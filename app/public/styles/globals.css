@@ -1,1 +1,24 @@
+.bg-primary {
+  background-color: #008080;
+}
 
+.text-primary {
+  color: #008080;
+}
+
+.dashboard-right {
+  width: calc(100vw - 17rem);
+}
+
+.chevron-open {
+  transition-property: all;
+  transform: rotate(0deg);
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chevron-close {
+  transition-property: all;
+  transform: rotate(180deg);
+  transition-duration: 400ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

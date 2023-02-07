@@ -51,10 +51,10 @@ class Router {
         switch($requestMethod) {
             case 'GET':
                 switch($uri) {
-                    case '': 
-                        require __DIR__ . '/controller/feedController.php';
+                    case 'dashboard': 
+                        require __DIR__ . '/controller/dashboardController.php';
                         session_start();
-                        $controller = new FeedController();
+                        $controller = new DashboardController();
                         $controller->index();
                         break;
                     default:
