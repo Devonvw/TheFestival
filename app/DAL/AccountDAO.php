@@ -1,9 +1,9 @@
 <?php 
-require_once __DIR__ . '/../model/User.php';
+require_once __DIR__ . '/../model/Account.php';
 require_once __DIR__ . '/../model/Post.php';
 require_once __DIR__ . '/../DAL/Database.php';
 
-    class UserDAO {
+    class AccountDAO {
        public $DB;
        
        function __construct() {
@@ -79,21 +79,40 @@ require_once __DIR__ . '/../DAL/Database.php';
         }
        }
 
-       function getMyPosts() {
-        $stmt = $this->DB::$connection->prepare("SELECT posts.*, users.id as user_id, users.username, counter.likes, CASE WHEN post_likes_account.post_id THEN true else false END as liked, pco.comments FROM posts left join users on users.id = posts.account_id left join (SELECT * FROM post_likes WHERE account_id = :account_id) as post_likes_account on post_likes_account.post_id = posts.id left join (SELECT COUNT(post_id) as likes, post_id FROM post_likes GROUP BY post_id) as counter on counter.post_id = posts.id left join (select posts.id, replace(replace(JSON_ARRAYAGG(create_objects.object), '}\"', '}'), '\"{', '{') as comments from posts left join (select post_id, JSON_MERGE(JSON_OBJECTAGG('username', users.username), JSON_OBJECTAGG('comment', post_comment.comment)) as object from post_comment left join users on users.id = post_comment.account_id group by post_comment.id order by post_comment.created_at desc) as create_objects on posts.id = create_objects.post_id group by posts.id) as pco on pco.id = posts.id where users.id = :account_id ORDER BY posts.created_at DESC;");
-        $account_id_param = isset($_SESSION["id"]) ? $_SESSION["id"] : 0;
+       function getAllAccounts() {
+        if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
-        $stmt->bindValue(':account_id', $account_id_param, PDO::PARAM_INT);
+        $stmt = $this->DB::$connection->prepare("SELECT * from account where type_id is not 3 order by id;");
+
         $stmt->execute();
-        $data = $stmt->fetchAll();
+        $accounts = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');;
 
-        $posts = [];
+        return $accounts;
+      }
 
-        foreach ($data as $row) {
-          array_push($posts, new Post($row['id'], $row['title'], $row['image_type'], base64_encode($row['image_data']), $row['description'], $row['likes'], $row['liked'], $row['created_at'], json_decode(stripslashes($row['comments'])), new User($row['id'], $row['username'])));
-        }
+      function deleteAccount($id) {
+        if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
-        return $posts;
+        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET active = false where id = :id");
+        $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $del_stmt->execute();
+      }
+
+      function updateAccount($id, $firstName, $lastName, $email) {
+        if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
+
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
+        $stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
+        $stmt->execute();
+        $account = $stmt->fetchObject("Account");
+
+        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email where id = :id");
+        $del_stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
+        $del_stmt->bindValue(':first_name', $firstName ? trim(htmlspecialchars($firstName)) : $account->first_name, PDO::PARAM_STR);
+        $del_stmt->bindValue(':last_name', $lastName ? trim(htmlspecialchars($lastName)) : $account->last_name, PDO::PARAM_STR);
+        $del_stmt->bindValue(':email', $email ? trim(htmlspecialchars($email)) : $account->email, PDO::PARAM_STR);
+
+        $del_stmt->execute();
       }
      }
 ?>

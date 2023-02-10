@@ -4,7 +4,7 @@ require_once __DIR__ . '/../DAL/InformationPageDAO.php';
 class InformationPageService {
     public function getInformationPages() {
         $dao = new InformationPageDAO();
-        $dao->GetInformationPages();
+        $dao->getInformationPages();
     }
 
     public function addInformationPage($url, $title, $description) {

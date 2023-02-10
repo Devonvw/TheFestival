@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/middleware/middleware.php';
+
 class Router {
     public function route($uri, $params, $requestMethod) {
         $api = false;
@@ -16,10 +18,16 @@ class Router {
         switch($requestMethod) {
             case 'GET':
                 switch($uri) {
-                    case "information-pages":
+                    case "information-page":
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->getInformationPages();
+                        break;
+                    case "account":
+                        (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->getAllAccounts();
                         break;
                     default:
                         http_response_code(404);
@@ -29,11 +37,13 @@ class Router {
             case 'POST': 
                 switch($uri) {
                     case "information-page":
+                        (new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationPage();
                         break;
                     case "information-section":
+                        (new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationSection($params["information_page_id"]);
@@ -43,17 +53,38 @@ class Router {
                         break;
                 }
                 break;
+            case 'PUT': 
+                switch($uri) {
+                    case "account":
+                        (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->updateAccount($params["id"]);
+                        break;
+                    default:
+                        http_response_code(404);
+                        break;
+                }
+                break;
             case "DELETE":
                 switch($uri) {
                     case "information-page":
+                        (new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->deleteInformationPage($params["id"]);
                         break;
                     case "information-section":
+                        (new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->deleteInformationSection($params["id"]);
+                        break;
+                    case "account":
+                        (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->deleteAccount($params["id"]);
                         break;
                     default:
                         http_response_code(404);
