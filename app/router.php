@@ -16,12 +16,11 @@ class Router {
         switch($requestMethod) {
             case 'GET':
                 switch($uri) {
-                    /*case "feed":
-                        session_start();
-                        require_once __DIR__ . '/api/controller/feedController.php';
-                        $controller = new APIFeedController();
-                        $controller->getFeed();
-                        break;*/
+                    case "information-pages":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->getInformationPages();
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -29,6 +28,16 @@ class Router {
                 break;
             case 'POST': 
                 switch($uri) {
+                    case "information-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->addInformationPage();
+                        break;
+                    case "information-section":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->addInformationSection($params["information_page_id"]);
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -36,6 +45,16 @@ class Router {
                 break;
             case "DELETE":
                 switch($uri) {
+                    case "information-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->deleteInformationPage($params["id"]);
+                        break;
+                    case "information-section":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->deleteInformationSection($params["id"]);
+                        break;
                     default:
                         http_response_code(404);
                         break;
