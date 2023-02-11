@@ -1,85 +1,120 @@
-<?php 
+<?php
 require_once __DIR__ . '/../model/Account.php';
-require_once __DIR__ . '/../model/Post.php';
 require_once __DIR__ . '/../DAL/Database.php';
 
-    class AccountDAO {
-       public $DB;
-       
-       function __construct() {
-         $this->DB = new DB();
-       }
+class AccountDAO
+{
+    public $DB;
 
-       function logoutUser() {
-          if (isset($_SESSION["loggedin"])){
+    function __construct()
+    {
+        $this->DB = new DB();
+    }
+
+    function logoutUser()
+    {
+        if (isset($_SESSION["loggedin"])) {
             session_destroy();
-          }
-       }
-
-       function loginUser($username, $password) {
-        if(empty(trim($username))){
-            throw new Exception("Please enter a username.", 1);
         }
-        if(empty(trim($password))){
+    }
+
+    function loginUser($email, $password)
+    {
+        if (empty(trim($email))) {
+            throw new Exception("Please enter an email.", 1);
+        }
+        if (empty(trim($password))) {
             throw new Exception("Please enter a password.", 1);
         }
 
-        $stmt = $this->DB::$connection->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
-        $username_param = trim(htmlspecialchars($username));
-        $stmt->bindValue(':username', $username_param, PDO::PARAM_STR);
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE email = :email LIMIT 1");
+        $email_param = trim(htmlspecialchars($email));
+        $stmt->bindValue(':email', $email_param, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetchObject("User");
+        $user = $stmt->fetchObject("Account");
 
-        if(!$user) throw new Exception("This user does not exist", 1);
+        if (!$user) throw new Exception("This email does not exist", 1);
 
-        if(password_verify($password, $user->password)){
+        if (password_verify($password, $user->password)) {
 
             $_SESSION["loggedin"] = true;
             $_SESSION["id"] = $user->id;
-            $_SESSION["username"] = $user->username;  
+            $_SESSION["email"] = $user->email;
+            $_SESSION["first_name"] = $user->first_name;
+            $_SESSION["last_name"] = $user->last_name;
+            $_SESSION["type_id"] = $user->type_id;
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);
-       }
+    }
 
-       function createUser($username, $password) {
-        if(empty(trim($username))){
-            throw new Exception("Please enter a username", 1);
-        } 
-        
-        if(!preg_match('/^[a-zA-Z0-9_]+$/', trim($username))){
-            throw new Exception("Username can only contain letters, numbers, and underscores", 1);
-        } 
-
-        if($stmt = $this->DB::$connection->prepare("SELECT id FROM users WHERE username = :username")){
-            $username_param = trim(htmlspecialchars($username));
-            $stmt->bindParam(':username', $username_param);  
-            $stmt->execute();
-            if($stmt->fetchColumn() > 1){
-                throw new Exception("This username is already taken", 1);
-            } 
+    function createUser($email, $password, $first_name, $last_name, $type_id)
+    {
+        if (empty(trim($email))) {
+            throw new Exception("Please enter an email", 1);
         }
-        
+
+        if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Invalid email address", 1);
+        }
+
+        if ($stmt = $this->DB::$connection->prepare("SELECT id FROM account WHERE email = :email")) {
+            $email_param = trim(htmlspecialchars($email));
+            $stmt->bindParam(':email', $email_param);
+            $stmt->execute();
+            if ($stmt->fetchColumn() > 1) {
+                throw new Exception("This email is already taken", 1);
+            }
+        }
+
         // Validate password
-        if(empty(trim($password))){
+        if (empty(trim($password))) {
             throw new Exception("Please enter a password", 1);
-        } 
-        if(strlen(trim($password)) < 6){
-            throw new Exception("Password must have atleast 6 characters", 1);
-        } 
-        
-        if($stmt = $this->DB::$connection->prepare("INSERT INTO users (username, password) VALUES (:username, :password)")){
-            $username_param = trim(htmlspecialchars($username));
-            $password_param = password_hash(trim(htmlspecialchars($password)),PASSWORD_DEFAULT);
-            
-            $stmt->bindParam(':username', $username_param);            
-            $stmt->bindParam(':password', $password_param);            
-            
-            $stmt->execute();
         }
-       }
+        if (strlen(trim($password)) < 6) {
+            throw new Exception("Password must have at least 6 characters", 1);
+        }
 
-       function getAllAccounts() {
+        // Validate first name
+        if (empty(trim($first_name))) {
+            throw new Exception("Please enter a first name", 1);
+        }
+
+        // Validate last name
+        if (empty(trim($last_name))) {
+            throw new Exception("Please enter a last name", 1);
+        }
+
+        // Validate type_id
+        if (empty(trim($type_id))) {
+            throw new Exception("Please select an account type", 1);
+        }
+
+
+
+        if ($stmt = $this->DB::$connection->prepare("INSERT INTO account (email, password, first_name, last_name, type_id) VALUES (:email, :password, :first_name, :last_name, :type_id)")) {
+            $email_param = trim(htmlspecialchars($email));
+            $password_param = password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT);
+            $first_name_param = trim(htmlspecialchars($first_name));
+            $last_name_param = trim(htmlspecialchars($last_name));
+            $type_id_param = trim(htmlspecialchars($type_id));
+
+            $stmt->bindParam(':email', $email_param);
+            $stmt->bindParam(':password', $password_param);
+            $stmt->bindParam(':first_name', $first_name_param);
+            $stmt->bindParam(':last_name', $last_name_param);
+            $stmt->bindParam(':type_id', $type_id_param);
+
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                throw new Exception("Error: Could not create user.");
+            }
+        }
+    }
+
+    function getAllAccounts()
+    {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
         $stmt = $this->DB::$connection->prepare("SELECT * from account where type_id is not 3 order by id;");
@@ -88,17 +123,19 @@ require_once __DIR__ . '/../DAL/Database.php';
         $accounts = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');;
 
         return $accounts;
-      }
+    }
 
-      function deleteAccount($id) {
+    function deleteAccount($id)
+    {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
         $del_stmt = $this->DB::$connection->prepare("UPDATE account SET active = false where id = :id");
         $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $del_stmt->execute();
-      }
+    }
 
-      function updateAccount($id, $firstName, $lastName, $email) {
+    function updateAccount($id, $firstName, $lastName, $email)
+    {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
         $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
@@ -113,6 +150,5 @@ require_once __DIR__ . '/../DAL/Database.php';
         $del_stmt->bindValue(':email', $email ? trim(htmlspecialchars($email)) : $account->email, PDO::PARAM_STR);
 
         $del_stmt->execute();
-      }
-     }
-?>
+    }
+}
