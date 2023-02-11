@@ -1,14 +1,35 @@
 <?php 
 /*if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    eader("location: /");
+    header("location: /");
     exit;
 }*/
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+<script>
+const dataTable = new simpleDatatables.DataTable("#userTable", {
+    searchable: true,
+    fixedHeight: true,
+});
+
+function getUsers() {
+    fetch(`${window.location.origin}/api/users`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            dataTable.insert(await res.json());
+        }
+    }).catch((res) => {});
+}
+</script>
 <header>
-    <link rel="stylesheet" href="styles/globals.css">
-    <title>Dashboard - The Festival</title>
+    <link rel="stylesheet" href="../styles/globals.css">
+    <title>Users - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Dashboard - The Festival" />
@@ -32,7 +53,10 @@
             <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8">
-                    <h2 class="text-2xl font-semibold">Home</h2>
+                    <h2 class="text-2xl font-semibold">Users</h2>
+                </div>
+                <div>
+                    <table id="userTable"></table>
                 </div>
             </div>
         </div>

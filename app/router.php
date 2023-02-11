@@ -107,6 +107,12 @@ class Router {
                         $controller = new DashboardController();
                         $controller->index();
                         break;
+                    case 'dashboard/users': 
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->users();
+                        break;
                     default:
                         http_response_code(404);
                         break;

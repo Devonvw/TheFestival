@@ -1,6 +1,5 @@
 <?php 
 require_once __DIR__ . '/../model/Account.php';
-require_once __DIR__ . '/../model/Post.php';
 require_once __DIR__ . '/../DAL/Database.php';
 
 class Middleware {
