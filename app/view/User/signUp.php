@@ -8,7 +8,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 function signUp() {
-    fetch(`${window.location.origin}/api/user/sign-up`, {
+    fetch(`${window.location.origin}/api/user/signup`, {
         headers: {
             'Content-Type': 'application/json'
         },

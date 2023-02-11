@@ -1,5 +1,5 @@
-<?php 
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] !== true){
+<?php
+if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] !== true) {
     header("location: /");
     exit;
 }
@@ -7,30 +7,30 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] !== true){
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-window.onload = getMyPosts();
+    window.onload = getMyPosts();
 
-function deletePost(id) {
-    if (!confirm("Are you sure you want to delete this post?")) return;
+    function deletePost(id) {
+        if (!confirm("Are you sure you want to delete this post?")) return;
 
-    fetch(`${window.location.origin}/api/feed?id=${id}`, {
-        method: "DELETE",
-    }).then(async (res) => {
-        if (res.ok) {
-            getMyPosts();
-        }
-    }).catch((res) => {})
-}
+        fetch(`${window.location.origin}/api/feed?id=${id}`, {
+            method: "DELETE",
+        }).then(async (res) => {
+            if (res.ok) {
+                getMyPosts();
+            }
+        }).catch((res) => {})
+    }
 
-function getMyPosts() {
-    fetch(`${window.location.origin}/api/user/my-posts`, {
-        method: "GET",
-    }).then(async (res) => {
-        if (res.ok) {
-            const data = await res.json();
+    function getMyPosts() {
+        fetch(`${window.location.origin}/api/user/my-posts`, {
+            method: "GET",
+        }).then(async (res) => {
+            if (res.ok) {
+                const data = await res.json();
 
-            var feedHTML = "";
+                var feedHTML = "";
 
-            data?.forEach((post => feedHTML += `<div class="bg-teal-600/20 rounded-lg overflow-hidden relative mb-12 shadow-md">
+                data?.forEach((post => feedHTML += `<div class="bg-teal-600/20 rounded-lg overflow-hidden relative mb-12 shadow-md">
                     <div class="absolute top-0 left-0 w-full p-2 pb-4 bg-gradient-to-b from-gray-800 to-transparent flex justify-between">
                         <h2 class="text-white font-extrabold text-2xl">${post.user.username}</h2>
                         <div class="flex gap-x-1"><a class="flex items-center" href="/edit-post?id=${post.id}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white hover:scale-110 cursor-pointer">
@@ -79,10 +79,10 @@ function getMyPosts() {
                     </div>
                 </div>`))
 
-            document.getElementById("posts").innerHTML = feedHTML;
-        }
-    }).catch((res) => {});
-}
+                document.getElementById("posts").innerHTML = feedHTML;
+            }
+        }).catch((res) => {});
+    }
 </script>
 <header>
     <title>My Posts - Social</title>

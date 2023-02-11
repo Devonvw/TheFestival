@@ -7,14 +7,14 @@ class UserService {
         $dao->logoutUser();
     }
 
-    public function loginUser($username, $password) {
+    public function loginUser($email, $password) {
         $dao = new UserDAO();
-        $dao->loginUser($username, $password);
+        $dao->loginUser($email, $password);
     }
 
-    public function createUser($username, $password) {
+    public function createUser($email, $password) {
         $dao = new UserDAO();
-        $dao->createUser($username, $password);
+        $dao->createUser($email, $password);
     }
 
     public function getMyPosts() {

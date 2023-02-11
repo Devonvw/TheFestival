@@ -16,17 +16,17 @@ require_once __DIR__ . '/../DAL/Database.php';
           }
        }
 
-       function loginUser($username, $password) {
-        if(empty(trim($username))){
-            throw new Exception("Please enter a username.", 1);
+       function loginUser($email, $password) {
+        if(empty(trim($email))){
+            throw new Exception("Please enter a email.", 1);
         }
         if(empty(trim($password))){
             throw new Exception("Please enter a password.", 1);
         }
 
-        $stmt = $this->DB::$connection->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
-        $username_param = trim(htmlspecialchars($username));
-        $stmt->bindValue(':username', $username_param, PDO::PARAM_STR);
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE email = :email LIMIT 1");
+        $email_param = trim(htmlspecialchars($email));
+        $stmt->bindValue(':email', $email_param, PDO::PARAM_STR);
         $stmt->execute();
         $user = $stmt->fetchObject("User");
 
@@ -36,27 +36,23 @@ require_once __DIR__ . '/../DAL/Database.php';
 
             $_SESSION["loggedin"] = true;
             $_SESSION["id"] = $user->id;
-            $_SESSION["username"] = $user->username;  
+            $_SESSION["email"] = $user->email;  
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);
        }
 
-       function createUser($username, $password) {
-        if(empty(trim($username))){
-            throw new Exception("Please enter a username", 1);
-        } 
-        
-        if(!preg_match('/^[a-zA-Z0-9_]+$/', trim($username))){
-            throw new Exception("Username can only contain letters, numbers, and underscores", 1);
+       function createUser($email, $password) {
+        if(empty(trim($email))){
+            throw new Exception("Please enter an email", 1);
         } 
 
-        if($stmt = $this->DB::$connection->prepare("SELECT id FROM users WHERE username = :username")){
-            $username_param = trim(htmlspecialchars($username));
-            $stmt->bindParam(':username', $username_param);  
+        if($stmt = $this->DB::$connection->prepare("SELECT id FROM account WHERE email = :email")){
+            $username_param = trim(htmlspecialchars($email));
+            $stmt->bindParam(':email', $username_param);  
             $stmt->execute();
             if($stmt->fetchColumn() > 1){
-                throw new Exception("This username is already taken", 1);
+                throw new Exception("This email is already in use", 1);
             } 
         }
         
@@ -68,11 +64,11 @@ require_once __DIR__ . '/../DAL/Database.php';
             throw new Exception("Password must have atleast 6 characters", 1);
         } 
         
-        if($stmt = $this->DB::$connection->prepare("INSERT INTO users (username, password) VALUES (:username, :password)")){
-            $username_param = trim(htmlspecialchars($username));
+        if($stmt = $this->DB::$connection->prepare("INSERT INTO account (email, password) VALUES (:email, :password)")){
+            $username_param = trim(htmlspecialchars($email));
             $password_param = password_hash(trim(htmlspecialchars($password)),PASSWORD_DEFAULT);
             
-            $stmt->bindParam(':username', $username_param);            
+            $stmt->bindParam(':email', $username_param);            
             $stmt->bindParam(':password', $password_param);            
             
             $stmt->execute();
@@ -80,7 +76,7 @@ require_once __DIR__ . '/../DAL/Database.php';
        }
 
        function getMyPosts() {
-        $stmt = $this->DB::$connection->prepare("SELECT posts.*, users.id as user_id, users.username, counter.likes, CASE WHEN post_likes_account.post_id THEN true else false END as liked, pco.comments FROM posts left join users on users.id = posts.account_id left join (SELECT * FROM post_likes WHERE account_id = :account_id) as post_likes_account on post_likes_account.post_id = posts.id left join (SELECT COUNT(post_id) as likes, post_id FROM post_likes GROUP BY post_id) as counter on counter.post_id = posts.id left join (select posts.id, replace(replace(JSON_ARRAYAGG(create_objects.object), '}\"', '}'), '\"{', '{') as comments from posts left join (select post_id, JSON_MERGE(JSON_OBJECTAGG('username', users.username), JSON_OBJECTAGG('comment', post_comment.comment)) as object from post_comment left join users on users.id = post_comment.account_id group by post_comment.id order by post_comment.created_at desc) as create_objects on posts.id = create_objects.post_id group by posts.id) as pco on pco.id = posts.id where users.id = :account_id ORDER BY posts.created_at DESC;");
+        $stmt = $this->DB::$connection->prepare("SELECT posts.*, users.id as user_id, users.email, counter.likes, CASE WHEN post_likes_account.post_id THEN true else false END as liked, pco.comments FROM posts left join users on users.id = posts.account_id left join (SELECT * FROM post_likes WHERE account_id = :account_id) as post_likes_account on post_likes_account.post_id = posts.id left join (SELECT COUNT(post_id) as likes, post_id FROM post_likes GROUP BY post_id) as counter on counter.post_id = posts.id left join (select posts.id, replace(replace(JSON_ARRAYAGG(create_objects.object), '}\"', '}'), '\"{', '{') as comments from posts left join (select post_id, JSON_MERGE(JSON_OBJECTAGG('email', users.email), JSON_OBJECTAGG('comment', post_comment.comment)) as object from post_comment left join users on users.id = post_comment.account_id group by post_comment.id order by post_comment.created_at desc) as create_objects on posts.id = create_objects.post_id group by posts.id) as pco on pco.id = posts.id where users.id = :account_id ORDER BY posts.created_at DESC;");
         $account_id_param = isset($_SESSION["id"]) ? $_SESSION["id"] : 0;
 
         $stmt->bindValue(':account_id', $account_id_param, PDO::PARAM_INT);
@@ -90,7 +86,7 @@ require_once __DIR__ . '/../DAL/Database.php';
         $posts = [];
 
         foreach ($data as $row) {
-          array_push($posts, new Post($row['id'], $row['title'], $row['image_type'], base64_encode($row['image_data']), $row['description'], $row['likes'], $row['liked'], $row['created_at'], json_decode(stripslashes($row['comments'])), new User($row['id'], $row['username'])));
+          array_push($posts, new Post($row['id'], $row['title'], $row['image_type'], base64_encode($row['image_data']), $row['description'], $row['likes'], $row['liked'], $row['created_at'], json_decode(stripslashes($row['comments'])), new User($row['id'], $row['email'])));
         }
 
         return $posts;

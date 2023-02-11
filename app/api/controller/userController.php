@@ -16,7 +16,7 @@ class APIUserController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->userService->loginUser($body["username"], $body["password"]);
+            $this->userService->loginUser($body["email"], $body["password"]);
             return json_encode($_SESSION);
         } catch (Exception $ex){
             http_response_code(500);
@@ -29,7 +29,7 @@ class APIUserController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->userService->createUser($body["username"], $body["password"]);
+            $this->userService->createUser($body["email"], $body["password"]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -40,16 +40,6 @@ class APIUserController
     {
         try {
             $this->userService->logoutUser();
-        } catch (Exception $ex){
-            http_response_code(500);
-            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
-        }
-    }
-
-    public function getMyPosts()
-    {
-        try {
-            echo json_encode($this->userService->getMyPosts());
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
