@@ -15,7 +15,7 @@ function login() {
             },
             method: "POST",
             body: JSON.stringify({
-                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
                 password: document.getElementById('password').value
             })
         }).then(async (res) => {
@@ -70,10 +70,10 @@ function login() {
                             <p id="error"></p>
                         </div>
                         <div>
-                            <label for="username"
+                            <label for="email"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
-                                username</label>
-                            <input maxlength="255" type="text" name="username" id="username"
+                                email</label>
+                            <input maxlength="255" type="text" name="email" id="email"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="..." required="">
                         </div>

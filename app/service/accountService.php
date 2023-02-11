@@ -7,14 +7,14 @@ class AccountService {
         $dao->logoutUser();
     }
 
-    public function loginUser($username, $password) {
+    public function loginUser($email, $password) {
         $dao = new AccountDAO();
-        $dao->loginUser($username, $password);
+        $dao->loginUser($email, $password);
     }
 
-    public function createUser($username, $password) {
+    public function createUser($email, $password, $first_name, $last_name, $type_id) {
         $dao = new AccountDAO();
-        $dao->createUser($username, $password);
+        $dao->createUser($email, $password, $first_name, $last_name, $type_id);
     }
 
     public function getAllAccounts() {
@@ -32,4 +32,3 @@ class AccountService {
         $dao->updateAccount($id, $firstName, $lastName, $email);
     }
 }
-?>

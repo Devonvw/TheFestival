@@ -16,7 +16,7 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->accountService->loginUser($body["username"], $body["password"]);
+            $this->accountService->loginUser($body["email"], $body["password"]);
             return json_encode($_SESSION);
         } catch (Exception $ex){
             http_response_code(500);
@@ -29,7 +29,7 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->accountService->createUser($body["username"], $body["password"]);
+            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], $body["type_id"] );
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
