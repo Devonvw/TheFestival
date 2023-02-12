@@ -79,5 +79,15 @@ class APIAccountController
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
         }
     }
+    public function updateAccountCustomer($id)
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+
+            $this->accountService->updateAccountCustomer($id, $body["firstName"], $body["lastName"], $body["email"]);
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
 }
-?>
+}

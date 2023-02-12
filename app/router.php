@@ -74,6 +74,11 @@ class Router
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
                         break;
+                    case "update-account":
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->updateAccountCustomer($params["id"]);
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -138,6 +143,12 @@ class Router
                         session_start();
                         $controller = new UserController();
                         $controller->signUp();
+                        break;
+                    case 'customer/manage-account':
+                        require __DIR__ . '/controller/userController.php';
+                        session_start();
+                        $controller = new UserController();
+                        $controller->accountManager();
                         break;
                     default:
                         http_response_code(404);
