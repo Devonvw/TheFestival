@@ -2,8 +2,17 @@
 require_once __DIR__ . '/../model/Account.php';
 require_once __DIR__ . '/../DAL/Database.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require 'src/Exception.php';
+require 'src/PHPMailer.php';
+require 'src/SMTP.php';
+
 class AccountDAO
 {
+
     public $DB;
 
     function __construct()
@@ -150,5 +159,50 @@ class AccountDAO
         $del_stmt->bindValue(':email', $email ? trim(htmlspecialchars($email)) : $account->email, PDO::PARAM_STR);
 
         $del_stmt->execute();
+    }
+    function updateAccountCustomer($id, $firstName, $lastName, $email)
+    {
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
+        $stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
+        $stmt->execute();
+        $account = $stmt->fetchObject("Account");
+
+        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email where id = :id");
+        $del_stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
+        $del_stmt->bindValue(':first_name', $firstName ? trim(htmlspecialchars($firstName)) : $account->first_name, PDO::PARAM_STR);
+        $del_stmt->bindValue(':last_name', $lastName ? trim(htmlspecialchars($lastName)) : $account->last_name, PDO::PARAM_STR);
+        $del_stmt->bindValue(':email', $email ? trim(htmlspecialchars($email)) : $account->email, PDO::PARAM_STR);
+        $del_stmt->execute();
+
+        if ($del_stmt->rowCount() > 0 && $email && $email != $account->email) {
+            //If the email has been updated, send a confirmation email
+            $mail = new PHPMailer(true);
+
+            try {
+                //Server settings
+                $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
+                $mail->isSMTP(); //Send using SMTP
+                $mail->Host = 'festivalteamhaarlem@gmail.com'; //Set the SMTP server to send through
+                $mail->SMTPAuth = true; //Enable SMTP authentication
+                $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
+                $mail->Password = 'Festivalproject'; //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+                $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+                //Recipients
+                $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
+                $mail->addAddress($email, $account->first_name); //Add a recipient
+
+                //Content
+                $mail->isHTML(false); //Set email format to plain text
+                $mail->Subject = 'Email address updated';
+                $mail->Body    = "Dear " . $account->first_name . ",\n\nYour email address has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
+
+                $mail->send();
+                echo 'Message has been sent';
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+        }
     }
 }
