@@ -1,14 +1,13 @@
 <?php
 require_once __DIR__ . '/../model/Account.php';
 require_once __DIR__ . '/../DAL/Database.php';
+require_once __DIR__ . '/../PHPMailer-master/src/Exception.php';
+require_once __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
+require_once __DIR__ . '/../PHPMailer-master/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
-
-require 'src/Exception.php';
-require 'src/PHPMailer.php';
-require 'src/SMTP.php';
 
 class AccountDAO
 {
@@ -204,5 +203,16 @@ class AccountDAO
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
         }
+    }
+    function getUserAccount($id)
+    {
+        $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id");
+        $stmt->bindValue(':id', isset($id) ? trim(htmlspecialchars($id)) : null, PDO::PARAM_INT);
+
+        
+        $stmt->execute();
+        $account = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');;
+
+        return $account;
     }
 }

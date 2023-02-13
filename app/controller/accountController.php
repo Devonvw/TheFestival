@@ -2,7 +2,7 @@
 require_once __DIR__ . '/controller.php';
 require_once __DIR__ . '/../service/accountService.php';
 
-class UserController extends Controller
+class AccountController extends Controller
 {
   private $userService;
 
@@ -11,13 +11,7 @@ class UserController extends Controller
   {
     $this->userService = new AccountService();
   }
-
-  public function login()
-  {
-    $this->displayView("");
-  }
-
-  public function signUp()
+  public function accountManager()
   {
     $this->displayView("");
   }
