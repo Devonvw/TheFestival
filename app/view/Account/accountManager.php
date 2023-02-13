@@ -1,5 +1,4 @@
 <?php
-$account = [];
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: /");
     exit;
@@ -11,9 +10,31 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <script>
     const form = document.querySelector('#manage_account_form');
     const submitButton = document.querySelector('#update_account_button');
+    fetch(`${window.location.origin}/api/user/login`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to retrieve user data from API endpoint.');
+            }
+        })
+        .then(user => {
+            document.querySelector('#first_name').value = user.first_name;
+            document.querySelector('#last_name').value = user.last_name;
+            document.querySelector('#email').value = user.email;
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        // Assign the user account data to the form fields
 
         const firstName = document.querySelector('#first-name').value;
         const lastName = document.querySelector('#last-name').value;
@@ -21,18 +42,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
         const password = document.querySelector('#password').value;
         const profilePicture = document.querySelector('#profile_picture_upload').files[0];
 
-        // Fetch the user account data from the API endpoint
-        const userAccountResponse = await fetch('/api/user-account');
-        if (!userAccountResponse.ok) {
-            console.error('Failed to retrieve user account data:', userAccountResponse);
-            return;
-        }
-        const userAccount = await userAccountResponse.json();
 
-        // Assign the user account data to the form fields
-        document.querySelector('#first_name').value = userAccount.first_name;
-        document.querySelector('#last_name').value = userAccount.last_name;
-        document.querySelector('#email').value = userAccount.email;
 
         const formData = new FormData();
         formData.append('first_name', firstName);
@@ -58,6 +68,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
         }
     });
 </script>
+
 
 <header>
     <title>Account - Social</title>
@@ -87,7 +98,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
         </div>
         <div class="mb-4">
             <label for="last_name" class="block text-gray-700 font-bold mb-2">Last Name</label>
-            <input id="last_name" name="last_name" type="text"  class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="last_name" name="last_name" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
             <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
