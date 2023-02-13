@@ -14,8 +14,8 @@ class APIAccountController
     public function login()
     {
         try {
+            session_start();
             $body = json_decode(file_get_contents('php://input'), true);
-
             $this->accountService->loginUser($body["email"], $body["password"]);
             return json_encode($_SESSION);
         } catch (Exception $ex) {
@@ -61,11 +61,11 @@ class APIAccountController
     {
         try {
             session_start();
-            $userId = $_SESSION['id'];
-
-            $account = $this->accountService->getUserAccount($userId);
-            if($account)
-            return $account;
+            $account = $this->accountService->getUserAccount($_SESSION['id']);
+            if ($account) {
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode($account);
+            }
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) {
@@ -73,6 +73,7 @@ class APIAccountController
             }
         }
     }
+
 
 
     public function deleteAccount($id)

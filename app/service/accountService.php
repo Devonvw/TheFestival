@@ -21,9 +21,9 @@ class AccountService {
         $dao = new AccountDAO();
         $dao->getAllAccounts();
     }
-    public function getUserAccount($id){
+    public function getUserAccount($userId){
         $dao = new AccountDAO();
-        return $dao->getUserAccount($id);
+        return $dao->getUserAccount($userId);
     }
 
     public function deleteAccount($id) {

@@ -207,12 +207,9 @@ class AccountDAO
     function getUserAccount($id)
     {
         $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id");
-        $stmt->bindValue(':id', isset($id) ? trim(htmlspecialchars($id)) : null, PDO::PARAM_INT);
-
-        
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        $account = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');;
-
+        $account = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');
         return $account;
     }
 }
