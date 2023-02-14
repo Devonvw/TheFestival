@@ -9,5 +9,11 @@ class Middleware {
             echo json_encode([ 'msg' => "Only admins can call this route" ]);
         }
     }
+    function loggedInOnly() {
+        if (!isset($_SESSION["loggedin"]) || !$_SESSION["loggedin"]) {
+            http_response_code(500);
+            echo json_encode([ 'msg' => "Only logged in can call this route" ]);
+        }
+    }
 }
 ?>

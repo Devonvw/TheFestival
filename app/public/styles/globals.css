@@ -22,3 +22,11 @@
   transition-duration: 400ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.datatable-table > thead > tr > th {
+  padding-right: 20px !important;
+}
+
+th {
+  padding: 20px !important;
+}

@@ -6,29 +6,39 @@
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 <script>
-const dataTable = new simpleDatatables.DataTable("#userTable", {
-    searchable: true,
-    fixedHeight: true,
+window.addEventListener("load", (event) => {
+    getUsers()
 });
 
+
+
 function getUsers() {
-    fetch(`${window.location.origin}/api/users`, {
+    fetch(`${window.location.origin}/api/accounts`, {
         headers: {
             'Content-Type': 'application/json'
         },
         method: "GET",
     }).then(async (res) => {
         if (res.ok) {
-            dataTable.insert(await res.json());
+            const data = await res.json();
+            new window.simpleDatatables.DataTable("table", {
+                data: {
+                    headings: Object.keys(data[0]),
+                    data: data.map(item => Object.values(item))
+                },
+            })
+            console.log(data.map(item => Object.values(item)))
+            console.log(Object.keys(data[0]))
+
         }
     }).catch((res) => {});
 }
 </script>
 <header>
     <link rel="stylesheet" href="../styles/globals.css">
+    <link rel="stylesheet" href="../styles/simple-datatables.css">
     <title>Users - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
@@ -53,10 +63,10 @@ function getUsers() {
             <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8">
-                    <h2 class="text-2xl font-semibold">Users</h2>
+                    <h2 class="text-2xl font-semibold">Accounts</h2>
                 </div>
-                <div>
-                    <table id="userTable"></table>
+                <div class="px-4 md:px-6 lg:px-8">
+                    <table class="table"></table>
                 </div>
             </div>
         </div>

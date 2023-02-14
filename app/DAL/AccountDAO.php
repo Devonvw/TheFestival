@@ -124,11 +124,10 @@ class AccountDAO
     {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
-        $stmt = $this->DB::$connection->prepare("SELECT * from account where type_id is not 3 order by id;");
+        $stmt = $this->DB::$connection->prepare("SELECT account.id, account.first_name, account.last_name, account.email, account_type.name as type_name, account.created_at from account left join account_type on account_type.id = account.type_id where type_id != 3 order by id;");
 
         $stmt->execute();
-        $accounts = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');;
-
+        $accounts = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');
         return $accounts;
     }
 
@@ -160,52 +159,46 @@ class AccountDAO
     }
     function updateAccountCustomer($first_name, $last_name, $email)
     {
-        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE email = :email LIMIT 1");
-        $email_param = trim(htmlspecialchars($email));
-        $stmt->bindParam(':email', $email_param);
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
+        $stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
         $stmt->execute();
         $account = $stmt->fetchObject("Account");
 
-        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name where email = :email");
+        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email where id = :id");
+        $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
 
-        $email_param = trim(htmlspecialchars($email));
-        $first_name_param = trim(htmlspecialchars($first_name));
-        $last_name_param = trim(htmlspecialchars($last_name));
+        $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
+        $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
+        $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
+        $update_stmt->execute();
 
-        $del_stmt->bindParam(':email', $email_param);
-        $del_stmt->bindParam(':first_name', $first_name_param);
-        $del_stmt->bindParam(':last_name', $last_name_param);
-        $del_stmt->execute();
+        //If the email has been updated, send a confirmation email
+        $mail = new PHPMailer(true);
 
-        if ($del_stmt->rowCount() > 0 && $email && $email != $account->email) {
-            //If the email has been updated, send a confirmation email
-            $mail = new PHPMailer(true);
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
+            $mail->isSMTP(); //Send using SMTP
+            $mail->Host = 'festivalteamhaarlem@gmail.com'; //Set the SMTP server to send through
+            $mail->SMTPAuth = true; //Enable SMTP authentication
+            $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
+            $mail->Password = 'Festivalproject'; //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
-            try {
-                //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
-                $mail->isSMTP(); //Send using SMTP
-                $mail->Host = 'festivalteamhaarlem@gmail.com'; //Set the SMTP server to send through
-                $mail->SMTPAuth = true; //Enable SMTP authentication
-                $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
-                $mail->Password = 'Festivalproject'; //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-                $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+            //Recipients
+            $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
+            $mail->addAddress($email, $account->first_name); //Add a recipient
 
-                //Recipients
-                $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
-                $mail->addAddress($email, $account->first_name); //Add a recipient
+            //Content
+            $mail->isHTML(false); //Set email format to plain text
+            $mail->Subject = 'Email address updated';
+            $mail->Body    = "Dear " . $account->first_name . ",\n\nYour email address has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
 
-                //Content
-                $mail->isHTML(false); //Set email format to plain text
-                $mail->Subject = 'Email address updated';
-                $mail->Body    = "Dear " . $account->first_name . ",\n\nYour email address has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
-
-                $mail->send();
-                echo 'Message has been sent';
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
+            $mail->send();
+            echo 'Message has been sent';
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 

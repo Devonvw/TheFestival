@@ -26,8 +26,8 @@ class Router
                         $controller = new APIInformationPageController();
                         $controller->getInformationPages();
                         break;
-                    case "account":
-                        (new Middleware())->adminOnly();
+                    case "accounts":
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
@@ -63,6 +63,8 @@ class Router
                         $controller->login();
                         break;
                     case "update-account":
+                        session_start();
+                        (new Middleware())->loggedInOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->updateAccountCustomer();
@@ -127,11 +129,11 @@ class Router
                         $controller = new DashboardController();
                         $controller->index();
                         break;
-                    case 'dashboard/users':
+                    case 'dashboard/accounts':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();
                         $controller = new DashboardController();
-                        $controller->users();
+                        $controller->accounts();
                         break;
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
