@@ -33,7 +33,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    method: 'PUT',
+                    method: 'POST',
                     body: formData
                 });
 
