@@ -1,5 +1,5 @@
 <?php
-if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: /");
     exit;
 }
@@ -8,65 +8,65 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    const form = document.querySelector('#manage_account_form');
-    const submitButton = document.querySelector('#update_account_button');
-    fetch(`${window.location.origin}/api/user/login`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'GET'
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Failed to retrieve user data from API endpoint.');
-            }
-        })
-        .then(user => {
-            document.querySelector('#first_name').value = user.first_name;
-            document.querySelector('#last_name').value = user.last_name;
-            document.querySelector('#email').value = user.email;
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        // Assign the user account data to the form fields
-
-        const firstName = document.querySelector('#first-name').value;
-        const lastName = document.querySelector('#last-name').value;
-        const email = document.querySelector('#email').value;
-        const password = document.querySelector('#password').value;
-        const profilePicture = document.querySelector('#profile_picture_upload').files[0];
-
-
-
-        const formData = new FormData();
-        formData.append('first_name', firstName);
-        formData.append('last_name', lastName);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('profile_picture', profilePicture);
-
-        const response = await fetch('/api/update-account', {
-            method: 'POST',
-            body: formData
-        });
-
+const form = document.querySelector('#manage_account_form');
+const submitButton = document.querySelector('#update_account_button');
+fetch(`${window.location.origin}/api/user`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'GET'
+    })
+    .then(response => {
         if (response.ok) {
-            alert('Account updated successfully!');
-            if (email !== currentUser.email) {
-                if (!confirmationResponse.ok) {
-                    console.error('Failed to send confirmation email:', confirmationResponse);
-                }
-            }
+            return response.json();
         } else {
-            console.error('Failed to update account:', response);
+            throw new Error('Failed to retrieve user data from API endpoint.');
         }
+    })
+    .then(user => {
+        document.getElementById('first_name').value = user.first_name;
+        document.getElementById('last_name').value = user.last_name;
+        document.getElementById('email').value = user.email;
+    })
+    .catch(error => {
+        console.error(error);
     });
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // Assign the user account data to the form fields
+
+    const firstName = document.querySelector('#first-name').value;
+    const lastName = document.querySelector('#last-name').value;
+    const email = document.querySelector('#email').value;
+    const password = document.querySelector('#password').value;
+    const profilePicture = document.querySelector('#profile_picture_upload').files[0];
+
+
+
+    const formData = new FormData();
+    formData.append('first_name', firstName);
+    formData.append('last_name', lastName);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('profile_picture', profilePicture);
+
+    const response = await fetch('/api/update-account', {
+        method: 'POST',
+        body: formData
+    });
+
+    if (response.ok) {
+        alert('Account updated successfully!');
+        if (email !== currentUser.email) {
+            if (!confirmationResponse.ok) {
+                console.error('Failed to send confirmation email:', confirmationResponse);
+            }
+        }
+    } else {
+        console.error('Failed to update account:', response);
+    }
+});
 </script>
 
 
@@ -94,26 +94,33 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
         <h1 class="text-2xl font-bold mb-4">Manage Account</h1>
         <div class="mb-4">
             <label for="first_name" class="block text-gray-700 font-bold mb-2">First Name</label>
-            <input id="first_name" name="first_name" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="first_name" name="first_name" type="text"
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
             <label for="last_name" class="block text-gray-700 font-bold mb-2">Last Name</label>
-            <input id="last_name" name="last_name" type="text" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="last_name" name="last_name" type="text"
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
             <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
-            <input id="email" name="email" type="email" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="email" name="email" type="email" value="<?php echo $_SESSION['email'] ?>"
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
             <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-            <input id="password" name="password" type="password" autocomplete="current-password" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
             <label for="profile_picture_upload" class="block text-gray-700 font-bold mb-2">Profile Picture</label>
-            <input id="profile_picture_upload" name="profile_picture_upload" type="file" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
+            <input id="profile_picture_upload" name="profile_picture_upload" type="file"
+                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5">
         </div>
         <div class="mb-4">
-            <button id="update_account_button" type="submit" class="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">Update Account</button>
+            <button id="update_account_button" type="submit"
+                class="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">Update
+                Account</button>
         </div>
     </form>
 

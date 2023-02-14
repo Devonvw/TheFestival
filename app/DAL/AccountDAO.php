@@ -44,7 +44,6 @@ class AccountDAO
         if (!$user) throw new Exception("This email does not exist", 1);
 
         if (password_verify($password, $user->password)) {
-
             $_SESSION["loggedin"] = true;
             $_SESSION["id"] = $user->id;
             $_SESSION["email"] = $user->email;

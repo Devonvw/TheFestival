@@ -14,7 +14,6 @@ class APIAccountController
     public function login()
     {
         try {
-            session_start();
             $body = json_decode(file_get_contents('php://input'), true);
             $this->accountService->loginUser($body["email"], $body["password"]);
             return json_encode($_SESSION);

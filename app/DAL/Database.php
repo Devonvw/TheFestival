@@ -3,7 +3,7 @@ class DB {
   const SERVER_NAME = "mysql";
   const USERNAME = "root";
   const PASSWORD = "secret123";
-  const DATABASE_NAME = "social";
+  const DATABASE_NAME = "festival";
   // Properties
   public static $connection;
   
