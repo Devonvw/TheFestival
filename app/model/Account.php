@@ -6,16 +6,18 @@ class Account {
   public $last_name;
   public $email;
   public $type_id;
+  public $type_name;
   public $password;
   public $created_at;
 
-  function __construct($id = null, $first_name = null, $last_name = null, $email = null, $type_id = null, $password = null, $created_at = null) {
+  function __construct($id = null, $first_name = null, $last_name = null, $email = null, $type_id = null, $type_name = null, $password = null, $created_at = null) {
     if(!is_null($id) && !is_null($email) && !is_null($first_name) && !is_null($last_name) && !is_null($type_id)) {
       $this->id = $id;
       $this->first_name = $first_name;
       $this->last_name = $last_name;
       $this->email = $email;
       $this->type_id = $type_id;
+      $this->type_name = $type_name;
       $this->password = $password;
       $this->created_at = $created_at;
     }

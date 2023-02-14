@@ -12,8 +12,6 @@ window.addEventListener("load", (event) => {
     getUsers()
 });
 
-
-
 function getUsers() {
     fetch(`${window.location.origin}/api/accounts`, {
         headers: {
@@ -23,15 +21,13 @@ function getUsers() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
+
             new window.simpleDatatables.DataTable("table", {
                 data: {
-                    headings: Object.keys(data[0]),
-                    data: data.map(item => Object.values(item))
+                    headings: ["Id", "First name", "Last name", "Email", "Type", "Created At"],
+                    data: data.map(item => Object.values(item).filter((item) => item != null))
                 },
             })
-            console.log(data.map(item => Object.values(item)))
-            console.log(Object.keys(data[0]))
-
         }
     }).catch((res) => {});
 }
@@ -62,7 +58,7 @@ function getUsers() {
         <div class="w-screen relative">
             <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
-                <div class="shadow-xl border-black w-full p-4 px-8">
+                <div class="shadow-xl border-black w-full p-4 px-8 mb-10">
                     <h2 class="text-2xl font-semibold">Accounts</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8">
