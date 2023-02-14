@@ -15,7 +15,7 @@ class DashboardController extends Controller {
     public function index() {
         $this->displayView("");
     }
-    public function users() {
+    public function accounts() {
         $this->displayView("");
     }
 }

@@ -19,7 +19,7 @@ class AccountService {
 
     public function getAllAccounts() {
         $dao = new AccountDAO();
-        $dao->getAllAccounts();
+        return $dao->getAllAccounts();
     }
     public function getUserAccount($userId){
         $dao = new AccountDAO();

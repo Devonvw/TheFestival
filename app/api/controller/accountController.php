@@ -49,8 +49,7 @@ class APIAccountController
     {
         try {
             session_start();
-
-            return $this->accountService->getAllAccounts();
+            echo json_encode($this->accountService->getAllAccounts());
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
