@@ -80,9 +80,8 @@ class APIAccountController
     public function updateAccountCustomer()
     {
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-
-            $this->accountService->updateAccountCustomer($body["first_name"], $body["last_name"], $body["email"]);
+            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
+            $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $_POST["email"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
