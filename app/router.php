@@ -63,6 +63,7 @@ class Router
                         $controller->createUser();
                         break;
                     case "user/login":
+                        session_start();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->login();
