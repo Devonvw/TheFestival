@@ -4,6 +4,6 @@ server with default setting (user 'root' with no password) */
 $servername = "mysql";
 $username = "root";
 $password = "secret123";
-$databasename = "social"
+$databasename = "festival"
 
 ?>

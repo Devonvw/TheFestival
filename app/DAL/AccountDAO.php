@@ -158,18 +158,23 @@ class AccountDAO
 
         $del_stmt->execute();
     }
-    function updateAccountCustomer($id, $firstName, $lastName, $email)
+    function updateAccountCustomer($first_name, $last_name, $email)
     {
-        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
-        $stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
+        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE email = :email LIMIT 1");
+        $email_param = trim(htmlspecialchars($email));
+        $stmt->bindParam(':email', $email_param);
         $stmt->execute();
         $account = $stmt->fetchObject("Account");
 
-        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email where id = :id");
-        $del_stmt->bindValue(':id', trim(htmlspecialchars($id)), PDO::PARAM_INT);
-        $del_stmt->bindValue(':first_name', $firstName ? trim(htmlspecialchars($firstName)) : $account->first_name, PDO::PARAM_STR);
-        $del_stmt->bindValue(':last_name', $lastName ? trim(htmlspecialchars($lastName)) : $account->last_name, PDO::PARAM_STR);
-        $del_stmt->bindValue(':email', $email ? trim(htmlspecialchars($email)) : $account->email, PDO::PARAM_STR);
+        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name where email = :email");
+
+        $email_param = trim(htmlspecialchars($email));
+        $first_name_param = trim(htmlspecialchars($first_name));
+        $last_name_param = trim(htmlspecialchars($last_name));
+
+        $del_stmt->bindParam(':email', $email_param);
+        $del_stmt->bindParam(':first_name', $first_name_param);
+        $del_stmt->bindParam(':last_name', $last_name_param);
         $del_stmt->execute();
 
         if ($del_stmt->rowCount() > 0 && $email && $email != $account->email) {
@@ -203,6 +208,7 @@ class AccountDAO
             }
         }
     }
+
     function getUserAccount($id)
     {
         $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id");
