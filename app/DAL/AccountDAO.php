@@ -179,7 +179,9 @@ class AccountDAO
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
             $mail->isSMTP(); //Send using SMTP
-            $mail->Host = 'festivalteamhaarlem@gmail.com'; //Set the SMTP server to send through
+            $mail->SMTPSecure = "tls";
+            $mail->SMTPAuth = true;
+            $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
             $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
             $mail->Password = 'Festivalproject'; //SMTP password
@@ -188,12 +190,12 @@ class AccountDAO
 
             //Recipients
             $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
-            $mail->addAddress($email, $account->first_name); //Add a recipient
+            $mail->addAddress($email, $account->email); //Add a recipient
 
             //Content
             $mail->isHTML(false); //Set email format to plain text
             $mail->Subject = 'Email address updated';
-            $mail->Body    = "Dear " . $account->first_name . ",\n\nYour email address has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
+            $mail->Body    = "Dear " . $account->first_name . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
 
             $mail->send();
             echo 'Message has been sent';
