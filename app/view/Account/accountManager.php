@@ -30,9 +30,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
             const response = await fetch(
                 `${window.location.origin}/api/update-account`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    
                     method: 'POST',
                     body: formData
                 });
