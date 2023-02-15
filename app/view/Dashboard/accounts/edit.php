@@ -6,28 +6,29 @@
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"></script>
 <script>
 window.addEventListener("load", (event) => {
-    getUsers()
+    getUser()
 });
 
-function getUsers() {
-    fetch(`${window.location.origin}/api/accounts`, {
+function editUser(id) {
+    fetch(`${window.location.origin}/api/accounts?id=${id}`, {
+        method: "POST",
+    }).then(async (res) => {
+        if (res.ok) window.location = "/dashboard/accounts";
+    }).catch((res) => {});
+}
+
+function getUser() {
+    const params = new URLSearchParams(window.location.search)
+    fetch(`${window.location.origin}/api/account?id=${params.get("id")}`, {
         headers: {
             'Content-Type': 'application/json'
         },
         method: "GET",
     }).then(async (res) => {
-        if (res.ok) {
-            const data = await res.json();
-
-            new window.simpleDatatables.DataTable("table", {
-                data: {
-                    headings: ["Id", "First name", "Last name", "Email", "Type", "Created At"],
-                    data: data.map(item => Object.values(item).filter((item) => item != null))
-                },
-            })
+        if (!res.ok) {
+            window.location = "/dashboard/accounts";
         }
     }).catch((res) => {});
 }
@@ -35,7 +36,7 @@ function getUsers() {
 <header>
     <link rel="stylesheet" href="../styles/globals.css">
     <link rel="stylesheet" href="../styles/simple-datatables.css">
-    <title>Users - The Festival</title>
+    <title>Edit Account - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Dashboard - The Festival" />
@@ -59,10 +60,9 @@ function getUsers() {
             <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8 mb-10">
-                    <h2 class="text-2xl font-semibold">Accounts</h2>
+                    <h2 class="text-2xl font-semibold">Edit account </h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8">
-                    <table class="table"></table>
                 </div>
             </div>
         </div>
