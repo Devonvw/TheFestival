@@ -141,6 +141,18 @@ class Router
                         $controller = new UserController();
                         $controller->login();
                         break;
+                    case 'login/reset/password':
+                        require __DIR__ . '/controller/userController.php';
+                        session_start();
+                        $controller = new UserController();
+                        $controller->login();
+                        break;
+                    case 'login/reset/email':
+                        require __DIR__ . '/controller/userController.php';
+                        session_start();
+                        $controller = new UserController();
+                        $controller->login();
+                        break;
                     case 'sign-up':
                         require __DIR__ . '/controller/userController.php';
                         session_start();
