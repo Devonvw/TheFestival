@@ -29,8 +29,15 @@
   padding: 6px;
 }
 
+.datatable-selector:focus-visible {
+  outline: #008080 solid 1px;
+}
+
 .datatable-input {
   padding: 6px 12px;
+}
+.datatable-input:focus-visible {
+  outline: #008080 solid 1px;
 }
 
 .datatable-info {
@@ -109,6 +116,7 @@
 .datatable-table > thead > tr > th {
   vertical-align: top;
   padding: 8px 14px;
+  padding-right: 20px !important;
 }
 
 .datatable-table > thead > tr > th {

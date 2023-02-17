@@ -26,7 +26,7 @@ class Router
                         $controller = new APIInformationPageController();
                         $controller->getInformationPages();
                         break;
-                    case "accounts":
+                    case "account/all":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
@@ -134,6 +134,12 @@ class Router
                         session_start();
                         $controller = new DashboardController();
                         $controller->accounts();
+                        break;
+                    case 'dashboard/accounts/edit':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->editAccount();
                         break;
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
