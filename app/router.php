@@ -69,6 +69,19 @@ class Router
                         $controller = new APIAccountController();
                         $controller->updateAccountCustomer();
                         break;
+                    case "user/reset/password":
+                        session_start();
+                        require_once __DIR__ . '/api/controller/PasswordResetcontroller.php';
+                        $token = $_GET['token'];
+                        $controller = new APIPasswordResetController();
+                        $controller->resetPassword($token);
+                        break;
+                    case "user/reset/sendResetLink":
+                        session_start();
+                        require_once __DIR__ . '/api/controller/PasswordResetcontroller.php';
+                        $controller = new APIPasswordResetController();
+                        $controller->sendConfirmationMail();
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -148,16 +161,24 @@ class Router
                         $controller->login();
                         break;
                     case 'login/reset/password':
-                        require __DIR__ . '/controller/userController.php';
+                        require __DIR__ . '/controller/passwordResetController.php';
                         session_start();
-                        $controller = new UserController();
-                        $controller->login();
+                        $controller = new PasswordResetController();
+                        $token = $_GET['token'];
+                        $controller->resetPassword($token);
                         break;
+
                     case 'login/reset/email':
-                        require __DIR__ . '/controller/userController.php';
+                        require __DIR__ . '/controller/passwordResetController.php';
                         session_start();
-                        $controller = new UserController();
-                        $controller->login();
+                        $controller = new PasswordResetController();
+                        $controller->resetEmail();
+                        break;
+                    case 'login/reset/sendResetLink':
+                        require __DIR__ . '/controller/passwordResetController.php';
+                        session_start();
+                        $controller = new PasswordResetController();
+                        $controller->sendResetLink();
                         break;
                     case 'sign-up':
                         require __DIR__ . '/controller/userController.php';
