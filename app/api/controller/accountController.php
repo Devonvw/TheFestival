@@ -79,8 +79,8 @@ class APIAccountController
     public function updateAccountCustomer()
     {
         try {
-            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
-            $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $_POST["email"]);
+            $image = $_FILES ? ($_FILES["profile_picture"]["name"] ? $_FILES["profile_picture"] : false) : false;
+            $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $_POST["email"], $image, $_POST["password"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

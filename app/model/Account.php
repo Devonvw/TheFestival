@@ -9,9 +9,10 @@ class Account {
   public $type_name;
   public $password;
   public $created_at;
+  public $profile_picture;
 
-  function __construct($id = null, $first_name = null, $last_name = null, $email = null, $type_id = null, $type_name = null, $password = null, $created_at = null) {
-    if(!is_null($id) && !is_null($email) && !is_null($first_name) && !is_null($last_name) && !is_null($type_id)) {
+  function __construct($id = null, $first_name = null, $last_name = null, $email = null, $type_id = null, $type_name = null, $password = null, $created_at = null, $profile_picture = null) {
+    if(!is_null($id) && !is_null($email) && !is_null($first_name) && !is_null($last_name) && !is_null($type_id) && !is_null($profile_picture)) {
       $this->id = $id;
       $this->first_name = $first_name;
       $this->last_name = $last_name;
@@ -20,6 +21,7 @@ class Account {
       $this->type_name = $type_name;
       $this->password = $password;
       $this->created_at = $created_at;
+      $this->profile_picture = $profile_picture;
     }
   }
 

@@ -50,6 +50,7 @@ class AccountDAO
             $_SESSION["first_name"] = $user->first_name;
             $_SESSION["last_name"] = $user->last_name;
             $_SESSION["type_id"] = $user->type_id;
+            $_SESSION["profile_picture"] = $user->profile_picture;
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);
@@ -157,19 +158,22 @@ class AccountDAO
 
         $del_stmt->execute();
     }
-    function updateAccountCustomer($first_name, $last_name, $email)
+    function updateAccountCustomer($first_name, $last_name, $email, $profile_picture, $password)
     {
         $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
         $stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
         $stmt->execute();
         $account = $stmt->fetchObject("Account");
 
-        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email where id = :id");
+        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, profile_picture = :profile_picture where id = :id");
         $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
 
         $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
         $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
+        $update_stmt->bindValue(':password', password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT));
+        $update_stmt->bindValue(':profile_picture', $profile_picture, PDO::PARAM_LOB);
+
         $update_stmt->execute();
 
         //If the email has been updated, send a confirmation email
@@ -179,12 +183,12 @@ class AccountDAO
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
             $mail->isSMTP(); //Send using SMTP
-            $mail->SMTPSecure = "tls";
             $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
             $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
-            $mail->Password = 'Festivalproject'; //SMTP password
+            $mail->Password = 'yfrjxpbwjpxuuvnd'; //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
@@ -195,10 +199,11 @@ class AccountDAO
             //Content
             $mail->isHTML(false); //Set email format to plain text
             $mail->Subject = 'Email address updated';
-            $mail->Body    = "Dear " . $account->first_name . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
+            $mail->Body    = "Dear " . $_SESSION['email'] . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
 
             $mail->send();
             echo 'Message has been sent';
+            $mail->smtpClose();
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
