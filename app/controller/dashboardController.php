@@ -16,7 +16,10 @@ class DashboardController extends Controller {
         $this->displayView("");
     }
     public function accounts() {
-        $this->displayView("");
+        require __DIR__ . "/../view/Dashboard/accounts/index.php";
+    }
+    public function editAccount() {
+        require __DIR__ . "/../view/Dashboard/accounts/edit.php";
     }
 }
 ?>
