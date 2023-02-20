@@ -115,7 +115,7 @@ class Router
                         $controller->deleteInformationSection($params["id"]);
                         break;
                     case "account":
-                        (new Middleware())->adminOnly();
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->deleteAccount($params["id"]);

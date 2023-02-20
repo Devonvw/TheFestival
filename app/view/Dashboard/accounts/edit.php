@@ -57,7 +57,7 @@ function getUser() {
 <body>
     <div class="">
         <div class="w-screen relative">
-            <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
+            <?php include __DIR__ . '/../../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8 mb-10">
                     <h2 class="text-2xl font-semibold">Edit account </h2>

@@ -125,7 +125,7 @@ class AccountDAO
     {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
 
-        $stmt = $this->DB::$connection->prepare("SELECT account.id, account.first_name, account.last_name, account.email, account_type.name as type_name, account.created_at from account left join account_type on account_type.id = account.type_id where type_id != 3 order by id;");
+        $stmt = $this->DB::$connection->prepare("SELECT account.id, account.first_name, account.last_name, account.email, account_type.name as type_name, account.created_at, account.active from account left join account_type on account_type.id = account.type_id where type_id != 3 order by id;");
 
         $stmt->execute();
         $accounts = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');
@@ -134,8 +134,6 @@ class AccountDAO
 
     function deleteAccount($id)
     {
-        if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
-
         $del_stmt = $this->DB::$connection->prepare("UPDATE account SET active = false where id = :id");
         $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $del_stmt->execute();

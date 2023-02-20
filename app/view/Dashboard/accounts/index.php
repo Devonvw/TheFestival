@@ -13,7 +13,7 @@ window.addEventListener("load", (event) => {
 });
 
 function deleteUser(id) {
-    fetch(`${window.location.origin}/api/accounts?id=${id}`, {
+    fetch(`${window.location.origin}/api/account?id=${id}`, {
         method: "DELETE",
     }).then(async (res) => {
         if (res.ok) getUsers();
@@ -30,22 +30,30 @@ function getUsers() {
         if (res.ok) {
             const data = await res.json();
 
+            const dataArray = data.map(item => Object.values(item).filter((item) =>
+                item != null).concat([false]))
+
             const dataTable = new simpleDatatables.DataTable("table", {
                 data: {
-                    headings: ["Id", "First name", "Last name", "Email", "Type", "Created At",
-                        ""
+                    headings: ["Id", "First name", "Last name", "Email", "Type", "Active",
+                        "Created At", ""
                     ],
-                    data: data.map(item => Object.values(item).filter((item) =>
-                        item != null).concat([false])),
+                    data: dataArray,
 
                 },
                 columns: [{
-                    select: 6,
-                    sortable: false,
+                    select: 5,
                     render: (value, _td, _rowIndex, _cellIndex) =>
-                        `<div class="ml-auto flex flex-row gap-x-2"><button class="bg-red-800 h-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
+                        value == 1 ? "True" : "False"
+                }, {
+                    select: 7,
+                    sortable: false,
+                    render: (value, _td, _rowIndex, _cellIndex) => {
+                        console.log(dataArray[_rowIndex])
+                        return `<div class="ml-auto flex flex-row gap-x-2"><button onclick="deleteUser(${dataArray[_rowIndex][0]})" class="bg-red-800 h-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
 </button><button class="bg-gray-800 h-[1.7rem] flex items-center"><img src="../assets/icons8-pencil-drawing-100.png" class="w-full scale-[0.80] h-[1.5rem] mx-auto" />
 </button></div>`
+                    }
                 }]
             })
 
@@ -77,7 +85,7 @@ function getUsers() {
 <body>
     <div class="">
         <div class="w-screen relative">
-            <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
+            <?php include __DIR__ . '/../../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8 mb-10">
                     <h2 class="text-2xl font-semibold">Accounts</h2>
