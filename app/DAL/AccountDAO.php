@@ -207,6 +207,14 @@ class AccountDAO
         }
     }
 
+    function getAccount($id)
+    {
+        $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id LIMIT 1");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchObject("Account");
+    }
+
     function getUserAccount($id)
     {
         $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id");

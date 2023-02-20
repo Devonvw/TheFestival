@@ -6,6 +6,10 @@
   color: #008080;
 }
 
+.border-primary {
+  border-color: #008080;
+}
+
 .dashboard-right {
   width: calc(100vw - 17rem);
 }

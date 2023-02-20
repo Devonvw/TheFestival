@@ -55,6 +55,17 @@ class APIAccountController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
+    public function getAccount($id)
+    {
+        try {
+            echo json_encode($this->accountService->getAccount($id));
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+
     public function deleteAccount($id)
     {
         try {
@@ -70,7 +81,7 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->accountService->updateAccount($id, $body["firstName"], $body["lastName"], $body["email"]);
+            $this->accountService->updateAccount($id, $body["first_name"], $body["last_name"], $body["email"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

@@ -32,6 +32,12 @@ class Router
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
                         break;
+                    case "account":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->getAccount($params["id"]);
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -90,7 +96,7 @@ class Router
             case 'PUT':
                 switch ($uri) {
                     case "account":
-                        (new Middleware())->adminOnly();
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
