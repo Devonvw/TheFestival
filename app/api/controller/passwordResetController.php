@@ -22,12 +22,11 @@ class APIPasswordResetController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
-    public function resetPassword($token)
+    public function resetPassword()
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $token = $body['token'];
-            $this->passwordResetService->resetPassword($body['token'], $body["password"]);
+            $this->passwordResetService->resetPassword($body["password"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

@@ -11,7 +11,7 @@ class PasswordResetController extends Controller
   {
     $this->passwordResetService = new PasswordResetService();
   }
-  public function resetPassword($token)
+  public function resetPassword()
   {
     $this->displayView("");
   }

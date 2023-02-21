@@ -78,9 +78,8 @@ class Router
                     case "user/reset/password":
                         session_start();
                         require_once __DIR__ . '/api/controller/PasswordResetcontroller.php';
-                        $token = $_GET['token'];
                         $controller = new APIPasswordResetController();
-                        $controller->resetPassword($token);
+                        $controller->resetPassword();
                         break;
                     case "user/reset/sendResetLink":
                         session_start();
@@ -152,8 +151,7 @@ class Router
                         require __DIR__ . '/controller/passwordResetController.php';
                         session_start();
                         $controller = new PasswordResetController();
-                        $token = $_GET['token'];
-                        $controller->resetPassword($token);
+                        $controller->resetPassword();
                         break;
                     case 'login/reset/email':
                         require __DIR__ . '/controller/passwordResetController.php';
