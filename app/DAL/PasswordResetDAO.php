@@ -37,7 +37,7 @@ class PasswordResetDAO
 
         $reset_link = "localhost/login/reset/password?token=$hashed_token";
         $mail = new PHPMailer(true);
-
+        $_SESSION['email'] = $email;
         try {
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
@@ -54,7 +54,7 @@ class PasswordResetDAO
             //Recipients
             $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
             $mail->addAddress($email, $email); //Add a recipient
-            
+
 
             //Content
             $mail->isHTML(true); //Set email format to plain text
@@ -70,37 +70,29 @@ class PasswordResetDAO
         }
         echo "An email has been sent to your email address with instructions on how to reset your password.";
     }
-    function getEmailByToken($token)
+    function resetPassword($password)
     {
-        $stmt = $this->DB::$connection->prepare("SELECT email FROM password_resets WHERE token = ? AND expiration > NOW()");
-        $stmt->bindParam(1, $token);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($result) {
-            return $result['email'];
-        } else {
-            return false;
+        if (empty(trim($password))) {
+            throw new Exception("Please enter a password", 1);
         }
-    }
-    function resetPassword($token, $password)
-    {
-
-        $email = $this->getEmailByToken($token);
+        $email = $_SESSION['email'];
+        
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        if ($email) {
-            // Update the user's password in the database
-            $stmt = $this->DB::$connection->prepare("UPDATE account SET password = ? WHERE email = ?");
-            $stmt->bindParam(1, $hashed_password);
-            $stmt->bindParam(2, $email);
-            $stmt->execute();
 
-            echo "Your password has been successfully reset.";
-            // Return true if the password was updated successfully, false otherwise
-            return $stmt->rowCount() == 1;
-        } else {
-            echo "Invalid or expired token.";
-        }
+        // Update the user's password in the database
+        $stmt = $this->DB::$connection->prepare("UPDATE account SET password = ? WHERE email = ?");
+        $stmt->bindParam(1, $hashed_password);
+        $stmt->bindParam(2, $email);
+        $stmt->execute();
+        
+        echo "Your password has been successfully reset.";
+
+        $this->tokenRemover($email);
+    }
+
+    function tokenRemover($email){
+        $stmt = $this->DB::$connection->prepare("DELETE FROM password_resets WHERE email = ?");
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
     }
 }
