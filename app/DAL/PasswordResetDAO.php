@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../model/Password_resets.php';
 require_once __DIR__ . '/../DAL/Database.php';
-require_once __DIR__ . '/../PHPMailer-master/src/Exception.php';
-require_once __DIR__ . '/../PHPMailer-master/src/PHPMailer.php';
-require_once __DIR__ . '/../PHPMailer-master/src/SMTP.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/Exception.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/PHPMailer.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
