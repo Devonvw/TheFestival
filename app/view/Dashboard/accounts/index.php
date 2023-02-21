@@ -49,8 +49,8 @@ function getUsers() {
                     select: 7,
                     sortable: false,
                     render: (value, _td, _rowIndex, _cellIndex) => {
-                        return `<div class="ml-auto flex flex-row gap-x-2"><button onclick="deleteUser(${dataArray[_rowIndex][0]})" class="bg-red-800 h-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
-</button><a href="/dashboard/accounts/edit?id=${dataArray[_rowIndex][0]}" class="bg-gray-800 h-[1.7rem] flex items-center"><img src="../assets/icons8-pencil-drawing-100.png" class="w-full scale-[0.80] h-[1.5rem] mx-auto" />
+                        return `<div class="ml-auto flex flex-row gap-x-2"><button onclick="deleteUser(${dataArray[_rowIndex][0]})" class="bg-red-800 h-[1.7rem] w-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
+</button><a href="/dashboard/accounts/edit?id=${dataArray[_rowIndex][0]}" class="bg-gray-800 h-[1.7rem] w-[1.7rem] flex items-center"><img src="../assets/icons8-pencil-drawing-100.png" class="w-full scale-[0.80] h-[1.5rem] mx-auto" />
 </a></div>`
                     }
                 }]

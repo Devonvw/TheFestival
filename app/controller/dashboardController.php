@@ -21,5 +21,14 @@ class DashboardController extends Controller {
     public function editAccount() {
         require __DIR__ . "/../view/Dashboard/accounts/edit.php";
     }
+    public function contentHomePage() {
+        require __DIR__ . "/../view/Dashboard/content/homePage.php";
+    }
+    public function contentInformationPages() {
+        require __DIR__ . "/../view/Dashboard/content/informationPages/index.php";
+    }
+    public function contentInformationPage() {
+        require __DIR__ . "/../view/Dashboard/content/informationPages/page.php";
+    }
 }
 ?>

@@ -142,24 +142,6 @@ class Router
         switch ($requestMethod) {
             case 'GET':
                 switch ($uri) {
-                    case 'dashboard':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->index();
-                        break;
-                    case 'dashboard/accounts':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->accounts();
-                        break;
-                    case 'dashboard/accounts/edit':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->editAccount();
-                        break;
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
                         session_start();
@@ -173,7 +155,6 @@ class Router
                         $token = $_GET['token'];
                         $controller->resetPassword($token);
                         break;
-
                     case 'login/reset/email':
                         require __DIR__ . '/controller/passwordResetController.php';
                         session_start();
@@ -197,6 +178,44 @@ class Router
                         session_start();
                         $controller = new AccountController();
                         $controller->accountManager();
+                        break;
+
+                    //Dashboard routes
+                    case 'dashboard':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->index();
+                        break;
+                    case 'dashboard/accounts':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->accounts();
+                        break;
+                    case 'dashboard/accounts/edit':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->editAccount();
+                        break;
+                    case 'dashboard/content/home-page':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentHomePage();
+                        break;
+                    case 'dashboard/content/information-pages':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentInformationPages();
+                        break;
+                    case 'dashboard/accounts/information-pages/page':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentInformationPage();
                         break;
                     default:
                         http_response_code(404);

@@ -7,8 +7,8 @@
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <header>
-    <link rel="stylesheet" href="styles/globals.css">
-    <title>Dashboard - The Festival</title>
+    <link rel="stylesheet" href="../../../styles/globals.css">
+    <title>Information pages - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Dashboard - The Festival" />
@@ -29,27 +29,12 @@
 <body>
     <div class="">
         <div class="w-screen relative">
-            <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
+            <?php include __DIR__ . '/../../../../components/dashboard/sidebar.php' ?>
             <div class="dashboard-right min-h-screen ml-auto">
                 <div class="shadow-xl border-black w-full p-4 px-8">
-                    <h2 class="text-2xl font-semibold">Dashboard</h2>
+                    <h2 class="text-2xl font-semibold">Information pages</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10">
-                    <div class="grid grid-cols-12 gap-12">
-                        <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                            <div class="bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden">
-                                <h4 class="font-medium text-white text-lg p-4 border-b bg-primary">Bought tickets</h4>
-                                <p class="text-xl px-4 py-8">112</p>
-                            </div>
-                        </div>
-                        <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                            <div class="bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden">
-                                <h4 class="font-medium text-white text-lg p-4 border-b bg-primary">Restaurant
-                                    reservations</h4>
-                                <p class="text-xl px-4 py-8">44</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

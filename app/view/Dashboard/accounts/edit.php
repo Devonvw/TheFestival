@@ -27,6 +27,8 @@ function editUser(e) {
         })
     }).then(async (res) => {
         if (res.ok) window.location = "/dashboard/accounts";
+        document.getElementById('error').innerHTML = (await res.json())?.msg;
+        document.getElementById('errorWrapper').classList.remove('hidden');
     }).catch((res) => {});
 }
 
