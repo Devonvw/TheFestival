@@ -35,6 +35,17 @@ class APIInformationPageController
         }
     }
 
+    public function editHomePage()
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+            $this->informationPageService->editHomePage($body["title"], $body["subtitle"], $body["meta_description"], $body["meta_title"], $body["sections"]);
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
+    }
+
     public function addInformationPage()
     {
         try {

@@ -12,6 +12,11 @@ class InformationPageService {
         return $dao->getHomePage();
     }
 
+    public function editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections) {
+        $dao = new InformationPageDAO();
+        $dao->editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections);
+    }
+
     public function addInformationPage($url, $title, $description) {
         $dao = new InformationPageDAO();
         $dao->addInformationPage($url, $title, $description);

@@ -29,9 +29,29 @@
     <meta name="theme-color" content="#ffffff" />
 </header>
 <script>
+const handleImageUpload = (blobInfo, progress) => new Promise((resolve, reject) => {
+    const image = blobInfo.blob();
+
+    if (FileReader && image) {
+        var fr = new FileReader();
+        fr.onload = function() {
+            resolve(fr.result);
+        }
+        fr.readAsDataURL(image);
+    }
+
+    // Not supported
+    else {
+        // fallback -- perhaps submit the input to an iframe and temporarily store
+        // them on the server until the user's session ends.
+    }
+})
+
 tinymce.init({
     selector: 'textarea.tiny',
+    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image',
     plugins: 'image',
+    images_upload_handler: handleImageUpload
 });
 </script>
 <script>
@@ -45,16 +65,21 @@ window.addEventListener("load", (event) => {
 
 function editHomePage(e) {
     e.preventDefault();
-    const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/information-page/home-page`, {
+    fetch(`${window.location.origin}/api/information-page/edit-home-page`, {
         method: "POST",
         body: JSON.stringify({
             meta_title: document.getElementById('metaTitle').value,
             meta_description: document.getElementById('metaDesc').value,
             title: document.getElementById('title').value,
-            subtitle: document.getElementById('title').subtitle,
-            sections: [tinymce.get("section1").getContent(), tinymce.get("section2").getContent()],
+            subtitle: document.getElementById('subtitle').value,
+            sections: [{
+                id: document.getElementById('section1').getAttribute("name"),
+                text: tinymce.get("section1").getContent()
+            }, {
+                id: document.getElementById('section2').getAttribute("name"),
+                text: tinymce.get("section2").getContent()
+            }],
         })
     }).then(async (res) => {
         if (!res.ok) {
@@ -79,8 +104,12 @@ function getHomePage() {
             document.getElementById('metaDesc').value = data?.meta_description;
             document.getElementById('title').value = data?.title;
             document.getElementById('subtitle').value = data?.subtitle;
-            tinymce.get("section1").setContent(data?.sections[0] ? data?.sections[0] : "");
-            tinymce.get("section2").setContent(data?.sections[1] ? data?.sections[1] : "");
+            tinymce.get("section1").setContent(data?.sections[0]?.text ? data?.sections[0]?.text : "");
+            tinymce.get("section2").setContent(data?.sections[1]?.text ? data?.sections[1]?.text : "");
+            document.getElementById('section1').setAttribute("name", data?.sections[0] ? data?.sections[0]
+                ?.id : "");
+            document.getElementById('section1').setAttribute("name", data?.sections[1] ? data?.sections[1]
+                ?.id : "");
         }
     }).catch((res) => {
         console.log(res)
@@ -164,12 +193,12 @@ function getHomePage() {
                                             Name</label>
                                         <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                         <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
                                             Link</label>
                                         <input maxlength="255" type="text" name="linkOne" id="linkOne"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                     </div>
                                 </div>
                             </div>
@@ -204,12 +233,12 @@ function getHomePage() {
                                             Name</label>
                                         <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                         <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
                                             Link</label>
                                         <input maxlength="255" type="text" name="linkOne" id="linkOne"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                     </div>
                                 </div>
                             </div>
@@ -244,12 +273,12 @@ function getHomePage() {
                                             Name</label>
                                         <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                         <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
                                             Link</label>
                                         <input maxlength="255" type="text" name="linkOne" id="linkOne"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle..." required="">
+                                            placeholder="Subtitle...">
                                     </div>
                                 </div>
                             </div>
