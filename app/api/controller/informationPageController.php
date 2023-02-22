@@ -16,7 +16,19 @@ class APIInformationPageController
         try {
             session_start();
 
-            return $this->informationPageService->getInformationPages();
+            return json_encode($this->informationPageService->getInformationPages());
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
+    }
+
+    public function getHomePage()
+    {
+        try {
+            session_start();
+
+            return json_encode($this->informationPageService->getHomePage());
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);

@@ -10,7 +10,7 @@ require_once __DIR__ . '/../DAL/Database.php';
        }
 
        function getInformationPages() {
-          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.text) as sections from information_section left join information_page on information_page.id = information_section.information_page_id group by information_section.information_page_id;");
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.text) as sections from information_page left join information_section on information_page.id = information_section.information_page_id group by information_section.information_page_id;");
 
           $stmt->execute();
           $data = $stmt->fetchAll();
@@ -18,10 +18,21 @@ require_once __DIR__ . '/../DAL/Database.php';
           $pages = [];
 
           foreach ($data as $row) {
-            array_push($pages, new InformationPage($row['id'], $row['title'], $row['description'], $row['sections']));
+            array_push($pages, new InformationPage($row['id'], $row['title'], $row['subtitle'], $row['meta_title'], $row['meta_description'], json_decode(stripslashes($row['sections']))));
           }
 
           return $pages;
+        }
+
+        function getHomePage() {
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.text) as sections from information_page left join information_section on information_page.id = information_section.information_page_id where information_page.id = 1 group by information_section.information_page_id LIMIT 1;");
+
+          $stmt->execute();
+          $data = $stmt->fetch();
+
+          if (!$data) return;
+
+          return new InformationPage($data['id'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], json_decode(stripslashes($data['sections'])));
         }
 
         function addInformationPage($url, $title, $description) {
