@@ -38,6 +38,7 @@ class PasswordResetDAO
         $reset_link = "localhost/login/reset/password?token=$hashed_token";
         $mail = new PHPMailer(true);
         $_SESSION['email'] = $email;
+        session_write_close();
         try {
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
