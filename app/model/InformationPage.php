@@ -2,14 +2,18 @@
 class InformationPage {
   public $id;
   public $title;
-  public $description;
+  public $subtitle;
+  public $meta_title;
+  public $meta_description;
   public $sections;
 
-  function __construct($id = null, $title = null, $description = null, $sections = null) {
-    if(!is_null($id) && !is_null($title) && !is_null($description)) {
+  function __construct($id = null, $title = null, $subtitle = null, $meta_title = null, $meta_description = null, $sections = null) {
+    if(!is_null($id) && !is_null($title)) {
       $this->id = $id;
       $this->title = $title;
-      $this->description = $description;
+      $this->subtitle = $subtitle;
+      $this->meta_title = $meta_title;
+      $this->meta_description = $meta_description;
       $this->sections = $sections;
     }
   }

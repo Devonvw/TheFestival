@@ -21,11 +21,6 @@ class Router
         switch ($requestMethod) {
             case 'GET':
                 switch ($uri) {
-                    case "information-page":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        $controller->getInformationPages();
-                        break;
                     case "account/all":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
@@ -37,6 +32,19 @@ class Router
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->getAccount($params["id"]);
+                        break;
+
+                    //Information pages routes
+                    case "information-page":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->getInformationPages();
+                        break;
+                    case "information-page/home-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getHomePage();
                         break;
                     default:
                         http_response_code(404);
@@ -50,6 +58,12 @@ class Router
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationPage();
+                        break;
+                    case "information-page/edit-home-page":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->editHomePage($params["id"]);
                         break;
                     case "information-section":
                         (new Middleware())->adminOnly();
