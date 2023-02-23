@@ -39,18 +39,18 @@ class AccountDAO
         $email_param = trim(htmlspecialchars($email));
         $stmt->bindValue(':email', $email_param, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetchObject("Account");
+        $account = $stmt->fetchObject("Account");
 
-        if (!$user) throw new Exception("This email does not exist", 1);
+        if (!$account) throw new Exception("This email does not exist", 1);
 
-        if (password_verify($password, $user->password)) {
+        if (password_verify($password, $account->password)) {
             $_SESSION["loggedin"] = true;
-            $_SESSION["id"] = $user->id;
-            $_SESSION["email"] = $user->email;
-            $_SESSION["first_name"] = $user->first_name;
-            $_SESSION["last_name"] = $user->last_name;
-            $_SESSION["type_id"] = $user->type_id;
-            $_SESSION["profile_picture"] = $user->profile_picture;
+            $_SESSION["id"] = $account->id;
+            $_SESSION["email"] = $account->email;
+            $_SESSION["first_name"] = $account->first_name;
+            $_SESSION["last_name"] = $account->last_name;
+            $_SESSION["type_id"] = $account->type_id;
+            $_SESSION["profile_picture"] = $account->profile_picture;
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);
