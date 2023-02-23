@@ -150,6 +150,7 @@ class Router
                         $controller = new APIAccountController();
                         $controller->deleteAccount($params["id"]);
                         break;
+                        
                     default:
                         http_response_code(404);
                         break;
@@ -239,6 +240,13 @@ class Router
                         session_start();
                         $controller = new DashboardController();
                         $controller->contentInformationPage();
+                        break;
+                        //Cart routes
+                    case "cart":
+                        require __DIR__ . '/controller/cartController.php';
+                        session_start();
+                        $controller = new CartController();
+                        $controller->cart();
                         break;
                     default:
                         http_response_code(404);
