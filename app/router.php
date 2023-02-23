@@ -21,6 +21,7 @@ class Router
         switch ($requestMethod) {
             case 'GET':
                 switch ($uri) {
+                        //Account routes
                     case "account/all":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
@@ -34,7 +35,7 @@ class Router
                         $controller->getAccount($params["id"]);
                         break;
 
-                    //Information pages routes
+                        //Information pages routes
                     case "information-page":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
@@ -42,6 +43,12 @@ class Router
                         $controller->getInformationPages();
                         break;
                     case "information-page/home-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getHomePage();
+                        break;
+                        //Cart routes
+                    case "cart":
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         echo $controller->getHomePage();
@@ -71,6 +78,7 @@ class Router
                         $controller = new APIInformationPageController();
                         $controller->addInformationSection($params["information_page_id"]);
                         break;
+                        //User routes
                     case "user/sign-up":
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
@@ -82,6 +90,7 @@ class Router
                         $controller = new APIAccountController();
                         $controller->login();
                         break;
+                        //update-account in post because of image
                     case "update-account":
                         session_start();
                         (new Middleware())->loggedInOnly();
@@ -108,6 +117,7 @@ class Router
                 break;
             case 'PUT':
                 switch ($uri) {
+                        //account routes
                     case "account":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
@@ -133,6 +143,7 @@ class Router
                         $controller = new APIInformationPageController();
                         $controller->deleteInformationSection($params["id"]);
                         break;
+                        //Account routes
                     case "account":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/accountController.php';
@@ -192,7 +203,7 @@ class Router
                         $controller->accountManager();
                         break;
 
-                    //Dashboard routes
+                        //Dashboard routes
                     case 'dashboard':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();
