@@ -197,25 +197,6 @@ class Router
                         $controller = new DashboardController();
                         $controller->restaurant();
                         break;
-                    case "account":
-                        //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
-                        $controller = new APIAccountController();
-                        $controller->getAccount($params["id"]);
-                        break;
-
-                        //Information pages routes
-                    case "information-page":
-                        //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        $controller->getInformationPages();
-                        break;
-                    case "information-page/home-page":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        echo $controller->getHomePage();
-                        break;
                     case 'dashboard/content/home-page':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();
@@ -234,11 +215,6 @@ class Router
                         $controller = new DashboardController();
                         $controller->contentInformationPage();
                         break;
-                        //Cart routes
-                    case "cart":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        echo $controller->getHomePage();
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
                         session_start();
@@ -271,7 +247,6 @@ class Router
                         break;
                     case 'customer/manage-account':
                         require __DIR__ . '/controller/accountController.php';
-                        session_start();
                         $controller = new AccountController();
                         $controller->accountManager();
                         break;
