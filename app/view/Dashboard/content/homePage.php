@@ -108,7 +108,7 @@ function getHomePage() {
             tinymce.get("section2").setContent(data?.sections[1]?.text ? data?.sections[1]?.text : "");
             document.getElementById('section1').setAttribute("name", data?.sections[0] ? data?.sections[0]
                 ?.id : "");
-            document.getElementById('section1').setAttribute("name", data?.sections[1] ? data?.sections[1]
+            document.getElementById('section2').setAttribute("name", data?.sections[1] ? data?.sections[1]
                 ?.id : "");
         }
     }).catch((res) => {

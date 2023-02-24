@@ -28,30 +28,11 @@ class Router
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
                         break;
-                    case "account":
-                        //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
-                        $controller = new APIAccountController();
-                        $controller->getAccount($params["id"]);
-                        break;
-
-                        //Information pages routes
-                    case "information-page":
-                        //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        $controller->getInformationPages();
-                        break;
-                    case "information-page/home-page":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        echo $controller->getHomePage();
-                        break;
-                        //Cart routes
-                    case "cart":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
-                        $controller = new APIInformationPageController();
-                        echo $controller->getHomePage();
+                    case "event/all":
+                         //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/eventController.php';
+                        $controller = new APIEventController();
+                        $controller->getAllEvents();
                         break;
                     default:
                         http_response_code(404);
@@ -70,7 +51,7 @@ class Router
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
-                        $controller->editHomePage($params["id"]);
+                        $controller->editHomePage();
                         break;
                     case "information-section":
                         (new Middleware())->adminOnly();
@@ -110,6 +91,13 @@ class Router
                         $controller = new APIPasswordResetController();
                         $controller->sendConfirmationMail();
                         break;
+                    case "update-event":
+                        session_start();
+                            // (new Middleware())->adminOnly();
+                             require_once __DIR__ . '/api/controller/eventController.php';
+                             $controller = new APIEventController();
+                             $controller->updateEvent();
+                             break;
                     default:
                         http_response_code(404);
                         break;
@@ -124,9 +112,7 @@ class Router
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
                         break;
-                    default:
-                        http_response_code(404);
-                        break;
+
                 }
                 break;
             case "DELETE":
@@ -150,7 +136,14 @@ class Router
                         $controller = new APIAccountController();
                         $controller->deleteAccount($params["id"]);
                         break;
-                        
+
+                    case "event":
+                        // (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/eventController.php';
+                        $controller = new APIEventController();
+                        $controller->deleteEvent($params["id"]);
+                        break;
+
                     default:
                         http_response_code(404);
                         break;
@@ -167,6 +160,30 @@ class Router
         switch ($requestMethod) {
             case 'GET':
                 switch ($uri) {
+                    case 'dashboard':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->index();
+                        break;
+                    case 'dashboard/accounts':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->accounts();
+                        break;
+                    case 'dashboard/accounts/edit':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->editAccount();
+                        break;
+                    case 'dashboard/restaurant':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->restaurant();
+                        break;
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
                         session_start();
@@ -203,43 +220,11 @@ class Router
                         $controller = new AccountController();
                         $controller->accountManager();
                         break;
-
-                        //Dashboard routes
-                    case 'dashboard':
-                        require __DIR__ . '/controller/dashboardController.php';
+                    case 'manage-event':
+                        require __DIR__ . '/controller/eventController.php';
                         session_start();
-                        $controller = new DashboardController();
-                        $controller->index();
-                        break;
-                    case 'dashboard/accounts':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->accounts();
-                        break;
-                    case 'dashboard/accounts/edit':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->editAccount();
-                        break;
-                    case 'dashboard/content/home-page':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->contentHomePage();
-                        break;
-                    case 'dashboard/content/information-pages':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->contentInformationPages();
-                        break;
-                    case 'dashboard/accounts/information-pages/page':
-                        require __DIR__ . '/controller/dashboardController.php';
-                        session_start();
-                        $controller = new DashboardController();
-                        $controller->contentInformationPage();
+                        $controller = new EventController();
+                        $controller->eventManager();
                         break;
                         //Cart routes
                     case "cart":
