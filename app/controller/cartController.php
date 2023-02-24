@@ -6,5 +6,9 @@ class CartController extends Controller
 {
     function __construct()
     {
+        
+    }
+    public function cart() {
+        $this->displayView("");
     }
 }
