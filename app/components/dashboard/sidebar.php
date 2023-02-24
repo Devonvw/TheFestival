@@ -77,7 +77,12 @@ window.onload = () => {
             </svg>
         </li>
         <ul class="flex flex-col gap-y-3 text-white pl-12 my-2 hidden text-sm">
-            <li>Restaurants</li>
+        <a href="/dashboard/restaurant">
+
+        <li>Restaurants</li>
+
+        </a>
+            
             <li>Sessions</li>
             <li>Reservations</li>
         </ul>

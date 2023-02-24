@@ -30,5 +30,8 @@ class DashboardController extends Controller {
     public function contentInformationPage() {
         require __DIR__ . "/../view/Dashboard/content/informationPages/page.php";
     }
+    public function restaurant() {
+        require __DIR__ . "/../view/Dashboard/Food/index.php";
+    }
 }
 ?>
