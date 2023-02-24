@@ -34,6 +34,19 @@ class Router
                         $controller = new APIEventController();
                         $controller->getAllEvents();
                         break;
+
+                    //Information pages routes
+                    case "information-page":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->getInformationPages();
+                        break;
+                    case "information-page/home-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getHomePage();
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -182,6 +195,48 @@ class Router
                         $controller = new DashboardController();
                         $controller->restaurant();
                         break;
+                    case "account":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->getAccount($params["id"]);
+                        break;
+
+                        //Information pages routes
+                    case "information-page":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        $controller->getInformationPages();
+                        break;
+                    case "information-page/home-page":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getHomePage();
+                        break;
+                    case 'dashboard/content/home-page':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentHomePage();
+                        break;
+                    case 'dashboard/content/information-pages':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentInformationPages();
+                        break;
+                    case 'dashboard/accounts/information-pages/page':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->contentInformationPage();
+                        break;
+                        //Cart routes
+                    case "cart":
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getHomePage();
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
                         session_start();

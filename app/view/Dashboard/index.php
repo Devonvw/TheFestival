@@ -28,7 +28,6 @@
 </header>
 
 <body>
-<?php include __DIR__ . '/../../components/navbar.php' ?>
     <div class="">
         <div class="w-screen relative">
             <?php include __DIR__ . '/../../components/dashboard/sidebar.php' ?>
@@ -54,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
     <?php include __DIR__ . '/../../components/footer.php' ?>
@@ -63,4 +62,3 @@
 
 
 </html>
-
