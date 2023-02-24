@@ -32,6 +32,12 @@ class Router
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
                         break;
+                    case "event/all":
+                         //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/eventController.php';
+                        $controller = new APIEventController();
+                        $controller->getAllEvents();
+                        break;
                     default:
                         http_response_code(404);
                         break;
@@ -82,6 +88,13 @@ class Router
                         $controller = new APIPasswordResetController();
                         $controller->sendConfirmationMail();
                         break;
+                    case "update-event":
+                        session_start();
+                            // (new Middleware())->adminOnly();
+                             require_once __DIR__ . '/api/controller/eventController.php';
+                             $controller = new APIEventController();
+                             $controller->updateEvent();
+                             break;
                     default:
                         http_response_code(404);
                         break;
@@ -95,9 +108,7 @@ class Router
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
                         break;
-                    default:
-                        http_response_code(404);
-                        break;
+
                 }
                 break;
             case "DELETE":
@@ -119,6 +130,12 @@ class Router
                         require_once __DIR__ . '/api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->deleteAccount($params["id"]);
+                        break;
+                    case "event":
+                        // (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/eventController.php';
+                        $controller = new APIEventController();
+                        $controller->deleteEvent($params["id"]);
                         break;
                     default:
                         http_response_code(404);
@@ -153,6 +170,12 @@ class Router
                         session_start();
                         $controller = new DashboardController();
                         $controller->editAccount();
+                        break;
+                    case 'dashboard/restaurant':
+                        require __DIR__ . '/controller/dashboardController.php';
+                        session_start();
+                        $controller = new DashboardController();
+                        $controller->restaurant();
                         break;
                     case 'login':
                         require __DIR__ . '/controller/userController.php';
@@ -191,6 +214,12 @@ class Router
                         session_start();
                         $controller = new AccountController();
                         $controller->accountManager();
+                        break;
+                    case 'manage-event':
+                        require __DIR__ . '/controller/eventController.php';
+                        session_start();
+                        $controller = new EventController();
+                        $controller->eventManager();
                         break;
                     default:
                         http_response_code(404);

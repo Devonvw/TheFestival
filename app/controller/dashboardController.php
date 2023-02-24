@@ -21,5 +21,8 @@ class DashboardController extends Controller {
     public function editAccount() {
         require __DIR__ . "/../view/Dashboard/accounts/edit.php";
     }
+    public function restaurant() {
+        require __DIR__ . "/../view/Dashboard/Food/index.php";
+    }
 }
 ?>
