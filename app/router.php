@@ -70,7 +70,7 @@ class Router
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
-                        $controller->editHomePage($params["id"]);
+                        $controller->editHomePage();
                         break;
                     case "information-section":
                         (new Middleware())->adminOnly();

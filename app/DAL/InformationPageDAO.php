@@ -47,6 +47,14 @@ require_once __DIR__ . '/../DAL/Database.php';
 
           $stmt->execute();
 
+          foreach ($sections as $value) {
+            $sections_stmt = $this->DB::$connection->prepare("UPDATE information_section SET text = :text where id = :id");
+            $sections_stmt->bindValue(':id', $value["id"], PDO::PARAM_INT);
+            //Security check ??
+            $sections_stmt->bindValue(':text', $value["text"], PDO::PARAM_STR);
+            $sections_stmt->execute();
+          }
+
           $this->DB::$connection->commit();
         }
 
