@@ -8,7 +8,7 @@
 
 </script>
 <header>
-    <title>Login - Social</title>
+    <title>Cart - Social</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Login - Social" />
@@ -28,7 +28,7 @@
 
 <body>
     <div class="">
-        <?php include __DIR__ . '/../../components/nav.php' ?>
+        <?php include __DIR__ . '/../../components/navbar.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
