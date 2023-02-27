@@ -55,16 +55,16 @@
                     </div>
                     <div class="bg-white border border-black rounded-lg p-4 mt-8">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Contact</h2>
-                        
+
                     </div>
                     <div class="text-gray-800 text-sm">
-                            <p class="mb-2 text-black">Payment methods</p>
-                            <div class="flex items-center mb-4">
-                                
-                                
-                            </div>
-                            
+                        <p class="mb-2 text-black">Payment methods</p>
+                        <div class="flex items-center mb-4">
+
+
                         </div>
+
+                    </div>
                 </div>
             </div>
         </div>
