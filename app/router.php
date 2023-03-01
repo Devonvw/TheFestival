@@ -29,13 +29,13 @@ class Router
                         $controller->getAllAccounts();
                         break;
                     case "event/all":
-                         //(new Middleware())->adminOnly();
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/eventController.php';
                         $controller = new APIEventController();
                         $controller->getAllEvents();
                         break;
 
-                    //Information pages routes
+                        //Information pages routes
                     case "information-page":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
@@ -106,11 +106,12 @@ class Router
                         break;
                     case "update-event":
                         session_start();
-                            // (new Middleware())->adminOnly();
-                             require_once __DIR__ . '/api/controller/eventController.php';
-                             $controller = new APIEventController();
-                             $controller->updateEvent();
-                             break;
+                        // (new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/eventController.php';
+                        $controller = new APIEventController();
+                        $controller->updateEvent();
+                        break;
+
                     default:
                         http_response_code(404);
                         break;
@@ -125,7 +126,13 @@ class Router
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
                         break;
-
+                    case "change-email":
+                        session_start();
+                        //(new Middleware())->loggedInOnly();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->updateEmailCustomer();
+                        break;
                 }
                 break;
             case "DELETE":
@@ -245,10 +252,24 @@ class Router
                         $controller = new UserController();
                         $controller->signUp();
                         break;
+                        //customer account manager routes
                     case 'customer/manage-account':
                         require __DIR__ . '/controller/accountController.php';
+                        session_start();
                         $controller = new AccountController();
                         $controller->accountManager();
+                        break;
+                    case 'customer/manage-account/change-password':
+                        require __DIR__ . '/controller/accountController.php';
+                        session_start();
+                        $controller = new AccountController();
+                        $controller->changePassword();
+                        break;
+                    case 'customer/manage-account/change-email':
+                        require __DIR__ . '/controller/accountController.php';
+                        session_start();
+                        $controller = new AccountController();
+                        $controller->changeEmail();
                         break;
                     case 'manage-event':
                         require __DIR__ . '/controller/eventController.php';

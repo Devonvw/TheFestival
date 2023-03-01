@@ -93,10 +93,6 @@ class AccountDAO
             throw new Exception("Please enter a last name", 1);
         }
 
-        // Validate type_id
-        if (empty(trim($type_id))) {
-            throw new Exception("Please select an account type", 1);
-        }
 
 
 
@@ -156,54 +152,71 @@ class AccountDAO
 
         $del_stmt->execute();
     }
-    function updateAccountCustomer($first_name, $last_name, $email, $profile_picture, $password)
+    function updateAccountCustomer($first_name, $last_name, $profile_picture)
     {
-        $stmt = $this->DB::$connection->prepare("SELECT * FROM account WHERE id = :id LIMIT 1");
-        $stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
-        $stmt->execute();
-        $account = $stmt->fetchObject("Account");
-
-        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, email = :email, password = :password, profile_picture = :profile_picture where id = :id");
+        $account = $this->getAccount($_SESSION['id']);
+        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, profile_picture = :profile_picture where id = :id");
         $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
-
-        $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
         $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
-        $update_stmt->bindValue(':password', password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT));
         $update_stmt->bindValue(':profile_picture', $profile_picture, PDO::PARAM_LOB);
 
-        $update_stmt->execute();
+        if ($update_stmt->execute()) {
+            //If the email has been updated, send a confirmation email
+            $mail = new PHPMailer(true);
 
-        //If the email has been updated, send a confirmation email
-        $mail = new PHPMailer(true);
+            try {
+                //Server settings
+                $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
+                $mail->isSMTP(); //Send using SMTP
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'tls';
+                $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
+                $mail->SMTPAuth = true; //Enable SMTP authentication
+                $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
+                $mail->Password = 'yfrjxpbwjpxuuvnd'; //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+                $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
-        try {
-            //Server settings
-            $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
-            $mail->isSMTP(); //Send using SMTP
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'tls';
-            $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
-            $mail->SMTPAuth = true; //Enable SMTP authentication
-            $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
-            $mail->Password = 'yfrjxpbwjpxuuvnd'; //SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+                //Recipients
+                $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
+                $mail->addAddress($account->email, $account->first_name); //Add a recipient
 
-            //Recipients
-            $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
-            $mail->addAddress($email, $account->email); //Add a recipient
+                //Content
+                $mail->isHTML(false); //Set email format to plain text
+                $mail->Subject = 'Email address updated';
+                $mail->Body    = "Dear " . $_SESSION['email'] . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
 
-            //Content
-            $mail->isHTML(false); //Set email format to plain text
-            $mail->Subject = 'Email address updated';
-            $mail->Body    = "Dear " . $_SESSION['email'] . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
+                $mail->send();
+                echo 'Message has been sent';
+                $mail->smtpClose();
+            } catch (Exception $e) {
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
+            $_SESSION["first_name"] = $first_name;
+            $_SESSION["last_name"] = $last_name;
+            $_SESSION["profile_picture"] = $profile_picture;
 
-            $mail->send();
-            echo 'Message has been sent';
-            $mail->smtpClose();
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            session_write_close();
+            return true;
+        } else {
+            throw new Exception("Error: Could not update account.");
+        }
+    }
+    function updateEmailCustomer($email, $password)
+    {
+        if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Invalid email address", 1);
+        }
+        $hashed_password = hash('sha256', $password);
+        $account = $this->getAccount($_SESSION['id']);
+        if ($account->password === $hashed_password) {
+            $update_stmt = $this->DB::$connection->prepare("UPDATE account SET email = :email where id = :id");
+            $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
+            $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
+            $update_stmt->execute();
+        } else {
+            throw new Exception("Error: Password was incorrect");
         }
     }
 

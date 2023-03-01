@@ -15,5 +15,14 @@ class AccountController extends Controller
   {
     $this->displayView("");
   }
+  public function changeEmail()
+  {
+    $this->displayView("");
+  }
+  public function changePassword()
+  {
+    $this->displayView("");
+  }
+
 }
 ?>
