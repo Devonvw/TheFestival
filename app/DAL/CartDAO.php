@@ -89,11 +89,6 @@ class cartDAO
         }
         return $tickets;
     }
-
-
-
-
-
     public function getCart($account_id = null, $session_id = null)
     {
         if ($account_id !== null) {

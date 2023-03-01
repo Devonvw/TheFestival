@@ -41,9 +41,13 @@ class AccountService {
         $dao = new AccountDAO();
         $dao->updateAccount($id, $firstName, $lastName, $email);
     }
-    public function updateAccountCustomer($firstName, $lastName, $email, $profile_picture, $password) {
+    public function updateAccountCustomer($firstName, $lastName, $profile_picture) {
         $dao = new AccountDAO();
-        $dao->updateAccountCustomer($firstName, $lastName, $email, $profile_picture, $password);
+        $dao->updateAccountCustomer($firstName, $lastName, $profile_picture);
+    }
+    public function updateEmailCustomer($email, $password){
+        $dao = new AccountDAO();
+        $dao->updateEmailCustomer($email, $password);
     }
 
 }

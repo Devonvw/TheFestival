@@ -28,7 +28,7 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], $body["type_id"]);
+            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], 1);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -91,7 +91,17 @@ class APIAccountController
     {
         try {
             $image = $_FILES ? ($_FILES["profile_picture"]["name"] ? $_FILES["profile_picture"] : false) : false;
-            $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $_POST["email"], $image, $_POST["password"]);
+            $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $image);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function updateEmailCustomer()
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+            $this->accountService->updateEmailCustomer($body["email"], $body["password"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
