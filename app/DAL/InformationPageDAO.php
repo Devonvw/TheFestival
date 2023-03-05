@@ -32,11 +32,25 @@ require_once __DIR__ . '/../DAL/Database.php';
 
           if (!$data) return;
 
-          return new InformationPage($data['id'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], json_decode(stripslashes($data['sections'])));
+          return new InformationPage($data['id'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], base64_encode($data['image']), json_decode($data['sections']));
         }
 
-        function editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections) {
+        function editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections, $image) {
+          //if (!$image) throw new Exception("Please enter an image url", 1);
+          if ($image && $image["size"] == 0) throw new Exception("This image is bigger than 2MB", 1);
+          if ($image && !is_uploaded_file($image['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
+
           $this->DB::$connection->beginTransaction();
+
+          if ($image) {
+            $img_data = file_get_contents($image['tmp_name']);
+            $img_type = $image['type'];
+
+            $stmt = $this->DB::$connection->prepare("UPDATE information_page SET image = :image where id = :id");
+            $stmt->bindValue(':id', 1, PDO::PARAM_INT);
+            $stmt->bindValue(':image', $img_data);
+            $stmt->execute();
+          }
 
           $stmt = $this->DB::$connection->prepare("UPDATE information_page SET title = :title, subtitle = :subtitle, meta_title = :meta_title, meta_description = :meta_description where id = :id");
           $stmt->bindValue(':id', 1, PDO::PARAM_INT);
@@ -44,14 +58,17 @@ require_once __DIR__ . '/../DAL/Database.php';
           $stmt->bindValue(':subtitle', trim(htmlspecialchars($subtitle)), PDO::PARAM_STR);
           $stmt->bindValue(':meta_description', trim(htmlspecialchars($metaDescription)), PDO::PARAM_STR);
           $stmt->bindValue(':meta_title', trim(htmlspecialchars($metaTitle)), PDO::PARAM_STR);
-
           $stmt->execute();
+
+          echo $sections[0]->text;
+          echo $sections[0]->id;
+
 
           foreach ($sections as $value) {
             $sections_stmt = $this->DB::$connection->prepare("UPDATE information_section SET text = :text where id = :id");
-            $sections_stmt->bindValue(':id', $value["id"], PDO::PARAM_INT);
+            $sections_stmt->bindValue(':id', $value->id, PDO::PARAM_INT);
             //Security check ??
-            $sections_stmt->bindValue(':text', $value["text"], PDO::PARAM_STR);
+            $sections_stmt->bindValue(':text', $value->text, PDO::PARAM_STR);
             $sections_stmt->execute();
           }
 
