@@ -25,6 +25,28 @@
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 </header>
+<script>
+window.addEventListener("load", (event) => {
+    getInformationPages();
+});
+
+function getInformationPages() {
+    fetch(`${window.location.origin}/api/information-page/home-page`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data)
+
+        }
+    }).catch((res) => {
+        console.log(res)
+    });
+}
+</script>
 
 <body>
     <div class="">
@@ -35,6 +57,7 @@
                     <h2 class="text-2xl font-semibold">Information pages</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10">
+                    <div id="pages" class="grid grid-cols-12"></div>
                 </div>
             </div>
         </div>
