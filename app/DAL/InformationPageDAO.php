@@ -10,7 +10,7 @@ require_once __DIR__ . '/../DAL/Database.php';
        }
 
        function getInformationPages() {
-          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id) as information_section on information_page.id = information_section.information_page_id group by information_section.information_page_id;");
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.url != '' group by information_page.id;");
 
           $stmt->execute();
           $data = $stmt->fetchAll();
@@ -18,21 +18,33 @@ require_once __DIR__ . '/../DAL/Database.php';
           $pages = [];
 
           foreach ($data as $row) {
-            array_push($pages, new InformationPage($row['id'], $row['title'], $row['subtitle'], $row['meta_title'], $row['meta_description'], json_decode(stripslashes($row['sections']))));
+            array_push($pages, new InformationPage($row['id'], $row['url'], $row['title'], $row['subtitle'], $row['meta_title'], $row['meta_description'], $row['image'] ? base64_encode($row['image']) : null, $row['sections'] == '[null]' ? [] :json_decode($row['sections'])));
           }
 
           return $pages;
         }
 
-        function getHomePage() {
-          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id = 1 group by information_section.information_page_id LIMIT 1;");
+        function getInformationPage($id) {
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id = :id group by information_section.information_page_id LIMIT 1;");
+          $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
           $stmt->execute();
           $data = $stmt->fetch();
 
           if (!$data) return;
 
-          return new InformationPage($data['id'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], base64_encode($data['image']), json_decode($data['sections']));
+          return new InformationPage($data['id'], $data['url'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], $data['image'] ? base64_encode($data['image']) : null, $data['sections'] == '[null]' ? [] :json_decode($data['sections']));
+        }
+
+        function getHomePage() {
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id = 1 group by information_section.information_page_id LIMIT 1;");
+
+          $stmt->execute();
+          $data = $stmt->fetch();
+
+          if (!$data) return;
+
+          return new InformationPage($data['id'], $data['url'], $data['title'], $data['subtitle'], $data['meta_title'], $data['meta_description'], $data['image'] ? base64_encode($data['image']) : null, $data['sections'] == '[null]' ? [] :json_decode($data['sections']));
         }
 
         function editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections, $image) {
