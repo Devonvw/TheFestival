@@ -23,7 +23,7 @@ window.onload = () => {
 </script>
 
 <nav class="py-8 px-4 bg-primary h-screen fixed w-[17rem] flex flex-col">
-    <img src="../../assets/festival_logo.png" class="w-3/4 mb-10 mx-auto" />
+    <img src="/assets/festival_logo.png" class="w-3/4 mb-10 mx-auto" />
     <ul class="flex flex-col gap-y-1 text-white">
         <li><a href="/dashboard" class="flex gap-x-2 rounded hover:bg-teal-800 p-2"><svg
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -77,12 +77,12 @@ window.onload = () => {
             </svg>
         </li>
         <ul class="flex flex-col gap-y-3 text-white pl-12 my-2 hidden text-sm">
-        <a href="/dashboard/restaurant">
+            <a href="/dashboard/restaurant">
 
-        <li>Restaurants</li>
+                <li>Restaurants</li>
 
-        </a>
-            
+            </a>
+
             <li>Sessions</li>
             <li>Reservations</li>
         </ul>

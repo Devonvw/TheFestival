@@ -40,7 +40,13 @@ class Router
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
-                        $controller->getInformationPages();
+                        echo $controller->getInformationPages();
+                        break;
+                    case "information-page/page":
+                        //(new Middleware())->adminOnly();
+                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        $controller = new APIInformationPageController();
+                        echo $controller->getInformationPage($params["id"]);
                         break;
                     case "information-page/home-page":
                         require_once __DIR__ . '/api/controller/informationPageController.php';
@@ -224,7 +230,7 @@ class Router
                         $controller = new DashboardController();
                         $controller->contentInformationPages();
                         break;
-                    case 'dashboard/accounts/information-pages/page':
+                    case 'dashboard/content/information-pages/page':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();
                         $controller = new DashboardController();

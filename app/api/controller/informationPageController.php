@@ -23,6 +23,18 @@ class APIInformationPageController
         }
     }
 
+    public function getInformationPage($id)
+    {
+        try {
+            session_start();
+
+            return json_encode($this->informationPageService->getInformationPage($id));
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
+    }
+
     public function getHomePage()
     {
         try {

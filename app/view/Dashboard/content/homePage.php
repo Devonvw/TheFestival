@@ -29,25 +29,8 @@
     <meta name="theme-color" content="#ffffff" />
 </header>
 <script src="/utils/getImage.js"></script>
+<script src="/utils/handleImageUpload.js"></script>
 <script>
-const handleImageUpload = (blobInfo, progress) => new Promise((resolve, reject) => {
-    const image = blobInfo.blob();
-
-    if (FileReader && image) {
-        var fr = new FileReader();
-        fr.onload = function() {
-            resolve(fr.result);
-        }
-        fr.readAsDataURL(image);
-    }
-
-    // Not supported
-    else {
-        // fallback -- perhaps submit the input to an iframe and temporarily store
-        // them on the server until the user's session ends.
-    }
-})
-
 tinymce.init({
     selector: 'textarea.tiny',
     toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image',
@@ -146,6 +129,9 @@ const handleImage = (e) => {
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10 pb-10">
                     <form onsubmit="editHomePage" id="editForm" class="space-y-4 md:space-y-6">
+                        <div class="w-full flex items-center justify-end"><button type="submit"
+                                class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Save</button>
+                        </div>
                         <div>
                             <label for="metaTitle" class="block mb-2 text-sm font-medium text-gray-900">
                                 Meta title</label>
