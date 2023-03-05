@@ -180,6 +180,14 @@ class Router
         switch ($requestMethod) {
             case 'GET':
                 switch ($uri) {
+                    case '':
+                        require __DIR__ . '/controller/homeController.php';
+                        session_start();
+                        $controller = new HomeController();
+                        $controller->index();
+                        break;
+
+                    //Dashboard pages
                     case 'dashboard':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();
