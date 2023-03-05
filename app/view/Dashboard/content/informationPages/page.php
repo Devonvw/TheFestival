@@ -47,7 +47,9 @@ function getInformationPage() {
             const data = await res.json();
             console.log(data)
 
-            document.getElementById('headerTitle').innerHTML = data?.title;
+            document.getElementById('headerTitle').innerHTML = data?.title ? data?.title :
+                `Page ${data?.id}`;
+            document.getElementById('url').value = data?.url;
             document.getElementById('metaTitle').value = data?.meta_title;
             document.getElementById('metaDesc').value = data?.meta_description;
             document.getElementById('title').value = data?.title;
@@ -100,6 +102,13 @@ function getInformationPage() {
                     <form id="editForm" class="space-y-4 md:space-y-6">
                         <div class="w-full flex items-center justify-end"><button type="submit"
                                 class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Save</button>
+                        </div>
+                        <div>
+                            <label for="url" class="block mb-2 text-sm font-medium text-gray-900">
+                                Url</label>
+                            <input maxlength="255" type="text" name="url" id="url"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Url..." required="">
                         </div>
                         <div>
                             <label for="metaTitle" class="block mb-2 text-sm font-medium text-gray-900">

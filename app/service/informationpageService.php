@@ -22,9 +22,9 @@ class InformationPageService {
         $dao->editHomePage($title, $subtitle, $metaDescription, $metaTitle, $sections, $image);
     }
 
-    public function addInformationPage($url, $title, $description) {
+    public function addInformationPage() {
         $dao = new InformationPageDAO();
-        $dao->addInformationPage($url, $title, $description);
+        $dao->addInformationPage();
     }
 
     public function deleteInformationPage($id) {

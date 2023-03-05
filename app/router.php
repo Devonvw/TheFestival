@@ -61,7 +61,7 @@ class Router
             case 'POST':
                 switch ($uri) {
                     case "information-page":
-                        (new Middleware())->adminOnly();
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationPage();
