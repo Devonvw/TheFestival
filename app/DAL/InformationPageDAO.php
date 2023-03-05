@@ -88,6 +88,8 @@ require_once __DIR__ . '/../DAL/Database.php';
         }
 
         function editInformationPage($id, $url, $title, $subtitle, $metaDescription, $metaTitle, $sections) {
+            //if (!preg_match('/^[-a-zA-Z]+$/D', $url)) throw new Exception("Url can only contain letters and dashes (-)", 1);
+
           $this->DB::$connection->beginTransaction();
 
           $stmt = $this->DB::$connection->prepare("UPDATE information_page SET url = :url, title = :title, subtitle = :subtitle, meta_title = :meta_title, meta_description = :meta_description where id = :id");
@@ -103,15 +105,12 @@ require_once __DIR__ . '/../DAL/Database.php';
           $this->DB::$connection->commit();
         }
 
-        function addInformationPage($url, $title, $description) {
+        function addInformationPage() {
             //Check if title only contains letters
-            if (!preg_match('/^[-a-zA-Z]+$/D', $url)) throw new Exception("Url can only contain letters and dashes (-)", 1);
+            //if (!preg_match('/^[-a-zA-Z]+$/D', $url)) throw new Exception("Url can only contain letters and dashes (-)", 1);
 
-            $stmt = $this->DB::$connection->prepare("INSERT INTO information_page (title, description) VALUES (:title, :description);");
+            $stmt = $this->DB::$connection->prepare("INSERT INTO information_page (url, meta_title, meta_description, title, subtitle) VALUES ('', '', '', '', '');");
   
-            $stmt->bindParam(':title', trim(htmlspecialchars($title)));            
-            $stmt->bindParam(':description', trim(htmlspecialchars($description)));  
-             
             $stmt->execute();
           }
 
