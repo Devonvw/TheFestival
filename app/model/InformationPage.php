@@ -10,7 +10,7 @@ class InformationPage {
   public $sections;
 
   function __construct($id = null, $url = null, $title = null, $subtitle = null, $meta_title = null, $meta_description = null, $image = null, $sections = null) {
-    if(!is_null($id) && !is_null($title)) {
+    if(!is_null($id)) {
       $this->id = $id;
       $this->url = $url;
       $this->title = $title;

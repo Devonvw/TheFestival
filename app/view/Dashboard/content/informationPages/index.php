@@ -85,7 +85,7 @@ function addInformationPage() {
                     <h2 class="text-2xl font-semibold">Information pages</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10">
-                    <div class="w-full flex items-center justify-end"><button
+                    <div class="w-full flex items-center justify-end"><button onclick="addInformationPage()"
                             class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Add
                             page</button>
                     </div>

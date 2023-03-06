@@ -60,6 +60,7 @@ class Router
                 break;
             case 'POST':
                 switch ($uri) {
+                    //Information page routes
                     case "information-page":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
@@ -72,8 +73,8 @@ class Router
                         $controller = new APIInformationPageController();
                         $controller->editHomePage();
                         break;
-                    case "information-section":
-                        (new Middleware())->adminOnly();
+                    case "information-page/information-section":
+                        //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationSection($params["information_page_id"]);

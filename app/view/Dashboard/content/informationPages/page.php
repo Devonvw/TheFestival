@@ -30,6 +30,23 @@
 <script src="/utils/getImage.js"></script>
 <script src="/utils/handleImageUpload.js"></script>
 <script>
+tinymce.init({
+    selector: 'textarea.tiny',
+    toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image',
+    plugins: 'image',
+    image_class_list: [{
+            title: 'Left',
+            value: ''
+        },
+        {
+            title: 'Right',
+            value: 'md:float-right'
+        }
+    ],
+    images_upload_handler: handleImageUpload
+});
+</script>
+<script>
 window.addEventListener("load", (event) => {
     getInformationPage();
 });
@@ -54,15 +71,18 @@ function getInformationPage() {
             document.getElementById('metaDesc').value = data?.meta_description;
             document.getElementById('title').value = data?.title;
             document.getElementById('subtitle').value = data?.subtitle;
+            document.getElementById('sections').setAttribute('name', data?.sections?.length);
             if (data?.image) document.getElementById('image').src = getImage(data?.image);
 
             var sectionsHTML = "";
+
+            tinymce.remove("textarea.tiny");
 
             data?.sections?.forEach((section, index) => sectionsHTML +=
                 `<div>
                             <label for="${section?.id}" class="block mb-2 text-sm font-medium text-gray-900">
                             Section ${index + 1}</label>
-                            <textarea id="${section?.id}" name="${section?.id}" class="tiny"></textarea>
+                            <textarea id="section-${index}" name="${section?.id}" class="tiny"></textarea>
                         </div>`
             )
 
@@ -84,9 +104,55 @@ function getInformationPage() {
                 images_upload_handler: handleImageUpload
             });
         }
+    }).then(() => {
+
+
     }).catch((res) => {
         console.log(res)
     });
+}
+
+const editInformationPage = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("url", document.getElementById('url').value);
+    formData.append("meta_title", document.getElementById('metaTitle').value);
+    formData.append("meta_description", document.getElementById('metaDesc').value);
+    formData.append("title", document.getElementById('title').value);
+    formData.append("subtitle", document.getElementById('subtitle').value);
+    formData.append("image", document.getElementById('imageInput').files ? document.getElementById('imageInput')
+        .files[0] : null);
+    formData.append("sections", JSON.stringify([...Array(document.getElementById('sections').getAttribute('name'))
+        .keys()
+    ].map((value) => ({
+        id: document.getElementById(`section-${value}`).getAttribute('name'),
+        text: tinymce.get(`section-${value}`).getContent()
+    }))));
+
+    fetch(`${window.location.origin}/api/information-page/edit-page`, {
+        method: "POST",
+        body: formData
+    }).then(async (res) => {
+        if (!res.ok) {
+            document.getElementById('error').innerHTML = (await res.json())?.msg;
+            document.getElementById('errorWrapper').classList.remove('hidden');
+        }
+    }).catch((res) => {});
+}
+
+function addInformationSection() {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/information-page/information-section?information_page_id=${params.get("id")}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({})
+    }).then(async (res) => {
+        getInformationPage();
+    }).catch((res) => {});
 }
 </script>
 
@@ -166,7 +232,8 @@ function getInformationPage() {
                                     </label>
                                 </div>
                             </div>
-                            <div class="w-full flex items-center justify-end mt-20"><button
+                            <div class="w-full flex items-center justify-end mt-20"><button type="button"
+                                    onclick="addInformationSection()"
                                     class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Add
                                     section</button>
                             </div>
