@@ -10,7 +10,8 @@ require_once __DIR__ . '/../DAL/Database.php';
        }
 
        function getInformationPages() {
-          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.url != '' group by information_page.id;");
+        //Maybe better check for home page
+          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id != 1 group by information_page.id;");
 
           $stmt->execute();
           $data = $stmt->fetchAll();
