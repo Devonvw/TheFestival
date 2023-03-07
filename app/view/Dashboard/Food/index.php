@@ -19,10 +19,10 @@
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 </header>
-<?php include __DIR__ . '/../../../components/navbar.php' ?>
+<?php include __DIR__ . '/../../../components/nav.php' ?>
 
 <body>
-    <div class=" flex flex-col w-screen ">
+    <div class=" flex flex-col w-screen -mt-10">
     <img src="../assets/walrus-restaurant.png" class="h-15 w-screen bg-gradient-to-b from-white to-black" />
     <div class="flex flex-col items-center">
         <h2 class="text-7xl text-cyan-900">Yummie!</h2>

@@ -1,4 +1,4 @@
-<nav class="bg-[url('../assets/header-image.png')] bg-no-repeat w-screen" style="background-size:100%;"">
+<nav class="bg-[url('../assets/header-image.png')] bg-no-repeat w-screen" style="background-size:100%;">
     <div class=" flex items-center mx-auto justify-between px-20 py-5">
     <div class="flex">
         <a href="#" class="flex items-center">
