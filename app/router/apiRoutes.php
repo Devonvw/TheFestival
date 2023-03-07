@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/middleware/middleware.php';
+require_once __DIR__ . '/../middleware/middleware.php';
 
 function handleApiRoutes($uri, $params, $requestMethod)
     {
@@ -11,13 +11,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     case "account/all":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
                         break;
                     case "event/all":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/eventController.php';
+                        require_once __DIR__ . '/../api/controller/eventController.php';
                         $controller = new APIEventController();
                         $controller->getAllEvents();
                         break;
@@ -26,18 +26,18 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     case "information-page":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         echo $controller->getInformationPages();
                         break;
                     case "information-page/page":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         echo $controller->getInformationPage($params["id"]);
                         break;
                     case "information-page/home-page":
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         echo $controller->getHomePage();
                         break;
@@ -54,13 +54,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
 /*----------------------POST account routes-----------------------------*/
 
                     case "user/sign-up":
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->createUser();
                         break;
                     case "user/login":
                         session_start();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->login();
                         break;
@@ -68,26 +68,26 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     case "update-account":
                         session_start();
                         (new Middleware())->loggedInOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->updateAccountCustomer();
                         break;
                     case "user/reset/password":
                         session_start();
-                        require_once __DIR__ . '/api/controller/PasswordResetcontroller.php';
+                        require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
                         $controller = new APIPasswordResetController();
                         $controller->resetPassword();
                         break;
                     case "user/reset/sendResetLink":
                         session_start();
-                        require_once __DIR__ . '/api/controller/PasswordResetcontroller.php';
+                        require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
                         $controller = new APIPasswordResetController();
                         $controller->sendConfirmationMail();
                         break;
                     case "update-event":
                         session_start();
                         // (new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/eventController.php';
+                        require_once __DIR__ . '/../api/controller/eventController.php';
                         $controller = new APIEventController();
                         $controller->updateEvent();
                         break;
@@ -97,27 +97,27 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     //Edit information page, only for admin
                     case "information-page":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationPage();
                         break;
                     //Edit home page, only for admin
                     case "information-page/edit-home-page":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->editHomePage();
                         break;
                     //Edit information page, only for admin
                     case "information-page/edit-page":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->editInformationPage($params["id"]);
                         break;
                     case "information-page/information-section":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->addInformationSection($params["information_page_id"]);
                         break;
@@ -135,14 +135,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     case "account":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->updateAccount($params["id"]);
                         break;
                     case "change-email":
                         session_start();
                         //(new Middleware())->loggedInOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->updateEmailCustomer();
                         break;
@@ -160,14 +160,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     case "account":
                         //(new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/accountController.php';
+                        require_once __DIR__ . '/../api/controller/accountController.php';
                         $controller = new APIAccountController();
                         $controller->deleteAccount($params["id"]);
                         break;
 
                     case "event":
                         // (new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/eventController.php';
+                        require_once __DIR__ . '/../api/controller/eventController.php';
                         $controller = new APIEventController();
                         $controller->deleteEvent($params["id"]);
                         break;
@@ -176,13 +176,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     case "information-page":
                         (new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->deleteInformationPage($params["id"]);
                         break;
                     case "information-section":
                         (new Middleware())->adminOnly();
-                        require_once __DIR__ . '/api/controller/informationPageController.php';
+                        require_once __DIR__ . '/../api/controller/informationPageController.php';
                         $controller = new APIInformationPageController();
                         $controller->deleteInformationSection($params["id"]);
                         break;
