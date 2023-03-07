@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
 <script>
 window.onload = () => {
     var acc = document.getElementsByClassName("accordion");

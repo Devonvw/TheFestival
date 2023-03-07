@@ -88,7 +88,7 @@ function getInformationPage() {
 
             document.getElementById("sections").innerHTML = sectionsHTML;
 
-            tinymce.init({
+            await tinymce.init({
                 selector: 'textarea.tiny',
                 toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | image',
                 plugins: 'image',
@@ -103,10 +103,13 @@ function getInformationPage() {
                 ],
                 images_upload_handler: handleImageUpload
             });
+
+            data?.sections?.forEach((section, index) => {
+                tinymce.get(`section-${index}`).setContent(section
+                    ?.text || "")
+            })
+
         }
-    }).then(() => {
-
-
     }).catch((res) => {
         console.log(res)
     });
@@ -114,6 +117,8 @@ function getInformationPage() {
 
 const editInformationPage = (e) => {
     e.preventDefault();
+
+    const params = new URLSearchParams(window.location.search)
 
     const formData = new FormData();
     formData.append("url", document.getElementById('url').value);
@@ -130,13 +135,12 @@ const editInformationPage = (e) => {
         text: tinymce.get(`section-${value}`).getContent()
     }))));
 
-    fetch(`${window.location.origin}/api/information-page/edit-page`, {
+    fetch(`${window.location.origin}/api/information-page/edit-page?id=${params.get("id")}`, {
         method: "POST",
         body: formData
     }).then(async (res) => {
         if (!res.ok) {
-            document.getElementById('error').innerHTML = (await res.json())?.msg;
-            document.getElementById('errorWrapper').classList.remove('hidden');
+            ToastError((await res.json())?.msg);
         }
     }).catch((res) => {});
 }
@@ -165,7 +169,7 @@ function addInformationSection() {
                     <h2 id="headerTitle" class="text-2xl font-semibold"></h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10">
-                    <form id="editForm" class="space-y-4 md:space-y-6">
+                    <form onsubmit="editInformationPage(event)" id="editForm" class="space-y-4 md:space-y-6">
                         <div class="w-full flex items-center justify-end"><button type="submit"
                                 class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Save</button>
                         </div>
@@ -174,35 +178,35 @@ function addInformationSection() {
                                 Url</label>
                             <input maxlength="255" type="text" name="url" id="url"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Url..." required="">
+                                placeholder="Url...">
                         </div>
                         <div>
                             <label for="metaTitle" class="block mb-2 text-sm font-medium text-gray-900">
                                 Meta title</label>
                             <input maxlength="255" type="text" name="metaTitle" id="metaTitle"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Meta title..." required="">
+                                placeholder="Meta title...">
                         </div>
                         <div>
                             <label for="metaDesc" class="block mb-2 text-sm font-medium text-gray-900">
                                 Meta description</label>
                             <input maxlength="255" type="text" name="metaDesc" id="metaDesc"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Meta description..." required="">
+                                placeholder="Meta description...">
                         </div>
                         <div>
                             <label for="title" class="block mb-2 text-sm font-medium text-gray-900">
                                 Title</label>
                             <input maxlength="255" type="text" name="title" id="title"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Title..." required="">
+                                placeholder="Title...">
                         </div>
                         <div>
                             <label for="subtitle" class="block mb-2 text-sm font-medium text-gray-900">
                                 Subtitle</label>
                             <input maxlength="255" type="text" name="subtitle" id="subtitle"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Subtitle..." required="">
+                                placeholder="Subtitle...">
                         </div>
                         <div>
                             <label for="image" class="block mb-2 text-sm font-medium text-gray-900">
