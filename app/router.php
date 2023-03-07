@@ -28,6 +28,12 @@ class Router
                         $controller = new APIAccountController();
                         $controller->getAllAccounts();
                         break;
+                    case "account/user":
+                        session_start();
+                        require_once __DIR__ . '/api/controller/accountController.php';
+                        $controller = new APIAccountController();
+                        $controller->getAccount($_SESSION["id"]);
+                        break;
                     case "event/all":
                         //(new Middleware())->adminOnly();
                         require_once __DIR__ . '/api/controller/eventController.php';
@@ -47,6 +53,7 @@ class Router
                         $controller = new APIInformationPageController();
                         echo $controller->getHomePage();
                         break;
+
                     default:
                         http_response_code(404);
                         break;
@@ -187,7 +194,7 @@ class Router
                         $controller->index();
                         break;
 
-                    //Dashboard pages
+                        //Dashboard pages
                     case 'dashboard':
                         require __DIR__ . '/controller/dashboardController.php';
                         session_start();

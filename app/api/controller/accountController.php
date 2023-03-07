@@ -59,12 +59,16 @@ class APIAccountController
     public function getAccount($id)
     {
         try {
-            echo json_encode($this->accountService->getAccount($id));
+            header('Content-Type: application/json');
+            return $this->accountService->getAccount($id);
         } catch (Exception $ex) {
             http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+            if ($ex->getCode() != 0) return json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
+
+
 
     public function deleteAccount($id)
     {
@@ -101,7 +105,7 @@ class APIAccountController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->accountService->updateEmailCustomer($body["email"], $body["password"]);
+            $this->accountService->updateEmailCustomer($body["new_email"], $body["new_email_confirmation"], $body["password"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

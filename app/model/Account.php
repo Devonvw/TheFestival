@@ -23,7 +23,7 @@ class Account {
       $this->password = $password;
       $this->active = $active;
       $this->created_at = $created_at;
-      $this->profile_picture = $profile_picture;
+      $this->profile_picture = base64_encode($profile_picture);
     }
   }
 
