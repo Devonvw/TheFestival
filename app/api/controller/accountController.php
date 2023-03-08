@@ -61,7 +61,7 @@ class APIAccountController
         try {
             header('Content-Type: application/json');
             return $this->accountService->getAccount($id);
-        } catch (Exception $ex) {
+        } catch (Exception $ex) {   
             http_response_code(500);
             if ($ex->getCode() != 0) return json_encode(['msg' => $ex->getMessage()]);
         }

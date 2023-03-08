@@ -16,6 +16,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
+    <link rel="stylesheet" href="../../../styles/globals.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -83,16 +84,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </svg>
                     <p id="error"></p>
                 </div>
-                <div class="bg-green-200 p-2 w-full rounded-lg flex text-green-700 items-center text-sm hidden" id="success">
-                    <svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-6a1 1 0 112 0v2a1 1 0 11-2 0v-2zm1-9a1 1 0 00-1 1v5a1 1 0 102 0V4a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <p id="successMessage"></p>
-                </div>
+                
 
 
                 <div class="text-right">
-                    <button id="update_account_button" type="submit" class="bg-teal-500 text-white py-2 px-4 rounded font-bold">Update
+                    <button id="update_account_button" type="submit" class="bg-primary text-white py-2 px-4 rounded font-bold">Update
                         Account</button>
                 </div>
             </section>
@@ -121,9 +117,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     body: formData
                 }).then(async (res) => {
                     if (res.ok) {
-                        document.getElementById('errorWrapper').classList.add('hidden');
-                        document.getElementById('success').innerHTML = "Account updated";
-                        document.getElementById('success').classList.remove('hidden');
+                        
 
                     } else {
                         document.getElementById('error').innerHTML = (await res.json())?.msg;
@@ -174,9 +168,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         }).catch((res) => {
             console.log(res)
         });
-
-
-
 
         const getImage = (file) => {
             if (typeof file == "string") return `data:image/jpg;base64, ${file}`;
