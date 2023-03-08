@@ -158,6 +158,11 @@ function addInformationSection() {
         getInformationPage();
     }).catch((res) => {});
 }
+
+const handleImage = (e) => {
+    console.log(e?.files[0])
+    document.getElementById('image').src = getImage(e?.files[0]);
+}
 </script>
 
 <body>

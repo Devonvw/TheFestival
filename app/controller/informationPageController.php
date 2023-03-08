@@ -14,7 +14,7 @@ class InformationPageController extends Controller {
     public function index($uri) {
         if (!$this->informationPageService->checkIfInformationPage($uri)) return http_response_code(404);
         
-        require __DIR__ . "/../view/Dashboard/index.php";
+        require __DIR__ . "/../view/Content/index.php";
     }
 }
 ?>

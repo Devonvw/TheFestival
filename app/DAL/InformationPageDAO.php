@@ -25,12 +25,22 @@ require_once __DIR__ . '/../DAL/Database.php';
           return $pages;
         }
 
-        function getInformationPage($id) {
-          $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id = :id group by information_section.information_page_id LIMIT 1;");
-          $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        function getInformationPage($id, $url) {
+          $data = null;
 
-          $stmt->execute();
-          $data = $stmt->fetch();
+          if ($id) {
+            $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.id = :id group by information_section.information_page_id LIMIT 1;");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+  
+            $stmt->execute();
+            $data = $stmt->fetch();
+          } else if ($url) {
+            $stmt = $this->DB::$connection->prepare("SELECT information_page.*, JSON_ARRAYAGG(information_section.json) as sections from information_page left join (select id, information_page_id, JSON_MERGE(JSON_OBJECTAGG('id', information_section.id), JSON_OBJECTAGG('text', information_section.text)) as json from information_section group by information_section.id order by information_section.id) as information_section on information_page.id = information_section.information_page_id where information_page.url = :url group by information_section.information_page_id LIMIT 1;");
+            $stmt->bindValue(':url', $url, PDO::PARAM_STR);
+  
+            $stmt->execute();
+            $data = $stmt->fetch();
+          }
 
           if (!$data) return;
 
