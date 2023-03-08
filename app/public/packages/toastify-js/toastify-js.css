@@ -85,13 +85,13 @@
 }
 
 .error {
-  background: rgb(239 68 68 / 0.2) !important;
+  background: rgb(254, 202, 202) !important;
   color: rgb(239 68 68) !important;
   border: 1px solid rgb(239 68 68) !important;
 }
 
 .succes {
-  background: rgb(34 197 94 / 0.2) !important;
+  background: rgb(187, 247, 208) !important;
   color: rgb(34 197 94) !important;
   border: 1px solid rgb(34 197 94) !important;
 }
