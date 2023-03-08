@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../router.php';
+require __DIR__ . '/../router/router.php';
 
 $uri = trim(strtok($_SERVER["REQUEST_URI"], '?'), '/');
 parse_str($_SERVER['QUERY_STRING'], $params);

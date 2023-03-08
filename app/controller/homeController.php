@@ -15,5 +15,14 @@ class HomeController extends Controller {
     public function index() {
         $this->displayView("");
     }
+    public function food() {
+        require __DIR__ . "/../view/Home/Events/Food/index.php";
+    }
+    public function culture() {
+        require __DIR__ . "/../view/Home/Events/Culture/index.php";
+    }
+    public function festival() {
+        require __DIR__ . "/../view/Home/Events/Festival/index.php";
+    }
 }
 ?>
