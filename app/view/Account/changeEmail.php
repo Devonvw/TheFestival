@@ -3,7 +3,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: /");
     exit;
 }
-
+echo $_SESSION['test'];
+echo '</br>';
+echo $_SESSION['test2'];
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +43,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     <input id="new_email" name="new_email" type="email" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="mb-4">
-                    <label for="new_email" class="block text-gray-700 font-bold mb-2">Re-type Email</label>
+                    <label for="new_email_confirmation" class="block text-gray-700 font-bold mb-2">Re-type Email</label>
                     <input id="new_email_confirmation" name="new_email_confirmation" type="email" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="mb-8">
@@ -60,7 +62,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     <p id="successMessage"></p>
                 </div>
                 <div class="text-right">
-                    <button id="change_email_button" type="button" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
+                    <button onclick="updateEmail()" id="change_email_button" type="button" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
                 </div>
             </div>
         </section>
@@ -69,41 +71,27 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 </body>
 <script>
-    const submitButton = document.querySelector('#change_email_button');
+    const submitButton = document.getElementById('change_email_button');
     const newEmail = document.getElementById('new_email');
-    const newEmailConfirmation = document.querySelector('#new_email_confirmation');
+    const newEmailConfirmation = document.getElementById('new_email_confirmation');
     const password = document.getElementById('password');
 
-    submitButton.addEventListener('click', async () => {
-        if (!newEmail.value.trim() || !newEmailConfirmation.value.trim() || !password.value.trim()) {
-            document.getElementById('error').innerHTML = "Please fill in all fields";
-            document.getElementById('errorWrapper').classList.remove('hidden');
-            return;
-        }
+    function updateEmail() {
+        fetch(`${window.location.origin}/api/change-email`, {
+            method: "PUT",
+            body: JSON.stringify({
+                new_email: document.getElementById('new_email').value,
+                new_email_confirmation: document.getElementById('new_email_confirmation').value,
+                password: document.getElementById('password').value
+            })
+        }).then(async (res) => {
+            if (res.ok){
 
-        if (newEmail.value !== newEmailConfirmation.value) {
-            document.getElementById('error').innerHTML = "The emails do not match";
+            }
+            else{
+            document.getElementById('error').innerHTML = (await res.json())?.msg;
             document.getElementById('errorWrapper').classList.remove('hidden');
-            return;
-        }
-    
-    fetch(`${window.location.origin}/api/change-email`, {
-        method: "PUT",
-        body: JSON.stringify({
-            email: document.getElementById('new_email').value,
-            password: document.getElementById('password').value
-        })
-    }).then(async (res) => {
-        if (res.ok){
-        document.getElementById('errorWrapper').classList.add('hidden');
-        document.getElementById('success').innerHTML = "e-mail changed successfully";
-        document.getElementById('success').classList.remove('hidden');
-        newEmail.value = '';
-        newEmailConfirmation.value = '';
-        password.value = '';
-        }
-        document.getElementById('error').innerHTML = (response.json())?.msg;
-        document.getElementById('errorWrapper').classList.remove('hidden');
-    }).catch((res) => {});
-});
+            }
+        }).catch((res) => {});
+    }
 </script>

@@ -50,11 +50,17 @@ class AccountDAO
             $_SESSION["first_name"] = $account->first_name;
             $_SESSION["last_name"] = $account->last_name;
             $_SESSION["type_id"] = $account->type_id;
-            $_SESSION["profile_picture"] = $account->profile_picture;
+
+
+            $image_data = file_get_contents($_FILES["profile_picture"]["name"]);
+            $encoded_image = base64_encode($image_data);
+            $_SESSION["profile_picture"] = $encoded_image;
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);
     }
+
+
 
     function createUser($email, $password, $first_name, $last_name, $type_id)
     {
@@ -154,14 +160,21 @@ class AccountDAO
     }
     function updateAccountCustomer($first_name, $last_name, $profile_picture)
     {
+        
+        if ($profile_picture && $profile_picture["size"] == 0) throw new Exception("This image is bigger than 2MB", 1);
+        if ($profile_picture && !is_uploaded_file($profile_picture['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
+
+        $this->DB::$connection->beginTransaction();
+        $img_data = file_get_contents($profile_picture['tmp_name']);
         $account = $this->getAccount($_SESSION['id']);
         $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, profile_picture = :profile_picture where id = :id");
         $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
         $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
-        $update_stmt->bindValue(':profile_picture', $profile_picture, PDO::PARAM_LOB);
+        $update_stmt->bindValue(':profile_picture', $img_data);
 
         if ($update_stmt->execute()) {
+
             //If the email has been updated, send a confirmation email
             $mail = new PHPMailer(true);
 
@@ -195,28 +208,36 @@ class AccountDAO
             }
             $_SESSION["first_name"] = $first_name;
             $_SESSION["last_name"] = $last_name;
-            $_SESSION["profile_picture"] = $profile_picture;
 
             session_write_close();
-            return true;
+            return $profile_picture;
         } else {
             throw new Exception("Error: Could not update account.");
         }
     }
-    function updateEmailCustomer($email, $password)
+    function updateEmailCustomer($email, $new_email, $password)
     {
-        if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+        $hashed_password = password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT);
+        $account = $this->getAccount($_SESSION['id']);
+        $_SESSION['test'] = $account->password;
+        $_SESSION['test2'] = $hashed_password;
+        if (empty(trim($email)) || empty(trim($password)) || empty(trim($new_email))) {
+            throw new Exception("Not all fields are filled in", 1);
+        }
+        else if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Invalid email address", 1);
         }
-        $hashed_password = hash('sha256', $password);
-        $account = $this->getAccount($_SESSION['id']);
+        else if (trim($email) !== trim($new_email)) {
+            throw new Exception("Emails do not match", 1);
+        }
         if ($account->password === $hashed_password) {
             $update_stmt = $this->DB::$connection->prepare("UPDATE account SET email = :email where id = :id");
             $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
             $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
             $update_stmt->execute();
         } else {
-            throw new Exception("Error: Password was incorrect");
+            var_dump("Password was incorrect");
+            throw new Exception("Password was incorrect");
         }
     }
 
@@ -225,15 +246,24 @@ class AccountDAO
         $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id LIMIT 1");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchObject("Account");
+        $account = $stmt->fetchObject("Account");
+
+        $profile_picture_stmt = $this->DB::$connection->prepare("SELECT profile_picture FROM account WHERE id = :id");
+        $profile_picture_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $profile_picture_stmt->execute();
+        $profile_picture = base64_encode($profile_picture_stmt->fetch(PDO::FETCH_ASSOC)['profile_picture']);
+        $account->profile_picture = $profile_picture;
+
+        return $account;
     }
+
 
     function getUserAccount($id)
     {
         $stmt = $this->DB::$connection->prepare("SELECT * from account where id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        $account = $stmt->fetchAll(PDO::FETCH_CLASS, 'Account');
+        $account = $stmt->fetchObject("Account");
         return $account;
     }
 }
