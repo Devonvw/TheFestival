@@ -144,8 +144,8 @@ require_once __DIR__ . '/../DAL/Database.php';
 
           function deleteInformationPage($id) {
             //Delete all rows associated with this page
-            $del_stmt = $this->DB::$connection->prepare("DELETE FROM information_section where information_section_id = :information_section_id");
-            $del_stmt->bindValue(':information_section_id', $id, PDO::PARAM_INT);
+            $del_stmt = $this->DB::$connection->prepare("DELETE FROM information_section where information_page_id = :information_page_id");
+            $del_stmt->bindValue(':information_page_id', $id, PDO::PARAM_INT);
             $del_stmt->execute();
 
             $del_stmt = $this->DB::$connection->prepare("DELETE FROM information_page where id = :id");

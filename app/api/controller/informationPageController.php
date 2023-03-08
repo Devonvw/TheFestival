@@ -75,6 +75,7 @@ class APIInformationPageController
     {
         try {
             $this->informationPageService->addInformationPage();
+            echo json_encode([ 'msg' => "New page succesfully added." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -85,6 +86,7 @@ class APIInformationPageController
     {
         try {
             $this->informationPageService->deleteInformationPage($id);
+            echo json_encode([ 'msg' => "Page succesfully deleted." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -95,6 +97,7 @@ class APIInformationPageController
     {
         try {
             $this->informationPageService->addInformationSection($informationPageId);
+            echo json_encode([ 'msg' => "Section succesfully added." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -105,6 +108,7 @@ class APIInformationPageController
     {
         try {
             $this->informationPageService->deleteInformationSection($id);
+            echo json_encode([ 'msg' => "Section succesfully deleted." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
