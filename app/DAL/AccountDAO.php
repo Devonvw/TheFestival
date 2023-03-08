@@ -160,18 +160,25 @@ class AccountDAO
     }
     function updateAccountCustomer($first_name, $last_name, $profile_picture)
     {
-        
+
         if ($profile_picture && $profile_picture["size"] == 0) throw new Exception("This image is bigger than 2MB", 1);
         if ($profile_picture && !is_uploaded_file($profile_picture['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
 
-        $this->DB::$connection->beginTransaction();
-        $img_data = file_get_contents($profile_picture['tmp_name']);
-        $account = $this->getAccount($_SESSION['id']);
-        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name, profile_picture = :profile_picture where id = :id");
-        $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
+        if ($profile_picture) {
+            $img_data = file_get_contents($profile_picture['tmp_name']);
+            $img_type = $profile_picture['type'];
+
+            $stmt = $this->DB::$connection->prepare("UPDATE account SET profile_picture = :profile_picture where id = :id");
+            $stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
+            $stmt->bindValue(':profile_picture', $img_data);
+            $stmt->execute();
+        }
+        $account = $this->getAccount(5);
+        $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name where id = :id");
+        $update_stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
         $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
-        $update_stmt->bindValue(':profile_picture', $img_data);
+        $update_stmt->execute();
 
         if ($update_stmt->execute()) {
 
@@ -205,29 +212,26 @@ class AccountDAO
                 $mail->smtpClose();
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
-            $_SESSION["first_name"] = $first_name;
-            $_SESSION["last_name"] = $last_name;
-
-            session_write_close();
-            return $profile_picture;
+            } 
+            
         } else {
             throw new Exception("Error: Could not update account.");
         }
+        
+        $_SESSION["first_name"] = $first_name;
+        $_SESSION["last_name"] = $last_name;
+
+        session_write_close();
     }
     function updateEmailCustomer($email, $new_email, $password)
     {
         $hashed_password = password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT);
         $account = $this->getAccount($_SESSION['id']);
-        $_SESSION['test'] = $account->password;
-        $_SESSION['test2'] = $hashed_password;
         if (empty(trim($email)) || empty(trim($password)) || empty(trim($new_email))) {
             throw new Exception("Not all fields are filled in", 1);
-        }
-        else if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+        } else if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Invalid email address", 1);
-        }
-        else if (trim($email) !== trim($new_email)) {
+        } else if (trim($email) !== trim($new_email)) {
             throw new Exception("Emails do not match", 1);
         }
         if ($account->password === $hashed_password) {
@@ -236,7 +240,6 @@ class AccountDAO
             $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
             $update_stmt->execute();
         } else {
-            var_dump("Password was incorrect");
             throw new Exception("Password was incorrect");
         }
     }

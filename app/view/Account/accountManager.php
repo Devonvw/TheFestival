@@ -1,4 +1,5 @@
 <?php
+
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: /");
     exit;
@@ -6,6 +7,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/getImage.js"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
+<script src="/utils/handleImageUpload.js"></script>
 <header>
 
     <title>Account - Social</title>
@@ -79,14 +85,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <i class="fas fa-pencil-alt"></i>
                     </a>
                 </div>
-                <div class="bg-red-200 p-2 w-full rounded-lg flex text-red-700 items-center text-sm hidden" id="errorWrapper"><svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                    </svg>
-                    <p id="error"></p>
-                </div>
-                
-
-
                 <div class="text-right">
                     <button id="update_account_button" type="submit" class="bg-primary text-white py-2 px-4 rounded font-bold">Update
                         Account</button>
@@ -111,17 +109,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 formData.append('last_name', lastName);
                 formData.append('profile_picture', profilePicture);
 
-
                 fetch(`${window.location.origin}/api/update-account`, {
                     method: "POST",
                     body: formData
                 }).then(async (res) => {
                     if (res.ok) {
-                        
+                        ToastSucces("Account updated");
 
                     } else {
-                        document.getElementById('error').innerHTML = (await res.json())?.msg;
-                        document.getElementById('errorWrapper').classList.remove('hidden');
+                        ToastError((await res.json())?.msg);
                     }
                 }).catch((res) => {});
             });
@@ -146,7 +142,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             }
         });
 
-        fetch(`${window.location.origin}/api/account/user`, {
+        fetch(`${window.location.origin}/api/me`, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -168,16 +164,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         }).catch((res) => {
             console.log(res)
         });
-
-        const getImage = (file) => {
-            if (typeof file == "string") return `data:image/jpg;base64, ${file}`;
-            if (typeof file == "blob") return `data:image/jpg;base64, ${file}`;
-
-            //create the preview
-            const objectUrl = URL.createObjectURL(file);
-
-            return objectUrl;
-        };
     </script>
 </body>
 

@@ -3,9 +3,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: /");
     exit;
 }
-echo $_SESSION['test'];
-echo '</br>';
-echo $_SESSION['test2'];
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -86,7 +83,7 @@ echo $_SESSION['test2'];
             })
         }).then(async (res) => {
             if (res.ok){
-
+                
             }
             else{
             document.getElementById('error').innerHTML = (await res.json())?.msg;
