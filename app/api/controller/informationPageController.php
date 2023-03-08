@@ -23,6 +23,18 @@ class APIInformationPageController
         }
     }
 
+    public function getInformationPage($id)
+    {
+        try {
+            session_start();
+
+            return json_encode($this->informationPageService->getInformationPage($id));
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
+    }
+
     public function getHomePage()
     {
         try {
@@ -39,9 +51,20 @@ class APIInformationPageController
     {
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
-            $body = json_decode(file_get_contents('php://input'), true);
 
             $this->informationPageService->editHomePage($_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
+        } catch (Exception $ex){
+            http_response_code(500);
+            if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
+        }
+    }
+
+    public function editInformationPage($id)
+    {
+        try {
+            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
+
+            $this->informationPageService->editInformationPage($id, $_POST["url"], $_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -51,9 +74,7 @@ class APIInformationPageController
     public function addInformationPage()
     {
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-
-            $this->informationPageService->addInformationPage($body["url"], $body["title"], $body["description"]);
+            $this->informationPageService->addInformationPage();
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
