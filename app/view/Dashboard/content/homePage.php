@@ -50,7 +50,6 @@ tinymce.init({
 <script>
 window.addEventListener("load", (event) => {
     getHomePage();
-
     var frm = document.getElementById("editForm");
 
     frm.addEventListener("submit", editHomePage);
