@@ -39,36 +39,36 @@
             <img src="../assets/festival_logo.png" class="text-teal-800 font-black uppercase text-4xl leading-tight tracking-tight px-8" />
         </a>
         <div class="space-x-12 hidden md:flex flex-row text-xs sm:text-base">
-            <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login" class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+            <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-teal-800 group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-teal-800">
                         Login
                     </span>
-                </a><a href="/sign-up" class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                    <span class="text-white group-hover:text-teal-800 uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-teal-800 rounded-md group-hover:bg-white">
+                </a><a href="/sign-up" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                    <span class="text-teal-800 group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-teal-800">
                         Signup
                     </span>
                 </a><?php else : ?>
-                <a href="/new-post" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-2xl group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                         HISTORY
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/culture" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-2xl group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                         CULTURE
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/food" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-2xl group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                         FOOD
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/festival" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-2xl group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                         FESTIVAL
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <img src="../assets/britainLogo.svg" class="text-teal-800 font-black uppercase text-4xl leading-tight tracking-tight px-8" />
                 </a>
                 <button type="button" name="logoutBtn" onclick="logout()" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
@@ -95,30 +95,30 @@
         </div>
         <div class="flex flex-col text-xs sm:text-base my-auto">
             <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login" class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                    <span class="w-full text-center text-teal-800 group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-teal-800">
+                    <span class="w-full text-center text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-blue-400">
                         Login
                     </span>
                 </a><a href="/sign-up" class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                    <span class="text-white group-hover:text-teal-800 uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-blue-400">
+                    <span class="text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-blue-400">
                         Signup
                     </span>
                 </a><?php else : ?>
-                <a href="/new-post" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 mt-44 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 mt-44 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
                         HISTORY
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/culture" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
                         CULTURE
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/food" class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
                         FOOD
                     </span>
                 </a>
-                <a href="/my-posts" class="relative inline-flex items-center justify-center p-0.5 mb-64 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <a href="/festival" class="relative inline-flex items-center justify-center p-0.5 mb-64 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                     <span class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
                         FESTIVAL
                     </span>

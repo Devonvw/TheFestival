@@ -12,6 +12,24 @@ function handleRoutes($uri, $requestMethod)
                 $controller = new HomeController();
                 $controller->index();
                 break;
+            case 'food':
+                require __DIR__ . '/../controller/homeController.php';
+                session_start();
+                $controller = new HomeController();
+                $controller->food();
+                break;
+            case 'culture':
+                require __DIR__ . '/../controller/homeController.php';
+                session_start();
+                $controller = new HomeController();
+                $controller->culture();
+                break;
+             case 'festival':
+                require __DIR__ . '/../controller/homeController.php';
+                session_start();
+                $controller = new HomeController();
+                $controller->festival();
+                break;
 
 /*----------------------Dashboard routes-----------------------------*/
             

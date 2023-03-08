@@ -3,9 +3,9 @@
     <div>
         <div class="container flex flex-col-reverse justify-between px-3 py-10 mx-auto space-y-8 md:flex-row md:space-y-0">
             <div class="flex flex-col-reverse justify-center ml-32 space-y-10 md:flex-col md:space-y-0">
-
+            <a href="/">
                 <img src="../assets/festival_logo.png" class="h-15" />
-
+                </a>
                 <div>
                     <ul class="flex justify-center space-x-4">
                         <li class="mb-2">
@@ -57,19 +57,16 @@
                     <ul class="list-none">
                     <h2 class="text-white font-bold text-3xl mb-2">Haarlem</h2>
                         <li class="mb-2">
-                            <a href="#" class="text-white hover:text-red-300">Haarlem Jazz</a>
+                            <a href="/" class="text-white hover:text-red-300">History</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" class="text-white hover:text-indigo-300">The Secret of Dr.Teyler</a>
+                            <a href="/culture" class="text-white hover:text-indigo-300">Culture</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" class="text-white hover:text-indigo-300">Yummie</a>
+                            <a href="/food" class="text-white hover:text-indigo-300">Food</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#" class="text-white hover:text-indigo-300">A stroll through history</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-white hover:text-indigo-300">Dance</a>
+                            <a href="/festival" class="text-white hover:text-indigo-300">Festival</a>
                         </li>
                         <p class="fixed bottom-0 right-0 p-3 text-white">Made by ©Webber</p>
                     </ul>
