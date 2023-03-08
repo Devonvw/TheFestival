@@ -1,18 +1,19 @@
 <?php
 require_once __DIR__ . '/controller.php';
-//require __DIR__ . '/../service/feedService.php';
+require __DIR__ . '/../service/homeService.php';
 
 class HomeController extends Controller {
 
-    //private $feedService; 
+    private $homeService; 
 
     // initialize services
     function __construct() {
-        //$this->feedService = new FeedService();
+        $this->homeService = new HomeService();
     }
 
     // router maps this to /article and /article/index automatically
     public function index() {
+        $this->homeService->getInstagramFeed();
         $this->displayView("");
     }
 }
