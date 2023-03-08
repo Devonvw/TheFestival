@@ -154,5 +154,15 @@ require_once __DIR__ . '/../DAL/Database.php';
             $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $del_stmt->execute();
           }
+
+          function checkIfInformationPage($url) {
+            $stmt = $this->DB::$connection->prepare("SELECT * FROM information_page where url = :url");
+            $stmt->bindValue(':url', $url, PDO::PARAM_STR);
+            $stmt->execute();
+            $data = $stmt->fetch();
+
+            if (!$data) return false;
+            return true;
+          }
      }
 ?>
