@@ -46,5 +46,10 @@ class InformationPageService {
         $dao = new InformationPageDAO();
         return $dao->deleteInformationSection($id);
     }
+
+    public function checkIfInformationPage($url) {
+        $dao = new InformationPageDAO();
+        return $dao->checkIfInformationPage($url);
+    }
 }
 ?>

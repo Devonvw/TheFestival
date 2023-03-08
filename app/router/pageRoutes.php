@@ -1,34 +1,26 @@
 <?php
 require_once __DIR__ . '/../middleware/middleware.php';
 
-function handleRoutes($uri, $requestMethod)
+function handleRoutes($uri, $requestMethod, $content)
     {
         if ($requestMethod != "GET") http_response_code(404);
 
+        if ($content) {
+            require __DIR__ . '/../controller/informationPageController.php';
+                session_start();
+                $controller = new InformationPageController();
+                $controller->index($uri);
+        }
+
         switch ($uri) {
+
+/*----------------------Content routes-----------------------------*/
+
             case '':
                 require __DIR__ . '/../controller/homeController.php';
                 session_start();
                 $controller = new HomeController();
                 $controller->index();
-                break;
-            case 'food':
-                require __DIR__ . '/../controller/homeController.php';
-                session_start();
-                $controller = new HomeController();
-                $controller->food();
-                break;
-            case 'culture':
-                require __DIR__ . '/../controller/homeController.php';
-                session_start();
-                $controller = new HomeController();
-                $controller->culture();
-                break;
-             case 'festival':
-                require __DIR__ . '/../controller/homeController.php';
-                session_start();
-                $controller = new HomeController();
-                $controller->festival();
                 break;
 
 /*----------------------Dashboard routes-----------------------------*/
