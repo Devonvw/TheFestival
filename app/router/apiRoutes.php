@@ -42,6 +42,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                         echo $controller->getHomePage();
                         break;
 
+/*----------------------GET information pages routes-----------------------------*/
+
+                    case "instagram-feed":
+                        require_once __DIR__ . '/../api/controller/instagramController.php';
+                        $controller = new APIInstagramController();
+                        echo $controller->getInstagramFeed();
+                        break;
 
                     default:
                         http_response_code(404);

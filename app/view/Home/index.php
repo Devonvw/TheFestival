@@ -15,9 +15,7 @@ window.addEventListener("load", (event) => {
 });
 
 const getInstagramFeed = () => {
-    const secretKey =
-        "IGQVJVY1B2VkE2dVZArbEt4VUVRWUR5T2RRdzFleTM2QmVnX0xKOXRwV1hnVmpxbmlOams0RmlGYzRsZA3ZAWMUNTQ0J3QjVOSUNiUmJGRjF5cUZAFRTBiMWVPcVczUF9lWDZAQYmFvR3AwTmJodzhOd20tdQZDZD";
-    fetch(`https://graph.instagram.com/me/media?fields=id,username,media_url,caption,timestamp,permalink&access_token=${secretKey}`, {
+    fetch(`${window.location.origin}/api/instagram-feed`, {
         headers: {
             'Content-Type': 'application/json'
         },
