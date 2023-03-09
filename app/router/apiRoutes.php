@@ -40,7 +40,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getInformationPage($params["id"]);
+                    echo $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
                     break;
                 case "information-page/home-page":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -48,6 +48,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     echo $controller->getHomePage();
                     break;
 
+/*----------------------GET information pages routes-----------------------------*/
+
+                case "instagram-feed":
+                    require_once __DIR__ . '/../api/controller/instagramController.php';
+                    $controller = new APIInstagramController();
+                    echo $controller->getInstagramFeed();
+                    break;
 
 
                 default:
@@ -182,13 +189,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     /*----------------------DELETE information pages routes-----------------------------*/
 
                 case "information-page":
-                    (new Middleware())->adminOnly();
+                    //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
                     $controller->deleteInformationPage($params["id"]);
                     break;
-                case "information-section":
-                    (new Middleware())->adminOnly();
+
+                case "information-page/information-section":
+                    //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
                     $controller->deleteInformationSection($params["id"]);
@@ -201,7 +209,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
             }
             break;
         default:
-            http_response_code(404);
+                echo "help";
+                http_response_code(404);
             break;
     }
 }

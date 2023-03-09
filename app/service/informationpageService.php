@@ -7,9 +7,9 @@ class InformationPageService {
         return $dao->getInformationPages();
     }
 
-    public function getInformationPage($id) {
+    public function getInformationPage($id, $url) {
         $dao = new InformationPageDAO();
-        return $dao->getInformationPage($id);
+        return $dao->getInformationPage($id, $url);
     }
 
     public function getHomePage() {
@@ -45,6 +45,11 @@ class InformationPageService {
     public function deleteInformationSection($id) {
         $dao = new InformationPageDAO();
         return $dao->deleteInformationSection($id);
+    }
+
+    public function checkIfInformationPage($url) {
+        $dao = new InformationPageDAO();
+        return $dao->checkIfInformationPage($url);
     }
 }
 ?>

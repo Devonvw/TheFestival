@@ -7,14 +7,20 @@ class Router
 {
     public function route($uri, $params, $requestMethod)
     {
-        $api = false;
+        $content = false;
+
+        //Handle API routes
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
-            $api = true;
+            handleApiRoutes($uri, $params, $requestMethod);
         }
 
-        //Separate api routes and site routes
-        if ($api) handleApiRoutes($uri, $params, $requestMethod);
-        else handleRoutes($uri, $requestMethod);
+        //Handle content routes
+        if (str_starts_with($uri, "content/")) {
+            $uri = substr($uri, 8);
+            $content = true;
+        }
+
+        handleRoutes($uri, $requestMethod, $content);
     }
 }

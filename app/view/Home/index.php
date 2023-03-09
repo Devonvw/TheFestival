@@ -11,7 +11,35 @@
 <script>
 window.addEventListener("load", (event) => {
     getHomePage();
+    getInstagramFeed();
 });
+
+const getInstagramFeed = () => {
+    fetch(`${window.location.origin}/api/instagram-feed`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data)
+
+            var feedHTML = "";
+
+            data?.data?.forEach((item, index) => feedHTML +=
+                `<a class="tranform hover:scale-[1.02] duration-300 col-span-12 md:col-span-6 lg:col-span-4" href="${item?.permalink}" target="_blank"><div class="rounded-md overflow-hidden shadow-xl">
+                            <img src="${item?.media_url}" class="h-60 w-full object-cover" />
+                            <p class="p-3">${item?.caption}</p>
+                        </div></a>`
+            )
+
+            document.getElementById("instagramFeed").innerHTML = feedHTML;
+        }
+    }).catch((res) => {
+        console.log(res)
+    });
+}
 
 function getHomePage() {
     fetch(`${window.location.origin}/api/information-page/home-page`, {
@@ -125,6 +153,12 @@ function getHomePage() {
         </div>
         <div class="flex">
             <div id="section2" class="mb-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto"></div>
+        </div>
+        <div class="relative flex">
+            <div class="mb-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto flex flex-col justify-start w-full">
+                <h2 class="text-2xl font-semibold mb-10">Instagram feed</h2>
+                <div id="instagramFeed" class="grid grid-cols-12 gap-4"></div>
+            </div>
         </div>
         <div class="bg-primary-light py-14">
             <div class="max-w-6xl px-4 md:px-6 lg:px-8 mx-auto">
