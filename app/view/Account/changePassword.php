@@ -7,7 +7,28 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
+<script>
+    function updatePassword() {
+        fetch(`${window.location.origin}/api/me/change-password`, {
+            method: "PUT",
+            body: JSON.stringify({
+                current_password: document.getElementById('current_password').value,
+                new_password: document.getElementById('new_password').value,
+                confirm_password: document.getElementById('confirm_password').value
+            })
+        }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
 
+            } else {
+                ToastError((await res.json())?.msg);
+            }
+        }).catch((res) => {});
+    }
+</script>
 <header>
 
     <title>Account - Social</title>
@@ -18,6 +39,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
+    
+    <link rel="stylesheet" href="../../../styles/globals.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -49,7 +72,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     <input id="confirm_password" name="confirm_password" type="password" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="text-right">
-                    <button id="change_password" type="submit" class="bg-teal-500 text-white py-2 px-4 rounded font-bold">Change password</button>
+                    <button onclick="updatePassword()" id="change_password" type="button" class="bg-primary text-white py-2 px-4 rounded font-bold">Change password</button>
+
 
                 </div>
             </form>
@@ -57,3 +81,5 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     </div>
 
 </body>
+
+</html>

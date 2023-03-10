@@ -11,6 +11,15 @@ class AccountController extends Controller
   {
     $this->userService = new AccountService();
   }
+  public function login()
+  {
+    $this->displayView("");
+  }
+
+  public function signUp()
+  {
+    $this->displayView("");
+  }
   public function accountManager()
   {
     $this->displayView("");
