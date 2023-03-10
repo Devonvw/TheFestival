@@ -12,43 +12,27 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <script src="/packages/toast/toast.js"></script>
 <script src="/utils/handleImageUpload.js"></script>
 <script>
-    function checkPasswords() {
-        const newPassword = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('passwordConfirm').value;
-
-        if (newPassword === confirmPassword) {
-
-            return true; // allow form submission to proceed
-        } else {
-
-            document.getElementById('error').innerHTML = "Passwords do not match";
-            document.getElementById('errorWrapper').classList.remove('hidden');
-
-            return false; // prevent form submission
-        }
-    }
-
     function resetPassword() {
-        if (checkPasswords())
-            fetch(
-                `${window.location.origin}/api/account/reset/password`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    method: "POST",
-                    body: JSON.stringify({
-                        password: document.getElementById('password').value,
-                    })
-                }).then(async (res) => {
-                if (res.ok) {
-                    ToastSucces((await res.json())?.msg);
-                    setTimeout(() => {
-                        window.location = "/login";
-                    }, 3000);
-                } else {
-                    ToastError((await res.json())?.msg);
-                }
-            }).then((res) => {}).catch((res) => {});
+        fetch(
+            `${window.location.origin}/api/account/reset/password`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    password: document.getElementById('password').value,
+                    password_confirm: document.getElementById('passwordConfirm').value
+                })
+            }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
+                setTimeout(() => {
+                    window.location = "/login";
+                }, 3000);
+            } else {
+                ToastError((await res.json())?.msg);
+            }
+        }).then((res) => {}).catch((res) => {});
     }
 </script>
 <header>
