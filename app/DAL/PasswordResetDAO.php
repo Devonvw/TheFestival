@@ -85,8 +85,6 @@ class PasswordResetDAO
         $stmt->bindParam(1, $hashed_password);
         $stmt->bindParam(2, $email);
         $stmt->execute();
-        
-        echo "Your password has been successfully reset.";
 
         $this->tokenRemover($email);
     }

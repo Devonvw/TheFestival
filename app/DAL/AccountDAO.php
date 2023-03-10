@@ -164,85 +164,124 @@ class AccountDAO
         if ($profile_picture && $profile_picture["size"] == 0) throw new Exception("This image is bigger than 2MB", 1);
         if ($profile_picture && !is_uploaded_file($profile_picture['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
 
-        if ($profile_picture) {
+        if ($profile_picture && !is_null($profile_picture)) {
             $img_data = file_get_contents($profile_picture['tmp_name']);
-            $img_type = $profile_picture['type'];
 
             $stmt = $this->DB::$connection->prepare("UPDATE account SET profile_picture = :profile_picture where id = :id");
             $stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
             $stmt->bindValue(':profile_picture', $img_data);
             $stmt->execute();
         }
-        $account = $this->getAccount(5);
+        $account = $this->getAccount($_SESSION['id']);
         $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name where id = :id");
         $update_stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
         $update_stmt->bindValue(':last_name', trim(htmlspecialchars($last_name)));
         $update_stmt->execute();
-
-        if ($update_stmt->execute()) {
-
-            //If the email has been updated, send a confirmation email
-            $mail = new PHPMailer(true);
-
-            try {
-                //Server settings
-                $mail->SMTPDebug = SMTP::DEBUG_OFF; //Enable verbose debug output
-                $mail->isSMTP(); //Send using SMTP
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = 'tls';
-                $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
-                $mail->SMTPAuth = true; //Enable SMTP authentication
-                $mail->Username = 'festivalteamhaarlem@gmail.com'; //SMTP username
-                $mail->Password = 'yfrjxpbwjpxuuvnd'; //SMTP password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-                $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
-
-                //Recipients
-                $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
-                $mail->addAddress($account->email, $account->first_name); //Add a recipient
-
-                //Content
-                $mail->isHTML(false); //Set email format to plain text
-                $mail->Subject = 'Email address updated';
-                $mail->Body    = "Dear " . $_SESSION['email'] . ",\n\nYour account details have been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
-
-                $mail->send();
-                echo 'Message has been sent';
-                $mail->smtpClose();
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            } 
-            
-        } else {
-            throw new Exception("Error: Could not update account.");
-        }
-        
-        $_SESSION["first_name"] = $first_name;
-        $_SESSION["last_name"] = $last_name;
-
-        session_write_close();
     }
-    function updateEmailCustomer($email, $new_email, $password)
+    public function updateEmailCustomer($new_email, $new_email_confirmation, $password)
     {
-        $hashed_password = password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT);
         $account = $this->getAccount($_SESSION['id']);
-        if (empty(trim($email)) || empty(trim($password)) || empty(trim($new_email))) {
+
+        // Check if all fields are filled in
+        if (empty(trim($new_email)) || empty(trim($new_email_confirmation)) || empty(trim($password))) {
             throw new Exception("Not all fields are filled in", 1);
-        } else if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+        }
+
+        // Validate email address
+        if (!filter_var(trim($new_email), FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Invalid email address", 1);
-        } else if (trim($email) !== trim($new_email)) {
+        }
+
+        // Check if email and confirmation match
+        if (trim($new_email) !== trim($new_email_confirmation)) {
             throw new Exception("Emails do not match", 1);
         }
-        if ($account->password === $hashed_password) {
-            $update_stmt = $this->DB::$connection->prepare("UPDATE account SET email = :email where id = :id");
-            $update_stmt->bindValue(':id', trim(htmlspecialchars($_SESSION['id'])), PDO::PARAM_INT);
-            $update_stmt->bindValue(':email', trim(htmlspecialchars($email)));
-            $update_stmt->execute();
-        } else {
-            throw new Exception("Password was incorrect");
+
+        // Check if password is correct
+        if (!password_verify($password, $account->password)) {
+            throw new Exception("your password was incorrect");
+        }
+
+        if ($update_stmt = $this->DB::$connection->prepare("UPDATE account SET email = :email where id = :id")) {
+            $update_stmt->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
+            $update_stmt->bindParam(':email', trim(htmlspecialchars($new_email)), PDO::PARAM_STR);
+            if ($update_stmt->execute()) {
+                $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'e-mail');
+
+                return true;
+            } else {
+                throw new Exception("Error: Could not update password.");
+            }
         }
     }
+    public function updatePasswordCustomer($current_password, $new_password, $new_password_confirmation)
+    {
+        $account = $this->getAccount($_SESSION['id']);
+
+        $passwordCheck = password_verify(trim($current_password), $account->password);
+
+        // Check if password is correct
+        if (!$passwordCheck) {
+            throw new Exception("Current password was incorrect", 1);
+        }
+        // Check if all fields are filled in
+        if (empty(trim($new_password)) || empty(trim($new_password_confirmation)) || empty(trim($current_password))) {
+            throw new Exception("Not all fields are filled in", 1);
+        }
+
+        // Check if email and confirmation match
+        if (trim($new_password) !== trim($new_password_confirmation)) {
+            throw new Exception("New passwords do not match", 1);
+        }
+
+        if (strlen(trim($new_password)) < 6) {
+            throw new Exception("New password must have at least 6 characters", 1);
+        }
+        if ($update_stmt = $this->DB::$connection->prepare("UPDATE account SET password = :password where id = :id")) {
+            $password_param = password_hash(trim(htmlspecialchars($new_password)), PASSWORD_DEFAULT);
+            $update_stmt->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
+            $update_stmt->bindParam(':password', $password_param);
+            if ($update_stmt->execute()) {
+                $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'password');
+            } else {
+                throw new Exception("Error: Could not update password.");
+            }
+        }
+    }
+
+    function updateAndSendConfirmationEmail($update_stmt, $email, $firstName, $messageSubject)
+    {
+        if ($update_stmt->execute()) {
+            // If the email has been updated, send a confirmation email
+            $mail = new PHPMailer(true);
+
+            // Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output
+            $mail->isSMTP(); // Send using SMTP
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'festivalteamhaarlem@gmail.com'; // SMTP username
+            $mail->Password = 'yfrjxpbwjpxuuvnd'; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            // Recipients
+            $mail->setFrom('festivalteamhaarlem@gmail.com', 'Festival Team');
+            $mail->addAddress($email, $firstName); // Add a recipient
+
+            // Content
+            $mail->isHTML(false); // Set email format to plain text
+            $mail->Subject = $messageSubject . ' updated';
+            $mail->Body = "Dear " . $firstName . ",\n\nYour " . $messageSubject . " has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
+
+            $mail->send();
+            $mail->smtpClose();
+        }
+    }
+
 
     function getAccount($id)
     {
@@ -250,13 +289,13 @@ class AccountDAO
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $account = $stmt->fetchObject("Account");
-
-        $profile_picture_stmt = $this->DB::$connection->prepare("SELECT profile_picture FROM account WHERE id = :id");
-        $profile_picture_stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $profile_picture_stmt->execute();
-        $profile_picture = base64_encode($profile_picture_stmt->fetch(PDO::FETCH_ASSOC)['profile_picture']);
-        $account->profile_picture = $profile_picture;
-
+        if ($account->profile_picture && !is_null($account->profile_picture)) {
+            $profile_picture_stmt = $this->DB::$connection->prepare("SELECT profile_picture FROM account WHERE id = :id");
+            $profile_picture_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $profile_picture_stmt->execute();
+            $profile_picture = base64_encode($profile_picture_stmt->fetch(PDO::FETCH_ASSOC)['profile_picture']);
+            $account->profile_picture = $profile_picture;
+        }
         return $account;
     }
 

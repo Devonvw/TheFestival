@@ -36,7 +36,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </header>
 
 <body>
-    <img id="test" alt=""></img>
     <h1 class="max-w-md mx-auto text-2xl font-bold mt-5">Manage Account</h1>
 
     <form id="manage_account_form">
@@ -66,21 +65,20 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
                 <div class="mb-3">
                     <label for="first_name" class="block text-gray-700 font-bold mb-1">First Name</label>
-                    <input id="first_name" name="first_name" type="text" value="<?php echo $_SESSION['first_name'] ?>" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
+                    <input id="first_name" name="first_name" type="text" value="" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="mb-3">
                     <label for="last_name" class="block text-gray-700 font-bold mb-1">Last Name</label>
-                    <input id="last_name" name="last_name" type="text" value="<?php echo $_SESSION['last_name'] ?>" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
+                    <input id="last_name" name="last_name" type="text" value="" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
 
                 <label for="email" class="text-gray-700 font-bold mr-4">Email</label>
                 <div class="flex items-center mb-3">
-                    <span id="email" class="block py-1 mr-4"><?php echo $_SESSION['email'] ?></span>
-                    <a href="/customer/manage-account/change-email" class="text-gray-600 hover:text-blue-500"><i class="fas fa-pencil-alt"></i></a>
+                    <a href="/customer/manage-account/change-email" class="hover:text-blue-500 flex items-center"><span id="email" class="mr-2"></span><i class="fas fa-pencil-alt"></i></a>
                 </div>
                 <label for="password" class="text-gray-700 font-bold mr-4">Password</label>
                 <div class="flex items-center mb-3">
-                    <a href="/customer/manage-account/change-password" class="border-b border-gray-500 hover:text-blue-500 flex items-center">
+                    <a href="/customer/manage-account/change-password" class="hover:text-blue-500 flex items-center">
                         <span class="mr-2">Change password</span>
                         <i class="fas fa-pencil-alt"></i>
                     </a>
@@ -102,13 +100,12 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
                 const firstName = document.getElementById('first_name').value;
                 const lastName = document.getElementById('last_name').value;
-                const profilePicture = document.getElementById('profile_picture_upload').files[0];
 
                 const formData = new FormData();
                 formData.append('first_name', firstName);
                 formData.append('last_name', lastName);
-                formData.append('profile_picture', profilePicture);
-
+                formData.append("profile_picture", document.getElementById('profile_picture_upload').files ? document.getElementById('profile_picture_upload')
+                    .files[0] : null);
                 fetch(`${window.location.origin}/api/update-account`, {
                     method: "POST",
                     body: formData
@@ -126,21 +123,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         const profilePicturePlaceholder = document.getElementById('profile_picture_placeholder');
         const profilePicturePreview = document.getElementById('profile_picture_preview');
 
-        profilePictureUpload.addEventListener('change', () => {
-            if (profilePictureUpload.files && profilePictureUpload.files[0]) {
-                const reader = new FileReader();
 
-                reader.onload = (event) => {
-                    profilePicturePreview.src = event.target.result;
-                }
-
-                reader.readAsDataURL(profilePictureUpload.files[0]);
-                profilePicturePlaceholder.classList.add('hidden');
-            } else {
-                profilePicturePreview.src = '';
-                profilePicturePlaceholder.classList.remove('hidden');
-            }
-        });
 
         fetch(`${window.location.origin}/api/me`, {
             headers: {
@@ -155,14 +138,33 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 // Set the value of the first_name and last_name input fields
                 document.getElementById('first_name').value = data.first_name;
                 document.getElementById('last_name').value = data.last_name;
+                document.getElementById('email').innerHTML = data.email;
 
                 // Decode the base64-encoded profile picture and set the src attribute of the profile_picture_preview element
-                const profile_picture_preview = document.getElementById('profile_picture_preview');
-                profilePicturePlaceholder.classList.add('hidden');
-                profile_picture_preview.src = getImage(data.profile_picture);
+
+                if (data?.profile_picture) {
+                    const profile_picture_preview = document.getElementById('profile_picture_preview');
+                    profilePicturePlaceholder.classList.add('hidden');
+                    profile_picture_preview.src = getImage(data?.profile_picture);
+                }
             }
         }).catch((res) => {
             console.log(res)
+        });
+        profilePictureUpload.addEventListener('change', () => {
+            if (profilePictureUpload.files && profilePictureUpload.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    profilePicturePreview.src = event.target.result;
+                }
+
+                reader.readAsDataURL(profilePictureUpload.files[0]);
+                profilePicturePlaceholder.classList.add('hidden');
+            } else {
+                profilePicturePreview.src = '';
+                profilePicturePlaceholder.classList.remove('hidden');
+            }
         });
     </script>
 </body>

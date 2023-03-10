@@ -6,7 +6,33 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
+<script src="/utils/handleImageUpload.js"></script>
+<script>
+    const newEmail = document.getElementById('new_email');
+    const newEmailConfirmation = document.getElementById('new_email_confirmation');
+    const password = document.getElementById('password');
 
+    function updateEmail() {
+        fetch(`${window.location.origin}/api/me/change-email`, {
+            method: "PUT",
+            body: JSON.stringify({
+                new_email: document.getElementById('new_email').value,
+                new_email_confirmation: document.getElementById('new_email_confirmation').value,
+                password: document.getElementById('password').value
+            })
+        }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
+
+            } else {
+                ToastError((await res.json())?.msg);
+            }
+        }).catch((res) => {});
+    }
+</script>
 <header>
 
     <title>Account - Social</title>
@@ -17,6 +43,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
+
+    <link rel="stylesheet" href="../../../styles/globals.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -59,7 +87,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     <p id="successMessage"></p>
                 </div>
                 <div class="text-right">
-                    <button onclick="updateEmail()" id="change_email_button" type="button" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
+                    <button onclick="updateEmail()" id="change_email_button" type="button" class="bg-primary text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
                 </div>
             </div>
         </section>
@@ -67,28 +95,5 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 
 </body>
-<script>
-    const submitButton = document.getElementById('change_email_button');
-    const newEmail = document.getElementById('new_email');
-    const newEmailConfirmation = document.getElementById('new_email_confirmation');
-    const password = document.getElementById('password');
 
-    function updateEmail() {
-        fetch(`${window.location.origin}/api/change-email`, {
-            method: "PUT",
-            body: JSON.stringify({
-                new_email: document.getElementById('new_email').value,
-                new_email_confirmation: document.getElementById('new_email_confirmation').value,
-                password: document.getElementById('password').value
-            })
-        }).then(async (res) => {
-            if (res.ok){
-                
-            }
-            else{
-            document.getElementById('error').innerHTML = (await res.json())?.msg;
-            document.getElementById('errorWrapper').classList.remove('hidden');
-            }
-        }).catch((res) => {});
-    }
-</script>
+</html>

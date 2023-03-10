@@ -7,6 +7,10 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
+<script src="/utils/handleImageUpload.js"></script>
 <script>
     function checkPasswords() {
         const newPassword = document.getElementById('password').value;
@@ -27,7 +31,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     function resetPassword() {
         if (checkPasswords())
             fetch(
-                `${window.location.origin}/api/user/reset/password`, {
+                `${window.location.origin}/api/account/reset/password`, {
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -37,16 +41,12 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
                     })
                 }).then(async (res) => {
                 if (res.ok) {
-                    document.getElementById('errorWrapper').classList.add('hidden');
-                    document.getElementById('success').innerHTML = "Your password has been changed, you will now be redirected to the login page";
-                    document.getElementById('success').classList.remove('hidden');
-                    //Redirect to login page after 3 seconds
+                    ToastSucces((await res.json())?.msg);
                     setTimeout(() => {
                         window.location = "/login";
                     }, 3000);
                 } else {
-                    document.getElementById('error').innerHTML = (await res.json())?.msg;
-                    document.getElementById('errorWrapper').classList.remove('hidden');
+                    ToastError((await res.json())?.msg);
                 }
             }).then((res) => {}).catch((res) => {});
     }

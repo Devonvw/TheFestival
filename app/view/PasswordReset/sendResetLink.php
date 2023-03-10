@@ -10,7 +10,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <script>
     function resetPassword() {
         fetch(
-            `${window.location.origin}/api/user/reset/sendResetLink`, {
+            `${window.location.origin}/api/account/reset/sendResetLink`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
