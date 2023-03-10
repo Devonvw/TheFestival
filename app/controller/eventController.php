@@ -15,5 +15,6 @@ class EventController extends Controller
   {
     $this->displayView("");
   }
+
 }
 ?>

@@ -43,11 +43,23 @@ function handleRoutes($uri, $requestMethod, $content)
                 $controller = new DashboardController();
                 $controller->editAccount();
                 break;
-            case 'dashboard/restaurant':
+            case 'dashboard/events':
                 require __DIR__ . '/../controller/dashboardController.php';
                 session_start();
                 $controller = new DashboardController();
-                $controller->restaurant();
+                $controller->events();
+                break;
+            case 'dashboard/events/edit':
+                require __DIR__ . '/../controller/dashboardController.php';
+                session_start();
+                $controller = new DashboardController();
+                $controller->editEvents();
+                break;
+            case 'dashboard/events/add':
+                require __DIR__ . '/../controller/dashboardController.php';
+                session_start();
+                $controller = new DashboardController();
+                $controller->addEvents();
                 break;
             case 'dashboard/content/home-page':
                 require __DIR__ . '/../controller/dashboardController.php';
@@ -128,6 +140,7 @@ function handleRoutes($uri, $requestMethod, $content)
                 $controller = new EventController();
                 $controller->eventManager();
                 break;
+            
 
 /*----------------------Cart routes-----------------------------*/
 

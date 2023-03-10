@@ -17,6 +17,7 @@ class APIEventController
         try {
             session_start();
             echo json_encode($this->eventService->getAllEvents());
+        
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -27,9 +28,10 @@ class APIEventController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
+    
+            $this->eventService->addEvent($body["event_id"], $body["name"], $body["description"], $body["location"], $body["venue"], $body["cousine"], $body["seats"]);
+            return json_encode([ 'msg' => "Section succesfully added." ]);
 
-            $this->eventService->addEvent($body["id"], $body["event_id"], $body["name"], $body["description"], $body["location"], $body["venue"], $body["cousine"], $body["seats"]);
-            
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -53,7 +55,7 @@ class APIEventController
            
 
             $this->eventService->updateEvent($_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $_POST["seats"]);
-           
+            echo json_encode([ 'msg' => "Section succesfully deleted." ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -63,3 +65,4 @@ class APIEventController
 
 
 }
+?>
