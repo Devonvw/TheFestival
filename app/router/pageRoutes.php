@@ -83,9 +83,9 @@ function handleRoutes($uri, $requestMethod, $content)
 /*----------------------Account routes-----------------------------*/
 
             case 'login':
-                require __DIR__ . '/../controller/userController.php';
+                require __DIR__ . '/../controller/accountController.php';
                 session_start();
-                $controller = new UserController();
+                $controller = new AccountController();
                 $controller->login();
                 break;
             case 'login/reset/password':
@@ -107,9 +107,9 @@ function handleRoutes($uri, $requestMethod, $content)
                 $controller->sendResetLink();
                 break;
             case 'sign-up':
-                require __DIR__ . '/../controller/userController.php';
+                require __DIR__ . '/../controller/accountController.php';
                 session_start();
-                $controller = new UserController();
+                $controller = new AccountController();
                 $controller->signUp();
                 break;
                 //customer account manager routes

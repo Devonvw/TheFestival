@@ -17,6 +17,7 @@ class APIPasswordResetController
             $body = json_decode(file_get_contents('php://input'), true);
 
             $this->passwordResetService->sendConfirmationMail($body["email"]);
+            echo json_encode([ 'msg' => "Confirmation mail sent" ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -26,7 +27,8 @@ class APIPasswordResetController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->passwordResetService->resetPassword($body["password"]);
+            $this->passwordResetService->resetPassword($body["password"], $body['password_confirm']);
+            echo json_encode([ 'msg' => "Password updated" ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

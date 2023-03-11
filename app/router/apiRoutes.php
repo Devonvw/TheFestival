@@ -48,7 +48,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     echo $controller->getHomePage();
                     break;
 
-/*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET information pages routes-----------------------------*/
 
                 case "instagram-feed":
                     require_once __DIR__ . '/../api/controller/instagramController.php';
@@ -67,12 +67,12 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------POST account routes-----------------------------*/
 
-                case "user/sign-up":
+                case "account/sign-up":
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
-                    $controller->createUser();
+                    $controller->createAccount();
                     break;
-                case "user/login":
+                case "account/login":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
@@ -81,18 +81,20 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     //update-account in post because of image
                 case "update-account":
                     session_start();
-                   // (new Middleware())->loggedInOnly();
+                    // (new Middleware())->loggedInOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->updateAccountCustomer();
                     break;
-                case "user/reset/password":
+
+
+                case "account/reset/password":
                     session_start();
                     require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
                     $controller = new APIPasswordResetController();
                     $controller->resetPassword();
                     break;
-                case "user/reset/sendResetLink":
+                case "account/reset/sendResetLink":
                     session_start();
                     require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
                     $controller = new APIPasswordResetController();
@@ -161,14 +163,19 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->updateAccount($params["id"]);
                     break;
-                case "change-email":
+
+                case "me/change-email":
                     session_start();
-                    //(new Middleware())->loggedInOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->updateEmailCustomer();
                     break;
-
+                case "me/change-password":
+                    session_start();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
+                    $controller->updatePasswordCustomer();
+                    break;
 
                 default:
                     http_response_code(404);
@@ -217,8 +224,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
             }
             break;
         default:
-                echo "help";
-                http_response_code(404);
+            echo "help";
+            http_response_code(404);
             break;
     }
 }

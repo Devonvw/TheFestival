@@ -10,7 +10,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <script>
     function login() {
         fetch(
-            `${window.location.origin}/api/user/login`, {
+            `${window.location.origin}/api/account/login`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },

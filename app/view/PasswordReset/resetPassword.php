@@ -7,48 +7,32 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
+<script src="/utils/handleImageUpload.js"></script>
 <script>
-    function checkPasswords() {
-        const newPassword = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('passwordConfirm').value;
-
-        if (newPassword === confirmPassword) {
-
-            return true; // allow form submission to proceed
-        } else {
-
-            document.getElementById('error').innerHTML = "Passwords do not match";
-            document.getElementById('errorWrapper').classList.remove('hidden');
-
-            return false; // prevent form submission
-        }
-    }
-
     function resetPassword() {
-        if (checkPasswords())
-            fetch(
-                `${window.location.origin}/api/user/reset/password`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    method: "POST",
-                    body: JSON.stringify({
-                        password: document.getElementById('password').value,
-                    })
-                }).then(async (res) => {
-                if (res.ok) {
-                    document.getElementById('errorWrapper').classList.add('hidden');
-                    document.getElementById('success').innerHTML = "Your password has been changed, you will now be redirected to the login page";
-                    document.getElementById('success').classList.remove('hidden');
-                    //Redirect to login page after 3 seconds
-                    setTimeout(() => {
-                        window.location = "/login";
-                    }, 3000);
-                } else {
-                    document.getElementById('error').innerHTML = (await res.json())?.msg;
-                    document.getElementById('errorWrapper').classList.remove('hidden');
-                }
-            }).then((res) => {}).catch((res) => {});
+        fetch(
+            `${window.location.origin}/api/account/reset/password`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    password: document.getElementById('password').value,
+                    password_confirm: document.getElementById('passwordConfirm').value
+                })
+            }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
+                setTimeout(() => {
+                    window.location = "/login";
+                }, 3000);
+            } else {
+                ToastError((await res.json())?.msg);
+            }
+        }).then((res) => {}).catch((res) => {});
     }
 </script>
 <header>

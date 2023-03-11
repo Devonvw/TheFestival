@@ -6,9 +6,9 @@ class PasswordResetService {
         $dao = new PasswordResetDAO();
         $dao->sendConfirmationMail($email);
     }
-    public function resetPassword($password) {
+    public function resetPassword($password, $new_password) {
         $dao = new PasswordResetDAO();
-        $dao->resetPassword($password);
+        $dao->resetPassword($password, $new_password);
     }
 }
 ?>

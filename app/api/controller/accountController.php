@@ -23,12 +23,13 @@ class APIAccountController
         }
     }
 
-    public function createUser()
+    public function createAccount()
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
             $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], 1);
+            echo json_encode(['msg' => "Account successfully created, you can now login"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -61,7 +62,7 @@ class APIAccountController
         try {
             header('Content-Type: application/json');
             echo json_encode($this->accountService->getAccount($id));
-        } catch (Exception $ex) {   
+        } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
@@ -96,6 +97,7 @@ class APIAccountController
         try {
             $image = $_FILES ? ($_FILES["profile_picture"]["name"] ? $_FILES["profile_picture"] : false) : false;
             $this->accountService->updateAccountCustomer($_POST["first_name"], $_POST["last_name"], $image);
+            echo json_encode(['msg' => "Account updated"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -106,6 +108,20 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
             $this->accountService->updateEmailCustomer($body["new_email"], $body["new_email_confirmation"], $body["password"]);
+
+            echo json_encode(['msg' => "Email updated"]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function updatePasswordCustomer()
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+            $this->accountService->updatePasswordCustomer($body["current_password"], $body["new_password"], $body["confirm_password"]);
+
+            echo json_encode(['msg' => "Password updated"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
