@@ -11,8 +11,8 @@ class Event {
 
 
 
-  function construct($id = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $seats = null,) {
-    if(!is_null($id) && !is_null($event_id) && !is_null($name) && !is_null($description) && !is_null($location) && !is_null($venue) && !is_null($cousine) && !is_null($seats)) {
+  function __construct($id = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $seats = null) {
+   // if(!is_null($id) && !is_null($event_id) && !is_null($name) && !is_null($description) && !is_null($seats)) {
       $this->id = $id;
       $this->event_id = $event_id;
       $this->name = $name;
@@ -23,7 +23,7 @@ class Event {
       $this->seats = $seats;
 
 
-    }
+  //  }
   }
 
   public function set($name, $value) {}

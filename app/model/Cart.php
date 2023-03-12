@@ -4,8 +4,8 @@ class Cart {
   public $id;
   public $account_id;
   public $session_id;
+  public $cart_items;
   public $created_at;
-
   public $modified_at;
 
   function __construct($id = null, $account_id = null, $session_id = null, $created_at = null, $modified_at = null) {

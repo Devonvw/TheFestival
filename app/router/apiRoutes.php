@@ -105,8 +105,16 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
-                    $controller->updateEvent();
+                    $controller->updateEvent($params["id"]);
                     break;
+                case "event":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->addEvent();
+                    break;
+    
 
                     /*----------------------POST information page routes-----------------------------*/
 
