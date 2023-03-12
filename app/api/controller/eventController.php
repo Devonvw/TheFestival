@@ -30,7 +30,7 @@ class APIEventController
             $body = json_decode(file_get_contents('php://input'), true);
     
             $this->eventService->addEvent($body["event_id"], $body["name"], $body["description"], $body["location"], $body["venue"], $body["cousine"], $body["seats"]);
-            return json_encode([ 'msg' => "Section succesfully added." ]);
+            json_encode([ 'msg' => "Section succesfully added." ]);
 
         } catch (Exception $ex) {
             http_response_code(500);

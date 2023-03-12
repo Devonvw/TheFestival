@@ -96,6 +96,9 @@
                 if (response.ok) {
                     alert('Event updated successfully!');
                    console.log(response)
+                    
+                   window.location = "/dashboard/events";
+
                     // Update the form fields with the new input
                     // const updatedData = await response.json();
                     // document.querySelector('#name').value = updatedData.name;
