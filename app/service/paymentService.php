@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../DAL/PasswordResetDAO.php';
+require_once __DIR__ . '/../DAL/PaymentDAO.php';
 require_once __DIR__ . "/../packages/mollie-api-php/vendor/autoload.php";
 require_once __DIR__ . '/../env/index.php';
 
@@ -57,6 +57,8 @@ class PaymentService {
     public function paymentWebhook($id) {
         $mollie = $this->getMollie();
         $payment = $mollie->payments->get($id);
+
+
     }
 }
 ?>
