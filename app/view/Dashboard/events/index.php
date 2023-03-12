@@ -46,7 +46,8 @@
                 console.log(data)
 
                    let tableData="";
-                   data.map((values)=>{
+
+                   data.forEach((values)=>{
                     tableData+=` <tr>
                     <td>${values.id}</td>
                     <td>${values.event_id}</td>
@@ -57,21 +58,33 @@
                     <td>${values.cousine}</td>
                     <td>${values.seats}</td>
                     <td class="px-6 py-4 text-right">
-                    <a href="/dashboard/events/edit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                    <a href="/dashboard/events/edit?id=${values.event_id}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                     </td>
                     <td class="px-6 py-4 text-left">
-                    <a href="/dashboard/events/add" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Add</a>
+                    <button onclick="deleteEvent(${values.event_id})" class="bg-red-800 h-[1.7rem] w-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
                     </td>
-                    </tr>`;
+                    </tr>`; 
                    });
                    document.getElementById("table_body").innerHTML=tableData;
-                
+              
             }).catch((res) => {
                 console.log(res)
             });
     }
-</script>
 
+    function deleteEvent(id) {
+    fetch(`${window.location.origin}/api/event?id=${id}`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "DELETE",
+    }).then((res) => {
+        if (res.ok) 
+      
+        getEvent();
+    }).catch((res) => {});
+}
+</script>
 <body>
 
 
@@ -138,6 +151,8 @@
         </tbody>
     </table>
 </div>
+<button id="btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"><a href="/dashboard/events/add">Add</a></button>
+
     <!-- <div class="">
       
         <div class="mb-3">

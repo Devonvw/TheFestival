@@ -7,16 +7,16 @@
     window.addEventListener("DOMContentLoaded", function() {
         var frm = document.getElementById("createForm");
 
-        frm.addEventListener("submit", addUser);
+        frm.addEventListener("submit", addEvent);
     });
 
-    function addUser(e) {
+    function addEvent(e) {
         e.preventDefault();
 
 
         const event_id = document.querySelector('#event_id').value;
         const name = document.querySelector('#name').value;
-        const description = document.querySelector('#description').value.file[0].text();
+        const description = document.querySelector('#description').value;
         const location = document.querySelector('#location').value;
         const venue = document.querySelector('#venue').value;
         const cousine = document.querySelector('#cousine').value;
@@ -40,7 +40,7 @@
             cousine,
             seats
         }
-
+            console.log(body)
         fetch(`${window.location.origin}/api/event`, {
                 method: "POST",
                 body: JSON.stringify(body),
@@ -49,14 +49,13 @@
 
             }).then((response) => response.json())
             .then((res) => {
-                ToastSucces((res.json())?.msg);
+               
 
                 //  window.location = "/";
 
                 document.getElementById('success').innerHTML = "Account created, you can now login";
 
             }).catch((res) => {
-                console.log(res)
             })
     }
 </script>

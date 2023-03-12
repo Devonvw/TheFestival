@@ -17,9 +17,9 @@ class EventService {
         $dao->deleteEvent($id);
     }
 
-    public function updateEvent($name, $description, $location, $venue, $cousine, $seats) {
+    public function updateEvent($id, $name, $description, $location, $venue, $cousine, $seats) {
         $dao = new EventDAO();
-        $dao->updateEvent($name, $description, $location, $venue, $cousine, $seats);
+        $dao->updateEvent($id, $name, $description, $location, $venue, $cousine, $seats);
     }
        
     }

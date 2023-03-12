@@ -43,19 +43,20 @@ class APIEventController
         try {
             
             $this->eventService->deleteEvent($id);
+            echo json_encode([ 'msg' => "Page succesfully deleted." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
         }
     }
 
-    public function updateEvent()
+    public function updateEvent($id)
     {
         try {
            
 
-            $this->eventService->updateEvent($_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $_POST["seats"]);
-            echo json_encode([ 'msg' => "Section succesfully deleted." ]);
+            $this->eventService->updateEvent($id, $_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $_POST["seats"]);
+            echo json_encode([ 'msg' => "Section succesfully updated." ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

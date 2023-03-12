@@ -5,7 +5,6 @@
 
 <header>
     <link rel="stylesheet" href="../styles/globals.css">
-    <link rel="stylesheet" href="../styles/simple-datatables.css">
     <title>Accounts - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
@@ -28,7 +27,7 @@
     
 <body>
    
-    <form id="manage_account_form" class="max-w-md mx-auto my-8">
+    <form id="update_event_form" class="max-w-md mx-auto my-8">
 
     <div class="mb-4">
             <label for="password" class="block text-gray-700 font-bold mb-2">Name</label>
@@ -64,12 +63,13 @@
     </form>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const form = document.querySelector('#manage_account_form');
+            const form = document.querySelector('#update_event_form');
             const submitButton = document.querySelector('#update_account_button');
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
+                const params = new URLSearchParams(window.location.search)
                 const name = document.querySelector('#name').value;
                 const description = document.querySelector('#description').value;
                 const location = document.querySelector('#location').value;
@@ -85,22 +85,23 @@
                 formData.append('cousine', cousine);
                 formData.append('seats', seats);
 
+                
                 const response = await fetch(
-                    `${window.location.origin}/api/update-event`, {
-
+                    `${window.location.origin}/api/update-event?id=${params.get("id")}`, {
+                        
                         method: 'POST',
                         body: formData
                     });
 
                 if (response.ok) {
-                    alert('Account updated successfully!');
-
+                    alert('Event updated successfully!');
+                   console.log(response)
                     // Update the form fields with the new input
-                    const updatedData = await response.json();
-                    document.querySelector('#name').value = updatedData.first_name;
-                    document.querySelector('#last_name').value = updatedData.last_name;
-                    document.querySelector('#email').value = updatedData.email;
-                    document.querySelector('#password').value = '';
+                    // const updatedData = await response.json();
+                    // document.querySelector('#name').value = updatedData.name;
+                    // document.querySelector('#description').value = updatedData.description;
+                    // document.querySelector('#location').value = updatedData.location;
+                    // document.querySelector('#venue').value = updatedData.venue;
                 } else {
                     console.error('Failed to update account:', response);
                 }
