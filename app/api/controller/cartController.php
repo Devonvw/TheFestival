@@ -17,7 +17,7 @@ class APICartController
             $session_id = session_id();
         } else {
             $account_id = null;
-            $session_id = session_id();
+            $session_id = 0;
         }
 
         $ticket_id = isset($body["ticket_id"]) ? $body["ticket_id"] : null;
@@ -36,7 +36,7 @@ class APICartController
                 $this->cartService->clearCart($account_id, $session_id);
                 break;
             case 'getCartTickets':
-                $this->cartService->getCartTickets($account_id, $session_id);
+                $this->cartService->getCartTickets($account_id, 0);
                 break;
             case 'getCart':
                 $this->cartService->getCart($account_id, $session_id);
@@ -51,7 +51,7 @@ class APICartController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
             $this->processCartRequest('createCart', $body);
-            echo json_encode([ 'msg' => "" ]);
+            echo json_encode([ 'msg' => "Created cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -98,7 +98,6 @@ class APICartController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->processCartRequest('getCartTickets', $body);
             echo json_encode($this->processCartRequest('getCartTickets', $body));
         } catch (Exception $ex) {
             http_response_code(500);
