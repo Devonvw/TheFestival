@@ -1,11 +1,30 @@
 <?php
-
-
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
+    window.addEventListener("load", (event) => {
+        fetch(`${window.location.origin}/api/cart`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Output the response from the controller
+            })
+            .catch(error => {
+                console.error(error); // Handle any errors that occur
+            });
 
+
+    });
 </script>
 <header>
     <title>Cart - Social</title>
@@ -28,7 +47,6 @@
 
 <body>
     <div class="">
-        <?php include __DIR__ . '/../../components/navbar.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
@@ -68,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <?php include __DIR__ . '/../../components/navbar.php' ?>
+
     </div>
 </body>
 
