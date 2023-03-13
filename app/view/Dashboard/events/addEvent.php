@@ -53,7 +53,7 @@
                
 
                 //  window.location = "/";
-
+                
                 document.getElementById('success').innerHTML = "Event created, you can now login";
                  window.location = "/dashboard/events";
 

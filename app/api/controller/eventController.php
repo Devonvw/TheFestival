@@ -43,7 +43,7 @@ class APIEventController
         try {
             
             $this->eventService->deleteEvent($id);
-            echo json_encode([ 'msg' => "Page succesfully deleted." ]);
+            echo json_encode([ 'msg' => "Event succesfully deleted." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -56,7 +56,7 @@ class APIEventController
            
 
             $this->eventService->updateEvent($id, $_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $_POST["seats"]);
-            echo json_encode([ 'msg' => "Section succesfully updated." ]);
+            echo json_encode([ 'msg' => "Event succesfully updated." ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

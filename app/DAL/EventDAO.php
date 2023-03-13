@@ -37,7 +37,7 @@ require_once __DIR__ . '/../DAL/Database.php';
 
         function AddEvent($event_id, $name, $description, $location, $venue, $cousine, $seats){
           $stmt = $this->DB::$connection->prepare("INSERT INTO event_item (event_id, name, description, location, venue, cousine, seats) VALUES (:event_id, :name, :description, :location, :venue, :cousine, :seats)");
-        
+ 
 
          
             $event_id_param = trim(htmlspecialchars($event_id));

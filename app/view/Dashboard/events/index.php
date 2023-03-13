@@ -49,20 +49,21 @@
 
                    data.forEach((values)=>{
                     tableData+=` <tr>
-                    <td>${values.id}</td>
-                    <td>${values.event_id}</td>
-                    <td>${values.name}</td>
-                    <td>${values.description}</td>
-                    <td>${values.location}</td>
-                    <td>${values.venue}</td>
-                    <td>${values.cousine}</td>
-                    <td>${values.seats}</td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-6">${values.id}</td>
+                    <td class="px-6">${values.event_id}</td>
+                    <td class="px-6">${values.name}</td>
+                    <td class="px-6">${values.description}</td>
+                    <td class="px-6">${values.location}</td>
+                    <td class="px-6">${values.venue}</td>
+                    <td class="px-6">${values.cousine}</td>
+                    <td class="px-6">${values.seats}</td>
+
+                    <td class="flex items-center px-6 py-4 space-x-5">
                     <a href="/dashboard/events/edit?id=${values.event_id}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    </td>
-                    <td class="px-6 py-4 text-left">
                     <button onclick="deleteEvent(${values.event_id})" class="bg-red-800 h-[1.7rem] w-[1.7rem] flex items-center"><img src="../assets/icons8-trash-can-120.png" class="w-3/4 h-[1.5rem] mx-auto" />
-                    </td>
+                     </td>
+
+                 
                     </tr>`; 
                    });
                    document.getElementById("table_body").innerHTML=tableData;
@@ -80,7 +81,7 @@
         method: "DELETE",
     }).then((res) => {
         if (res.ok) 
-      
+      alert("Event Deleted");
         getEvent();
     }).catch((res) => {});
 }
@@ -137,13 +138,12 @@
                         <a href="#"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 ml-1" aria-hidden="true" fill="currentColor" viewBox="0 0 320 512"><path d="M27.66 224h264.7c24.6 0 36.89-29.78 19.54-47.12l-132.3-136.8c-5.406-5.406-12.47-8.107-19.53-8.107c-7.055 0-14.09 2.701-19.45 8.107L8.119 176.9C-9.229 194.2 3.055 224 27.66 224zM292.3 288H27.66c-24.6 0-36.89 29.77-19.54 47.12l132.5 136.8C145.9 477.3 152.1 480 160 480c7.053 0 14.12-2.703 19.53-8.109l132.3-136.8C329.2 317.8 316.9 288 292.3 288z"/></svg></a>
                     </div>
                 </th>
+                
                 <th scope="col" class="px-6 py-3">
-                    <span class="sr-only">Edit</span>
-                </th>
-                <th scope="col" class="px-6 py-3">
-                    <span class="sr-only">Edit</span>
+                    Action
                 </th>
                 
+            
             </tr>
         </thead>
         <tbody id="table_body">
