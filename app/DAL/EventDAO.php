@@ -14,15 +14,12 @@ require_once __DIR__ . '/../DAL/Database.php';
           $stmt = $this->DB::$connection->prepare("SELECT e.id AS event_id, ei.id AS event_item_id, ei.name AS event_item_name, ei.description AS event_item_description, ei.location, ei.venue, ei.cousine, ei.seats
                                                    FROM event_item AS ei LEFT JOIN event AS e on e.id = ei.event_id;");
 
-        
           $stmt->execute();
           $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-         $pages = [];
+          $pages = [];
 
           foreach ($data as $row) {
-         // echo json_encode($row);
-            //array_push($pages, new Event($row['id'], $row['event_id'], $row['name'], $row['description'], $row['location'], $row['venue'], $row['cousine'], $row['seats']));
             $pages[] = new Event($row['event_id'], $row['event_item_id'], $row['event_item_name'], $row['event_item_description'], $row['location'], $row['venue'], $row['cousine'], $row['seats']);
           }
           
@@ -30,14 +27,32 @@ require_once __DIR__ . '/../DAL/Database.php';
       
           
         
-           // $event = new Event($row['id'], $row['event_id'], $row['name'], $row['description'], $row['location'], $row['venue'], $row['cousine'], $row['seats']);
           
 
         }
 
-        function AddEvent($event_id, $name, $description, $location, $venue, $cousine, $seats){
-          $stmt = $this->DB::$connection->prepare("INSERT INTO event_item (event_id, name, description, location, venue, cousine, seats) VALUES (:event_id, :name, :description, :location, :venue, :cousine, :seats)");
+        function addEvent($id, $name, $description) {
+          $stmt = $this->DB::$connection->prepare("INSERT INTO event (id, name, description) VALUES (:id, :name, :description)");
+          $id_param = trim(htmlspecialchars($id));
+          $name_param = trim(htmlspecialchars($name));
+          $description_param = trim(htmlspecialchars($description));
+
+          $stmt->bindParam(':id', $id_param);
+          $stmt->bindParam(':name', $name_param);
+          $stmt->bindParam(':description', $description_param);
+          
+          if ($stmt->execute()) {
+            return true;
+        } else {
+            throw new Exception("Error: Could not create event.");
+        }
+      }
+
         
+
+        function AddEventItem($event_id, $name, $description, $location, $venue, $cousine, $seats){
+          $stmt = $this->DB::$connection->prepare("INSERT INTO event_item (event_id, name, description, location, venue, cousine, seats) VALUES (:event_id, :name, :description, :location, :venue, :cousine, :seats)");
+ 
 
          
             $event_id_param = trim(htmlspecialchars($event_id));

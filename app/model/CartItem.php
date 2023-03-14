@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/Ticket.php';
+require_once __DIR__ . '/Ticket.php';
 
 class CartItem {
   public $id;
