@@ -56,7 +56,19 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     echo $controller->getInstagramFeed();
                     break;
 
-
+                    /*----------------------GET information pages routes-----------------------------*/
+                case "cart":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->getCartTickets();
+                    break;
+                case "cart/tickets":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->getCart();
+                    break;
                 default:
                     http_response_code(404);
                     break;
@@ -152,7 +164,20 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationSection($params["information_page_id"]);
                     break;
 
+                    /*----------------------POST cart routes-----------------------------*/
 
+                case "cart/create":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->createCart();
+                    break;
+                case "cart/add":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->addToCart();
+                    break;
                 default:
                     http_response_code(404);
                     break;
@@ -223,7 +248,20 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->deleteInformationSection($params["id"]);
                     break;
 
+                    /*----------------------DELETE cart routes-----------------------------*/
 
+                case "cart/remove":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->removeFromCart();
+                    break;
+                case "cart/clear":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->clearCart();
+                    break;
                 default:
                     http_response_code(404);
                     break;
