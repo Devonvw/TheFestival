@@ -7,9 +7,15 @@ class EventService {
        return $dao->getAllEvent();
     }
 
-    public function addEvent($event_id, $name, $description, $location, $venue, $cousine, $seats) {
+    public function addEvent($id, $name, $description) {
         $dao = new EventDAO();
-        $dao->addEvent($event_id, $name, $description, $location, $venue, $cousine, $seats);
+        $dao->addEvent($id, $name, $description);
+    }
+
+    
+    public function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $seats) {
+        $dao = new EventDAO();
+        $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $seats);
     }
 
     public function deleteEvent($id) {
