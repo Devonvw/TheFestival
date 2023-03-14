@@ -126,3 +126,4 @@ class cartDAO
 
         return $cart->cart_items;
     }
+}
