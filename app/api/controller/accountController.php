@@ -40,6 +40,7 @@ class APIAccountController
     {
         try {
             $this->accountService->logoutUser();
+            echo json_encode(['msg' => "Succesfully logged out"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -68,13 +69,22 @@ class APIAccountController
         }
     }
 
-
-
-
     public function deleteAccount($id)
     {
         try {
             $this->accountService->deleteAccount($id);
+            echo json_encode(['msg' => "Account deleted"]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+
+    public function setAccountActive($id)
+    {
+        try {
+            $this->accountService->setAccountActive($id);
+            echo json_encode(['msg' => "Account is active"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -87,6 +97,7 @@ class APIAccountController
             $body = json_decode(file_get_contents('php://input'), true);
 
             $this->accountService->updateAccount($id, $body["first_name"], $body["last_name"], $body["email"]);
+            echo json_encode(['msg' => "Account updated"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
