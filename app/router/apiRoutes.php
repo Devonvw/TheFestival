@@ -146,6 +146,15 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationSection($params["information_page_id"]);
                     break;
 
+                /*----------------------POST order routes-----------------------------*/
+
+                case "order":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->createOrder($params["account_id"]);
+                    break;
+                    
 
                 default:
                     http_response_code(404);
