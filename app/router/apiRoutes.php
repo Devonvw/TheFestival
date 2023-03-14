@@ -28,35 +28,36 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getAllEvents();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET Information pages routes-----------------------------*/
 
                 case "information-page":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getInformationPages();
+                    $controller->getInformationPages();
                     break;
                 case "information-page/page":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
+                    $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
                     break;
                 case "information-page/home-page":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getHomePage();
+                    $controller->getHomePage();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET Instagram routes-----------------------------*/
 
                 case "instagram-feed":
                     require_once __DIR__ . '/../api/controller/instagramController.php';
                     $controller = new APIInstagramController();
-                    echo $controller->getInstagramFeed();
+                    $controller->getInstagramFeed();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET Cart routes-----------------------------*/
+
                 case "cart":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
@@ -203,7 +204,12 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->updateAccount($params["id"]);
                     break;
-
+                case "account/active":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
+                    $controller->setAccountActive($params["id"]);
+                    break;
                 case "me/change-email":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';

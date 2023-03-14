@@ -141,6 +141,13 @@ class AccountDAO
         $del_stmt->execute();
     }
 
+    function setAccountActive($id)
+    {
+        $del_stmt = $this->DB::$connection->prepare("UPDATE account SET active = true where id = :id");
+        $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $del_stmt->execute();
+    }
+
     function updateAccount($id, $firstName, $lastName, $email)
     {
         if ((isset($_SESSION["type"]) ? $_SESSION["type"] : 0) == 3) throw new Exception("Only admins can retrieve all accounts", 1);
