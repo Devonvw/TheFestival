@@ -62,13 +62,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------GET Cart routes-----------------------------*/
 
-                case "cart":
-                    //(new Middleware())->adminOnly();
-                    require_once __DIR__ . '/../api/controller/cartController.php';
-                    $controller = new APICartController();
-                    $controller->getCartTickets();
-                    break;
-
+              
                 case "cart/tickets":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';

@@ -11,6 +11,14 @@ class cartDAO
     {
         $this->DB = new DB();
     }
+    private function cartExist()
+    {
+        $cart = $this->getCart();
+        if (!$cart) {
+            $this->createCart();
+        }
+        return true;
+    }
 
     public function createCart($account_id = null, $session_id = null)
     {
@@ -69,26 +77,25 @@ class cartDAO
     {
         $cart = null;
         if ($account_id !== null) {
-            $sql = "SELECT * FROM cart WHERE account_id = :account_id";
+            $sql = "SELECT * FROM cart WHERE account_id = :account_id LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
             $stmt->execute();
-            $cart = $stmt->fetchAll(PDO::FETCH_CLASS, 'Cart'); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
+            $cart = $stmt->fetchObject('Cart'); // change PDO::FETCH_CLASS to fetchObject()
         } else {
-            $sql = "SELECT * FROM cart WHERE session_id = :session_id";
+            $sql = "SELECT * FROM cart WHERE session_id = :session_id LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':session_id', $session_id, PDO::PARAM_INT);
             $stmt->execute();
-            $cart = $stmt->fetchObject('Cart'); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
+            $cart = $stmt->fetchObject('Cart'); // change PDO::FETCH_CLASS to fetchObject()
         }
-
+        var_dump($session_id);
 
         //TODO: Needs to be tested
         $items_stmt = $this->DB::$connection->prepare("SELECT ci.*, eit.price, eit.event_item_id, eit.persons, ei.name as event_item_name, e.name as event_name FROM `cart` LEFT JOIN cart_item as ci on ci.cart_id = cart.id left join event_item_ticket as eit on ci.ticket_id = eit.id left join event_item as ei on eit.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE cart.id = :cart_id;");
-        $items_stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
+        $items_stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT); // Use $cart->id instead of $cart
         $items_stmt->execute();
         $items = $items_stmt->fetchAll();
-
 
         $cart_items = [];
 
@@ -97,7 +104,7 @@ class cartDAO
         }
 
         $cart->cart_items = $cart_items;
-        
+
         return $cart;
     }
 }

@@ -50,7 +50,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 <body>
     <div class="">
-        <?php include __DIR__ . '/../../components/nav.php' ?>
+        
         <div class="h-[80vh] flex justify-center items-center mt-32">
             <div class="max-w-xl">
                 <div class="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-xl xl:p-0 dark:bg-teal-800 dark:border-gray-700">

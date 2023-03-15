@@ -83,7 +83,7 @@ class PasswordResetDAO
             throw new Exception("New password must have at least 6 characters", 1);
         }
         $email = $_SESSION['email'];
-
+        //TODO: check with seperate router if token is valid
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
         // Update the user's password in the database
