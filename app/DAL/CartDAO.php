@@ -65,33 +65,6 @@ class cartDAO
         $stmt->bindParam(':cart_id', $cart->id, PDO::PARAM_INT);
         $stmt->execute();
     }
-
-
-    public function getCartTickets($account_id = null, $session_id = null)
-    {
-        if ($account_id !== null) {
-            $sql = "SELECT eit.price, eit.persons, ei.name, ei.description, ei.location, ei.venue, ei.cousine, ei.seats FROM cart c 
-                    JOIN cart_item ci ON c.id = ci.cart_id 
-                    JOIN event_item_ticket eit ON ci.ticket_id = eit.id 
-                    JOIN event_item ei ON eit.event_item_id = ei.id 
-                    WHERE c.account_id = :account_id";
-            $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $tickets = $stmt->fetchAll();
-        } else {
-            $sql = "SELECT eit.price, eit.persons, ei.name, ei.description, ei.location, ei.venue, ei.cousine, ei.seats FROM cart c 
-                    JOIN cart_item ci ON c.id = ci.cart_id 
-                    JOIN event_item_ticket eit ON ci.ticket_id = eit.id 
-                    JOIN event_item ei ON eit.event_item_id = ei.id 
-                    WHERE c.session_id = :session_id";
-            $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindValue(':session_id', $session_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $tickets = $stmt->fetchAll();
-        }
-        return $tickets;
-    }
     public function getCart($account_id = null, $session_id = null)
     {
         $cart = null;
@@ -100,13 +73,13 @@ class cartDAO
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
             $stmt->execute();
-            $cart = $stmt->fetch(PDO::FETCH_OBJ); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
+            $cart = $stmt->fetchAll(PDO::FETCH_CLASS, 'Cart'); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
         } else {
             $sql = "SELECT * FROM cart WHERE session_id = :session_id";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':session_id', $session_id, PDO::PARAM_INT);
             $stmt->execute();
-            $cart = $stmt->fetch(PDO::FETCH_OBJ); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
+            $cart = $stmt->fetchObject('Cart'); // change PDO::FETCH_CLASS to PDO::FETCH_OBJ
         }
 
 
@@ -114,16 +87,17 @@ class cartDAO
         $items_stmt = $this->DB::$connection->prepare("SELECT ci.*, eit.price, eit.event_item_id, eit.persons, ei.name as event_item_name, e.name as event_name FROM `cart` LEFT JOIN cart_item as ci on ci.cart_id = cart.id left join event_item_ticket as eit on ci.ticket_id = eit.id left join event_item as ei on eit.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE cart.id = :cart_id;");
         $items_stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
         $items_stmt->execute();
-        $items = $stmt->fetchAll();
+        $items = $items_stmt->fetchAll();
+
 
         $cart_items = [];
 
         foreach ($items as $row) {
-            array_push($pages, new CartItem($row['id'], $row['cart_id'], new Ticket($row['ticket_id'], $row['event_item_id'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['price']), $row['created_at']));
+            array_push($cart_items, new CartItem($row['id'], $row['cart_id'], new Ticket($row['ticket_id'], $row['event_item_id'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['price']), $row['created_at']));
         }
 
         $cart->cart_items = $cart_items;
-
-        return $cart->cart_items;
+        
+        return $cart;
     }
 }

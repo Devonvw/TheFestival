@@ -17,7 +17,7 @@ class APICartController
             $session_id = session_id();
         } else {
             $account_id = null;
-            $session_id = 0;
+            $session_id = 1;
         }
 
         $ticket_id = isset($body["ticket_id"]) ? $body["ticket_id"] : null;
@@ -35,11 +35,8 @@ class APICartController
             case 'clearCart':
                 $this->cartService->clearCart($account_id, $session_id);
                 break;
-            case 'getCartTickets':
-                $this->cartService->getCartTickets($account_id, 0);
-                break;
             case 'getCart':
-                $this->cartService->getCart($account_id, $session_id);
+                $this->cartService->getCart($account_id, 0);
                 break;
             default:
                 throw new Exception("Invalid function specified.");

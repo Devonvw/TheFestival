@@ -59,6 +59,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInstagramFeed();
                     break;
 
+
                     /*----------------------GET Cart routes-----------------------------*/
 
                 case "cart":
@@ -67,6 +68,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->getCartTickets();
                     break;
+
                 case "cart/tickets":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
