@@ -4,7 +4,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
     window.addEventListener("load", (event) => {
-        fetch(`${window.location.origin}/api/cart`, {
+        fetch(`${window.location.origin}/api/cart/tickets`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
