@@ -12,7 +12,7 @@ class Router
         //Handle API routes
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
-            handleApiRoutes($uri, $params, $requestMethod);
+            return handleApiRoutes($uri, $params, $requestMethod);
         }
 
         //Handle content routes

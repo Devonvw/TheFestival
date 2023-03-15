@@ -5,6 +5,9 @@ class Cart {
   public $account_id;
   public $session_id;
   public $cart_items;
+  public $total;
+  public $subtotal;
+  public $vat;
   public $created_at;
   public $modified_at;
 

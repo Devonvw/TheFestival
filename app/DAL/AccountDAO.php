@@ -52,9 +52,9 @@ class AccountDAO
             $_SESSION["type_id"] = $account->type_id;
 
 
-            $image_data = file_get_contents($_FILES["profile_picture"]["name"]);
-            $encoded_image = base64_encode($image_data);
-            $_SESSION["profile_picture"] = $encoded_image;
+            // $image_data = file_get_contents($_FILES["profile_picture"]["name"]);
+            // $encoded_image = base64_encode($image_data);
+            // $_SESSION["profile_picture"] = $encoded_image;
 
             session_write_close();
         } else throw new Exception("Password is not correct", 1);

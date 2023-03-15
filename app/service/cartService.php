@@ -11,17 +11,13 @@ class CartService {
         $dao = new cartDAO();
         $dao->addToCart($ticket_id, $account_id, $session_id);
     }
-    public function removeFromCart($ticket_id, $account_id, $session_id){
+    public function removeFromCart($cart_item_id, $account_id, $session_id){
         $dao = new cartDAO();
-        $dao->removeFromCart($ticket_id, $account_id, $session_id);
+        $dao->removeFromCart($cart_item_id, $account_id, $session_id);
     }
     public function clearCart($account_id, $session_id){
         $dao = new cartDAO();
         $dao->clearCart($account_id, $session_id);
-    }
-    public function getCartTickets($account_id, $session_id){
-        $dao = new cartDAO();
-        return $dao->getCartTickets($account_id, $session_id);
     }
     public function getCart($account_id, $session_id){
         $dao = new cartDAO();

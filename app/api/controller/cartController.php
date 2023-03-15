@@ -35,11 +35,8 @@ class APICartController
             case 'clearCart':
                 $this->cartService->clearCart($account_id, $session_id);
                 break;
-            case 'getCartTickets':
-                $this->cartService->getCartTickets($account_id, 0);
-                break;
             case 'getCart':
-                $this->cartService->getCart($account_id, $session_id);
+                echo $this->cartService->getCart($account_id, $session_id);
                 break;
             default:
                 throw new Exception("Invalid function specified.");
@@ -49,8 +46,8 @@ class APICartController
     public function createCart()
     {
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            $this->processCartRequest('createCart', $body);
+            $this->cartService->createCart(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
+
             echo json_encode([ 'msg' => "Created cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);
@@ -60,9 +57,12 @@ class APICartController
 
     public function addToCart()
     {
+        session_start();
+        
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->processCartRequest('addToCart', $body);
+
+            $this->cartService->addToCart($body["ticket_id"], isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
             echo json_encode([ 'msg' => "Item added to cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);
@@ -72,9 +72,12 @@ class APICartController
 
     public function removeFromCart()
     {
+        session_start();
+
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->processCartRequest('removeFromCart', $body);
+            
+            $this->cartService->removeFromCart($body["cart_item_id"], isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
             echo json_encode([ 'msg' => "Item removed from cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);
@@ -85,8 +88,8 @@ class APICartController
     public function clearCart()
     {
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            $this->processCartRequest('clearCart', $body);
+            $this->cartService->clearCart(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
+
             echo json_encode([ 'msg' => "Cart cleared" ]);
         } catch (Exception $ex) {
             http_response_code(500);
@@ -94,22 +97,12 @@ class APICartController
         }
     }
 
-    public function getCartTickets()
-    {
-        try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            echo json_encode($this->processCartRequest('getCartTickets', $body));
-        } catch (Exception $ex) {
-            http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
-        }
-    }
     public function getCart()
     {
+        session_start();
+        
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            
-            echo json_encode($this->processCartRequest('getCart', $body));
+            echo json_encode($this->cartService->getCart(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id()));
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
