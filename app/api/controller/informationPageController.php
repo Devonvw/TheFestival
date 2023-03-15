@@ -16,7 +16,7 @@ class APIInformationPageController
         try {
             session_start();
 
-            return json_encode($this->informationPageService->getInformationPages());
+            echo json_encode($this->informationPageService->getInformationPages());
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -28,7 +28,7 @@ class APIInformationPageController
         try {
             session_start();
 
-            return json_encode($this->informationPageService->getInformationPage($id, $url));
+            echo json_encode($this->informationPageService->getInformationPage($id, $url));
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -40,7 +40,7 @@ class APIInformationPageController
         try {
             session_start();
 
-            return json_encode($this->informationPageService->getHomePage());
+            echo json_encode($this->informationPageService->getHomePage());
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -53,6 +53,7 @@ class APIInformationPageController
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
 
             $this->informationPageService->editHomePage($_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
+            echo json_encode(['msg' => "Home page succesfully updated."]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -65,6 +66,7 @@ class APIInformationPageController
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
 
             $this->informationPageService->editInformationPage($id, $_POST["url"], $_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
+            echo json_encode(['msg' => "Information succesfully updated."]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);

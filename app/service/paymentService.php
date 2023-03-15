@@ -14,6 +14,7 @@ class PaymentService {
         $mollie = $this->getMollie();
 
         //Retrieve shopping cart and calculate total price;
+        //TODO: create getorder function
         $order = ["totalPrice" => "27,79", "id" => 8];
 
         $payment = $mollie->payments->create([
@@ -26,7 +27,7 @@ class PaymentService {
             "redirectUrl" => "",
             "webhookUrl" => "",
             "metadata" => [
-                "order_id" => $order["totalPrice"],
+                "order_id" => $order["id"],
             ],
             "issuer" => $issuer,
         ]);
@@ -34,6 +35,24 @@ class PaymentService {
 
     private function createPaypalPayment() {
         $mollie = $this->getMollie();
+
+        //Retrieve shopping cart and calculate total price;
+        //TODO: create getorder function
+        $order = ["totalPrice" => "27,79", "id" => 8];
+
+        $payment = $mollie->payments->create([
+            "amount" => [
+                "currency" => "EUR",
+                "value" => $order["totalPrice"], // You must send the correct number of decimals, thus we enforce the use of strings
+            ],
+            "method" => \Mollie\Api\Types\PaymentMethod::PAYPAL,
+            "description" => "Order #{$order['totalPrice']}",
+            "redirectUrl" => "",
+            "webhookUrl" => "",
+            "metadata" => [
+                "order_id" => $order["id"],
+            ],
+        ]);
     }
 
     public function createPayment($account_id, $method, $issuer) {
@@ -57,8 +76,6 @@ class PaymentService {
     public function paymentWebhook($id) {
         $mollie = $this->getMollie();
         $payment = $mollie->payments->get($id);
-
-
     }
 }
 ?>

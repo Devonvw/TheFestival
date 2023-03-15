@@ -24,13 +24,28 @@ class APIEventController
         }
     }
 
+    public function addEventItem()
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+    
+            $this->eventService->addEventItem($body["event_id"], $body["name"], $body["description"], $body["location"], $body["venue"], $body["cousine"], $body["seats"]);
+            json_encode([ 'msg' => "Event item succesfully added." ]);
+
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+
+    
     public function addEvent()
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
     
-            $this->eventService->addEvent($body["event_id"], $body["name"], $body["description"], $body["location"], $body["venue"], $body["cousine"], $body["seats"]);
-            json_encode([ 'msg' => "Section succesfully added." ]);
+            $this->eventService->addEvent($body["e_name"], $body["e_description"]);
+            json_encode([ 'msg' => "Event succesfully added." ]);
 
         } catch (Exception $ex) {
             http_response_code(500);
@@ -43,7 +58,7 @@ class APIEventController
         try {
             
             $this->eventService->deleteEvent($id);
-            echo json_encode([ 'msg' => "Page succesfully deleted." ]);
+            echo json_encode([ 'msg' => "Event item succesfully deleted." ]);
         } catch (Exception $ex){
             http_response_code(500);
             if($ex->getCode() != 0) echo json_encode([ 'msg' => $ex->getMessage() ]);
@@ -54,9 +69,8 @@ class APIEventController
     {
         try {
            
-
             $this->eventService->updateEvent($id, $_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $_POST["seats"]);
-            echo json_encode([ 'msg' => "Section succesfully updated." ]);
+            echo json_encode([ 'msg' => "Event succesfully updated." ]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

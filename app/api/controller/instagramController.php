@@ -14,7 +14,7 @@ class APIInstagramController
     public function getInstagramFeed()
     {
         try {
-            return $this->instagramService->getInstagramFeed();
+            echo $this->instagramService->getInstagramFeed();
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

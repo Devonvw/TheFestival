@@ -37,6 +37,11 @@ class AccountService {
         $dao->deleteAccount($id);
     }
 
+    public function setAccountActive($id) {
+        $dao = new AccountDAO();
+        $dao->setAccountActive($id);
+    }
+
     public function updateAccount($id, $firstName, $lastName, $email) {
         $dao = new AccountDAO();
         $dao->updateAccount($id, $firstName, $lastName, $email);

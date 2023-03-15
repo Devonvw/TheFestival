@@ -21,6 +21,9 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->getAccount($_SESSION["id"]);
                     break;
+
+                    /*----------------------GET Event routes-----------------------------*/
+
                 case "event/all":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
@@ -28,36 +31,44 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getAllEvents();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET Information pages routes-----------------------------*/
 
                 case "information-page":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getInformationPages();
+                    $controller->getInformationPages();
                     break;
                 case "information-page/page":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
+                    $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
                     break;
                 case "information-page/home-page":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
-                    echo $controller->getHomePage();
+                    $controller->getHomePage();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
+                    /*----------------------GET Instagram routes-----------------------------*/
 
                 case "instagram-feed":
                     require_once __DIR__ . '/../api/controller/instagramController.php';
                     $controller = new APIInstagramController();
-                    echo $controller->getInstagramFeed();
+                    $controller->getInstagramFeed();
                     break;
 
-                    /*----------------------GET information pages routes-----------------------------*/
-               
+
+                    /*----------------------GET Cart routes-----------------------------*/
+
+                case "cart":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->getCartTickets();
+                    break;
+
                 case "cart/tickets":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
@@ -107,6 +118,9 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIPasswordResetController();
                     $controller->sendConfirmationMail();
                     break;
+
+                    /*----------------------POST event routes-----------------------------*/
+
                 case "update-event":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -120,6 +134,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->addEvent();
+                    break;
+                case "event/item":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->addEventItem();
                     break;
 
 
@@ -153,7 +174,16 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationSection($params["information_page_id"]);
                     break;
 
-                    /*----------------------POST cart routes-----------------------------*/
+                /*----------------------POST order routes-----------------------------*/
+
+                case "order":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->createOrder($params["account_id"]);
+                    break;
+                    
+                /*----------------------POST cart routes-----------------------------*/
 
                 case "cart/create":
                     //(new Middleware())->adminOnly();
@@ -183,7 +213,12 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->updateAccount($params["id"]);
                     break;
-
+                case "account/active":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
+                    $controller->setAccountActive($params["id"]);
+                    break;
                 case "me/change-email":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
@@ -214,6 +249,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->deleteAccount($params["id"]);
                     break;
 
+                    /*----------------------DELETE event routes-----------------------------*/
+                    
                 case "event":
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';

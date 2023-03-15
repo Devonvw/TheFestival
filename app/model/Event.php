@@ -1,6 +1,7 @@
 <?php
 class Event {
   public $id;
+  public $event_name;
   public $event_id;
   public $name;
   public $description;
@@ -11,9 +12,10 @@ class Event {
 
 
 
-  function __construct($id = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $seats = null) {
+  function __construct($id = null, $event_name = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $seats = null) {
    // if(!is_null($id) && !is_null($event_id) && !is_null($name) && !is_null($description) && !is_null($seats)) {
       $this->id = $id;
+      $this->event_name = $event_name;
       $this->event_id = $event_id;
       $this->name = $name;
       $this->description = $description;
