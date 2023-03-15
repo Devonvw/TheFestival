@@ -62,17 +62,14 @@
     function addEvent(e) {
         e.preventDefault();
 
-        const id = document.querySelector('#id').value;
         const e_name = document.querySelector('#e_name').value;
         const e_description = document.querySelector('#e_description').value;
 
         const formData = new FormData();
-        formData.append('event_id', id);
         formData.append('name', e_name);
         formData.append('description', e_description);
       
         const body = {
-            id,
             e_name,
             e_description,
          
@@ -168,7 +165,7 @@
                             </div>
 
                             <button type="submit" class="border border-white w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                Create Event
+                                Create Event Item
                             </button>
                         </form>
                         <p id="success"></p>
@@ -191,11 +188,6 @@
                         </div>
                         <form id="e_createForm" enctype=”multipart/form-data” class="space-y-4 md:space-y-6">
 
-                            <div>
-                                <label for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    id</label>
-                                <input maxlength="255" type="number" name="id" id="id" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="id..." required="">
-                            </div>
                             <div>
                                 <label for="e_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     name</label>
@@ -223,8 +215,6 @@
 </body>
 
 </html>
-
-
 
 <!-- <html>
 <script src="https://cdn.tailwindcss.com"></script>

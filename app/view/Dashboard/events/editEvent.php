@@ -34,10 +34,13 @@
                 });
 
             if (response.ok) {
-                alert('Event updated successfully!');
                 console.log(response)
+                 alert('Event updated successfully!');
+              
 
                 window.location = "/dashboard/events";
+                
+         
 
             } else {
                 console.error('Failed to update event:', response);

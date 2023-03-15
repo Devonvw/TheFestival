@@ -7,9 +7,9 @@ class EventService {
        return $dao->getAllEvent();
     }
 
-    public function addEvent($id, $name, $description) {
+    public function addEvent($name, $description) {
         $dao = new EventDAO();
-        $dao->addEvent($id, $name, $description);
+        $dao->addEvent($name, $description);
     }
 
     
@@ -29,9 +29,5 @@ class EventService {
     }
        
     }
-
-
-
-  
 
 ?>

@@ -44,7 +44,7 @@ class APIEventController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
     
-            $this->eventService->addEvent($body["id"], $body["e_name"], $body["e_description"]);
+            $this->eventService->addEvent($body["e_name"], $body["e_description"]);
             json_encode([ 'msg' => "Event succesfully added." ]);
 
         } catch (Exception $ex) {

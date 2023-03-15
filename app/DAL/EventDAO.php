@@ -11,7 +11,7 @@ require_once __DIR__ . '/../DAL/Database.php';
 
        function getAllEvent() {
         
-          $stmt = $this->DB::$connection->prepare("SELECT e.id AS event_id, ei.id AS event_item_id, ei.name AS event_item_name, ei.description AS event_item_description, ei.location, ei.venue, ei.cousine, ei.seats
+          $stmt = $this->DB::$connection->prepare("SELECT e.id AS event_id, e.name AS event_name, ei.id AS event_item_id, ei.name AS event_item_name, ei.description AS event_item_description, ei.location, ei.venue, ei.cousine, ei.seats
                                                    FROM event_item AS ei LEFT JOIN event AS e on e.id = ei.event_id;");
 
           $stmt->execute();
@@ -20,24 +20,18 @@ require_once __DIR__ . '/../DAL/Database.php';
           $pages = [];
 
           foreach ($data as $row) {
-            $pages[] = new Event($row['event_id'], $row['event_item_id'], $row['event_item_name'], $row['event_item_description'], $row['location'], $row['venue'], $row['cousine'], $row['seats']);
+            $pages[] = new Event($row['event_id'], $row['event_name'] ,$row['event_item_id'], $row['event_item_name'], $row['event_item_description'], $row['location'], $row['venue'], $row['cousine'], $row['seats']);
           }
           
           return $pages;
-      
           
-        
-          
-
         }
 
-        function addEvent($id, $name, $description) {
-          $stmt = $this->DB::$connection->prepare("INSERT INTO event (id, name, description) VALUES (:id, :name, :description)");
-          $id_param = trim(htmlspecialchars($id));
+        function addEvent($name, $description) {
+          $stmt = $this->DB::$connection->prepare("INSERT INTO event (name, description) VALUES (:name, :description)");
           $name_param = trim(htmlspecialchars($name));
           $description_param = trim(htmlspecialchars($description));
 
-          $stmt->bindParam(':id', $id_param);
           $stmt->bindParam(':name', $name_param);
           $stmt->bindParam(':description', $description_param);
           
@@ -118,4 +112,3 @@ require_once __DIR__ . '/../DAL/Database.php';
 
         }
      }
-?>

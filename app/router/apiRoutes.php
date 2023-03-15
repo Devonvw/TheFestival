@@ -21,6 +21,9 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->getAccount($_SESSION["id"]);
                     break;
+
+                    /*----------------------GET Event routes-----------------------------*/
+
                 case "event/all":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
@@ -113,6 +116,9 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIPasswordResetController();
                     $controller->sendConfirmationMail();
                     break;
+
+                    /*----------------------POST event routes-----------------------------*/
+
                 case "update-event":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -134,6 +140,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->addEventItem();
                     break;
+
 
                     /*----------------------POST information page routes-----------------------------*/
 
@@ -240,6 +247,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->deleteAccount($params["id"]);
                     break;
 
+                    /*----------------------DELETE event routes-----------------------------*/
+                    
                 case "event":
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
