@@ -11,6 +11,14 @@ class cartDAO
     {
         $this->DB = new DB();
     }
+    private function cartExist()
+    {
+        $cart = $this->getCart();
+        if (!$cart) {
+            $this->createCart();
+        }
+        return true;
+    }
 
     public function createCart($account_id = null, $session_id = null)
     {
@@ -97,19 +105,19 @@ class cartDAO
         $stmt->execute();
     }
 
-    public function getCart($account_id = null, $session_id = null)
+public function getCart($account_id = null, $session_id = null)
     {
         $cart = null;
 
         if ($account_id !== null) {
-            $sql = "SELECT * FROM cart WHERE account_id = :account_id";
+            $sql = "SELECT * FROM cart WHERE account_id = :account_id LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
             $cart = $stmt->fetch();
         } else {
-            $sql = "SELECT * FROM cart WHERE session_id = :session_id";
+            $sql = "SELECT * FROM cart WHERE session_id = :session_id LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':session_id', $session_id, PDO::PARAM_INT);
             $stmt->execute();

@@ -99,9 +99,6 @@ class AccountDAO
             throw new Exception("Please enter a last name", 1);
         }
 
-
-
-
         if ($stmt = $this->DB::$connection->prepare("INSERT INTO account (email, password, first_name, last_name, type_id) VALUES (:email, :password, :first_name, :last_name, :type_id)")) {
             $email_param = trim(htmlspecialchars($email));
             $password_param = password_hash(trim(htmlspecialchars($password)), PASSWORD_DEFAULT);
@@ -118,7 +115,7 @@ class AccountDAO
             if ($stmt->execute()) {
                 return true;
             } else {
-                throw new Exception("Error: Could not create user.");
+                throw new Exception("Error: Could not create user.", 1);
             }
         }
     }
@@ -207,27 +204,24 @@ class AccountDAO
 
         // Check if password is correct
         if (!password_verify($password, $account->password)) {
-            throw new Exception("your password was incorrect");
+            throw new Exception("Your password was incorrect", 1);
         }
-
         if ($update_stmt = $this->DB::$connection->prepare("UPDATE account SET email = :email where id = :id")) {
             $update_stmt->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
-            $update_stmt->bindParam(':email', trim(htmlspecialchars($new_email)), PDO::PARAM_STR);
+            $update_stmt->bindValue(':email', trim(htmlspecialchars($new_email)), PDO::PARAM_STR);
             if ($update_stmt->execute()) {
                 $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'e-mail');
 
                 return true;
             } else {
-                throw new Exception("Error: Could not update password.");
+                throw new Exception("Error: Could not update email.", 1);
             }
         }
     }
     public function updatePasswordCustomer($current_password, $new_password, $new_password_confirmation)
     {
         $account = $this->getAccount($_SESSION['id']);
-
         $passwordCheck = password_verify(trim($current_password), $account->password);
-
         // Check if password is correct
         if (!$passwordCheck) {
             throw new Exception("Current password was incorrect", 1);
@@ -236,12 +230,10 @@ class AccountDAO
         if (empty(trim($new_password)) || empty(trim($new_password_confirmation)) || empty(trim($current_password))) {
             throw new Exception("Not all fields are filled in", 1);
         }
-
         // Check if email and confirmation match
         if (trim($new_password) !== trim($new_password_confirmation)) {
             throw new Exception("New passwords do not match", 1);
         }
-
         if (strlen(trim($new_password)) < 6) {
             throw new Exception("New password must have at least 6 characters", 1);
         }
@@ -252,11 +244,10 @@ class AccountDAO
             if ($update_stmt->execute()) {
                 $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'password');
             } else {
-                throw new Exception("Error: Could not update password.");
+                throw new Exception("Error: Could not update password.", 1);
             }
         }
     }
-
     function updateAndSendConfirmationEmail($update_stmt, $email, $firstName, $messageSubject)
     {
         if ($update_stmt->execute()) {

@@ -59,6 +59,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInstagramFeed();
                     break;
 
+
                     /*----------------------GET Cart routes-----------------------------*/
 
                 case "cart":
