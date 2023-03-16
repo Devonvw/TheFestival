@@ -13,10 +13,12 @@ class APIOrderController
         $this->orderService = new OrderService();
     }
 
-    public function createOrder($account_id)
+    public function createOrder()
     {
+        session_start();
+
         try {
-            $this->orderService->createOrder($account_id);
+            $this->orderService->createOrder(isset($_SESSION['id']) ? $_SESSION['id'] : null);
             
             echo json_encode([ 'msg' => "Order succesfully created." ]);
         } catch (Exception $ex) {
