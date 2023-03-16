@@ -3,28 +3,32 @@
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-    window.addEventListener("load", (event) => {
-        fetch(`${window.location.origin}/api/cart/tickets`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data); // Output the response from the controller
-            })
-            .catch(error => {
-                console.error(error); // Handle any errors that occur
-            });
+window.addEventListener("load", (event) => {
+    getCart();
+});
 
+function getCart() {
+    fetch(`${window.location.origin}/api/cart`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data)
+            var pagesHTML = "";
 
+            // data?.cart_items?.forEach((page) => pagesHTML +=
+            //     ``
+            // )
+
+            // document.getElementById("cartItems").innerHTML = pagesHTML;
+        }
+    }).catch((res) => {
+        console.log(res)
     });
+}
 </script>
 <header>
     <title>Cart - Social</title>
@@ -50,12 +54,55 @@
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
-            <hr class="mt-6 w-8/12 border-t border-black opacity-50">
-            <div class="flex flex-col md:flex-row items-end md:items-center justify-between">
-                <div class="w-full md:w-1/2 lg:w-2/3">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="w-full md:w-1/2 lg:w-3/4 pt-4 mt-4 border-t border-black">
                     <!-- Cart items -->
+                    <div id="cartItems">
+                        <div class="w-full flex flex-wrap gap-x-4 gap-y-4 border-b border-black pb-4">
+                            <div class="h-24 w-24 rounded-full bg-gray-300 my-auto"></div>
+                            <div class="mr-auto">
+                                <ul>
+                                    <li>
+                                        <p>Yummie!</p>
+                                    </li>
+                                    <li>
+                                        <p>Reservation for Restaurant ML</p>
+                                    </li>
+                                    <li>
+                                        <p>Saturday July 28, 19:00 - 21:00</p>
+                                    </li>
+                                    <li>
+                                        <p>4 persons</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="flex">
+                                <div class="mr-8">
+                                    <ul>
+                                        <li>
+                                            <p class="font-medium">Per person</p>
+                                        </li>
+                                        <li>
+                                            <p>10,-</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="">
+                                    <ul>
+                                        <li>
+                                            <p class="font-medium">Total</p>
+                                        </li>
+                                        <li>
+                                            <p>40,-</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-                <div class="w-full md:w-1/2 lg:w-1/3 md:ml-10 lg:ml-20 mt-8 md:mt-0">
+                <div class="w-full md:w-1/2 lg:w-1/4 md:ml-10 lg:ml-20 mt-8 md:mt-4">
                     <div class="bg-white border border-black rounded-lg p-4">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Order Summary</h2>
                         <div class="flex justify-between border-b border-gray-300 pb-4">

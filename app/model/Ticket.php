@@ -3,6 +3,7 @@
 
 class Ticket {
   public $id;
+  public $event_item_slot_id;
   public $start;
   public $end;
   public $event_item_name;
@@ -10,9 +11,10 @@ class Ticket {
   public $persons;
   public $price;
 
-  function __construct($id = null, $start = null, $end = null, $event_item_name = null, $event_name = null, $persons = null, $price = null) {
-    if(!is_null($id) && !is_null($start) && !is_null($end) && !is_null($event_name) && !is_null($persons) && !is_null($price)) {
+  function __construct($id = null, $event_item_slot_id = null, $start = null, $end = null, $event_item_name = null, $event_name = null, $persons = null, $price = null) {
+    if(!is_null($id) && !is_null($event_item_slot_id) && !is_null($start) && !is_null($end) && !is_null($event_name) && !is_null($persons) && !is_null($price)) {
       $this->id = $id;
+      $this->event_item_slot_id = $event_item_slot_id;
       $this->start = $start;
       $this->end = $end;
       $this->event_item_name = $event_item_name;
