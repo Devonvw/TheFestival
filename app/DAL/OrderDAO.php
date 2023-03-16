@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '/../model/Cart.php';
 require __DIR__ . '/../model/CartItem.php';
-require __DIR__ . '/../model/Ticket.php';
 require __DIR__ . '/CartDAO.php';
 
 class OrderDAO
@@ -16,7 +15,8 @@ class OrderDAO
     public function createOrder($accountId) {
         $this->DB::$connection->beginTransaction();
 
-        $stmt = $this->DB::$connection->prepare("INSERT INTO order (account_id) VALUES (:account_id);");
+        //TODO: Handle if not logged in
+        $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id) VALUES (:account_id);");
         $stmt->bindParam(':account_id', $accountId);
         $stmt->execute();
         $orderId = $this->DB::$connection->lastInsertId();
@@ -24,25 +24,34 @@ class OrderDAO
         $cartDAO = new cartDAO();
         $cart = $cartDAO->getCart($accountId);
 
-        $order_items = [];
+        //Add to price to keep price consistent, if a ticket price changes the order price doesn't
+        $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
+
         foreach ($cart->cart_items as $cart_item) {
-            array_push($order_items, array('ticket_id' => $cart_item->ticket->id, 'order_id' => $orderId, 'price' => $cart_item->ticket->price));
+            for ($i = 0; $i < $cart_item->quantity; $i++) {
+                $stmt = $this->DB::$connection->prepare($sql);
+                $stmt->bindValue(':ticket_id', $cart_item->ticket->id, PDO::PARAM_INT);
+                $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+                $stmt->bindValue(':price', $cart_item->ticket->price, PDO::PARAM_INT);
+                $stmt->execute();
+            }
         }
 
-        $dataToInsert = array();
-
-        array_push($dataToInsert, array_values($order_items));
-        $colNames = array('ticket_id', 'order_id', 'price');
-
-        $rowPlaces = '(' . implode(', ', array_fill(0, count($colNames), '?')) . ')';
-        $allPlaces = implode(', ', array_fill(0, count($order_items), $rowPlaces));
-
-        $sql = "INSERT INTO order_item (" . implode(', ', $colNames) . 
-            ") VALUES " . $allPlaces;
-
+        //Handle delete cart items
+        $sql = "DELETE FROM cart_item WHERE cart_id = :cart_id;";
         $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
+        $stmt->execute();
 
-        $stmt->execute($dataToInsert);
+        //Handle stock
+        $sql = "UPDATE event_item_slot SET stock = stock - :persons WHERE id = :event_item_slot_id";
+
+        foreach ($cart->cart_items as $cart_item) {
+            $stmt = $this->DB::$connection->prepare($sql);
+            $stmt->bindValue(':persons', $cart_item->ticket->persons * $cart_item->quantity, PDO::PARAM_INT);
+            $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
+            $stmt->execute();
+        }
 
         $this->DB::$connection->commit();
     }

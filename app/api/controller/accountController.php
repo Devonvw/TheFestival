@@ -16,7 +16,7 @@ class APIAccountController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
             $this->accountService->loginUser($body["email"], $body["password"]);
-            return json_encode($_SESSION);
+            echo json_encode($_SESSION);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
