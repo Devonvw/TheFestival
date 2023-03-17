@@ -8,9 +8,13 @@
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="/utils/getImage.js"></script>
+<link rel="stylesheet" href="/packages/toastify-js/toastify-js.css">
+<script src="/packages/toastify-js/toastify-js.js"></script>
+<script src="/packages/toast/toast.js"></script>
 <header>
     <title>Event- Index</title>
     <link rel="stylesheet" href="../../styles/globals.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Login - Social" />
@@ -131,10 +135,18 @@
 </script>
 
 <body>
+    <header class="bg-primary py-5">
+        <h1 class="text-center text-white text-3xl font-bold">Event Dashboard</h1>
+    </header>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <!-- The rest of your code -->
+        </table>
+    </div>
+    <div class="relative overflow-x-auto shadow-md ">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-white uppercase bg-primary">
                 <tr>
                     <th scope="col" class="px-6 py-3" id="id">
                         ID
@@ -155,7 +167,7 @@
                                 </svg></a>
                         </div>
                     </th>
-                    
+
                     <th scope="col" class="px-6 py-3">
                         <div class="flex items-center">
                             Name
@@ -212,14 +224,14 @@
 
                 </tr>
             </thead>
-            <tbody id="table_body">
+            <tbody id="table_body" class="text-black">
 
             </tbody>
         </table>
 
     </div>
     <div class="flex items-center justify-center mt-12">
-        <button id="btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"><a href="/dashboard/events/add">Add Event</a></button>
+        <button id="btn" class="bg-primary hover:bg-primary-light text-white font-bold py-2 px-4 rounded"><a href="/dashboard/events/add">Add Event</a></button>
     </div>
     <!-- <div class="">
       

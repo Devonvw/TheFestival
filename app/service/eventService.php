@@ -13,9 +13,9 @@ class EventService {
     }
 
     
-    public function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $seats) {
+    public function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $stock) {
         $dao = new EventDAO();
-        $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $seats);
+        $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $stock);
     }
 
     public function deleteEvent($id) {
@@ -23,9 +23,9 @@ class EventService {
         $dao->deleteEvent($id);
     }
 
-    public function updateEvent($id, $name, $description, $location, $venue, $cousine, $seats) {
+    public function updateEvent($id, $name, $description, $location, $venue, $cousine, $stock) {
         $dao = new EventDAO();
-        $dao->updateEvent($id, $name, $description, $location, $venue, $cousine, $seats);
+        $dao->updateEvent($id, $name, $description, $location, $venue, $cousine, $stock);
     }
        
     }

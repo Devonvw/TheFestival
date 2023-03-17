@@ -19,11 +19,11 @@ function getCart() {
             console.log(data)
             var pagesHTML = "";
 
-            // data?.cart_items?.forEach((page) => pagesHTML +=
-            //     ``
-            // )
+             data?.cart_items?.forEach((page) => pagesHTML +=
+                 ``
+             )
 
-            // document.getElementById("cartItems").innerHTML = pagesHTML;
+             document.getElementById("cartItems").innerHTML = pagesHTML;
         }
     }).catch((res) => {
         console.log(res)
