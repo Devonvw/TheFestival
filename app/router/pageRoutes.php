@@ -151,6 +151,13 @@ function handleRoutes($uri, $requestMethod, $content)
                 $controller->cart();
                 break;
 
+            case "checkout":
+                require __DIR__ . '/../controller/cartController.php';
+                session_start();
+                $controller = new CartController();
+                $controller->checkout();
+                break;
+
                 
             default:
                 http_response_code(404);
