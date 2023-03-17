@@ -31,6 +31,8 @@ class PaymentService {
             ],
             "issuer" => $issuer,
         ]);
+
+        return $payment->getCheckoutUrl();
     }
 
     private function createPaypalPayment() {
@@ -53,6 +55,8 @@ class PaymentService {
                 "order_id" => $order["id"],
             ],
         ]);
+
+        return $payment->getCheckoutUrl();
     }
 
     public function createPayment($account_id, $method, $issuer) {
@@ -79,6 +83,8 @@ class PaymentService {
     public function paymentWebhook($id) {
         $mollie = $this->getMollie();
         $payment = $mollie->payments->get($id);
+
+
     }
 }
 ?>

@@ -5,12 +5,59 @@
 <script>
 window.addEventListener("load", (event) => {
     getCart();
+    getIdealIssuers();
 });
 
 const formatDate = (input) => {
     const date = new Date(input);
 
     return `${date?.getDate()}-${date?.getMonth()}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
+}
+
+const createPayment = () => {
+    fetch(`${window.location.origin}/api/payment`, {
+        method: "POST",
+        body: JSON.stringify({
+            method: document.querySelector('input[name="rate"]:checked').value,
+            issuer: document.getElementById("idealIssuers").value,
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            country: document.getElementById("country").value,
+            city: document.getElementById("city").value,
+            zipcode: document.getElementById("zipcode").value,
+            address: document.getElementById("address").value,
+        })
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+
+            window.location = data?.link;
+        }
+    }).catch((res) => {});
+}
+
+const getIdealIssuers = () => {
+    fetch(`${window.location.origin}/api/payment/ideal-issuers`, {
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+
+            const issuerSelect = document.getElementById("idealIssuers");
+
+            Object.keys(data).forEach((issuer) => {
+                const newOption = new Option(data[issuer]?.name, data[issuer]?.ideal_ABNANL2A);
+                issuerSelect.add(newOption, undefined);
+            });
+        }
+    }).catch((res) => {});
+}
+
+const handleIdeal = (e) => {
+    if (e?.value == "Ideal")
+        document.getElementById("idealIssuersWrapper").style.display = "block";
+    else
+        document.getElementById("idealIssuersWrapper").style.display = "none";
 }
 
 function getCart() {
@@ -58,13 +105,86 @@ function getCart() {
 <body>
     <div class="">
         <div class="container mx-auto px-4 py-32">
-            <a href="#" class="text-black text-sm font-medium">Back to Cart</a>
+            <a href="/cart" class="text-black text-sm font-medium">Back to Cart</a>
             <h1 class="text-black text-3xl font-bold mt-6">Checkout</h1>
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="w-full md:w-1/2 lg:w-3/4 pt-4 mt-4 border-t border-black">
-                    <div>
-                        <h4>Payment Method</h4>
-                    </div>
+                    <form class="flex flex-col gap-y-10">
+                        <div>
+                            <div class="flex items-center gap-x-2 mb-4"><span
+                                    class="h-6 w-6 text-white flex items-center justify-center rounded-full bg-primary">1</span>
+                                <h4 class="font-medium text-lg">Payment Information</h4>
+                            </div>
+                            <div class="grid grid-cols-12 gap-x-4 gap-y-2">
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Name</label>
+                                    <input maxlength="255" type="text" name="name" id="name"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Name..." required="">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Email</label>
+                                    <input maxlength="255" type="text" name="email" id="email"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Email..." required="">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="country" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Country</label>
+                                    <input maxlength="255" type="text" name="country" id="country"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Country..." required="">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="city" class="block mb-2 text-sm font-medium text-gray-900">
+                                        City</label>
+                                    <input maxlength="255" type="text" name="city" id="city"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="City..." required="">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Zipcode</label>
+                                    <input maxlength="255" type="text" name="zipcode" id="zipcode"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Zipcode..." required="">
+                                </div>
+                                <div class="col-span-12 md:col-span-6">
+                                    <label for="address" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Address</label>
+                                    <input maxlength="255" type="text" name="address" id="address"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Address..." required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-x-2 mb-4"><span
+                                    class="h-6 w-6 text-white flex items-center justify-center rounded-full bg-primary">2</span>
+                                <h4 class="font-medium text-lg">Payment Methods</h4>
+                            </div>
+                            <div class="flex flex-col w-fit"><label class="w-full">
+                                    <input onclick="handleIdeal(this)" type="radio" name="paymentMethod" value="Ideal">
+                                    <span class="value flex items-center gap-x-2">Ideal <img
+                                            src="/assets/icons8-ideal-96.png"
+                                            class="ml-auto h-6 w-8 object-contain" /></span>
+                                </label>
+                                <label>
+                                    <input onclick="handleIdeal()" type="radio" name="paymentMethod" value="Paypal">
+                                    <span class="value flex items-center gap-x-2">Paypal <img
+                                            src="/assets/icons8-paypal-144.png"
+                                            class="ml-auto h-6 w-8 object-contain" /></span>
+                                </label>
+                            </div>
+                            <div class="mt-4 hidden" id="idealIssuersWrapper"><label for="idealIssuers">Ideal
+                                    issuers</label>
+                                <select name="idealIssuers" id="idealIssuers">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="w-full md:w-1/2 lg:w-1/4 md:ml-10 lg:ml-20 mt-8 md:mt-4">
                     <div class="bg-white border-2 border-primary rounded-lg p-4">
@@ -82,7 +202,8 @@ function getCart() {
                             <p id="total" class="text-gray-800 font-bold">$120.00</p>
                         </div>
                         <button
-                            class="mt-4 p-3 rounded-md w-full bg-primary hover:scale-[1.02] duration-300 text-white font-medium">Checkout</button>
+                            class="mt-4 p-3 rounded-md w-full bg-primary hover:scale-[1.02] duration-300 text-white font-medium">Order
+                            and pay</button>
                     </div>
                     <div class="bg-white border-2 border-primary rounded-lg p-4 mt-4">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Contact</h2>
