@@ -63,10 +63,13 @@ class PaymentService {
     }
 
     public function getIdealIssuers() {
-        $mollie = $this->getMollie();
-        $method = $mollie->methods->get(\Mollie\Api\Types\PaymentMethod::IDEAL, ["include" => "issuers"]);
-
-        return $method->issuers();
+        try {
+            $mollie = $this->getMollie();
+            $method = $mollie->methods->get(\Mollie\Api\Types\PaymentMethod::IDEAL, ["include" => "issuers"]);
+            return $method->issuers();
+        }  catch (Exception $ex) {
+            var_dump($ex);
+        }
     }
 
     public function payLater() {

@@ -67,6 +67,17 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->getCart();
                     break;
+
+                /*----------------------GET payment routes-----------------------------*/
+
+                case "payment/ideal-issuers":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->getIdealIssuers();
+                    break;
+
+
                 default:
                     http_response_code(404);
                     break;
@@ -189,6 +200,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->addToCart();
                     break;
+
+
                 default:
                     http_response_code(404);
                     break;
