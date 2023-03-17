@@ -35,3 +35,57 @@
 .number::-webkit-outer-spin-button {
   opacity: 1;
 }
+
+label {
+  display: flex;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+input[type="radio"] {
+  opacity: 0;
+  width: 0;
+}
+
+.value {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 5px 20px 5px 40px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.value:hover {
+  background: rgba(0, 128, 128, 0.1);
+}
+
+.value::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  outline-offset: 3px;
+  outline: 2px solid #008080;
+}
+
+.value::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+input[type="radio"]:checked ~ .value {
+  color: #008080;
+  background: rgba(0, 128, 128, 0.2);
+}
+input[type="radio"]:checked ~ .value::after {
+  top: 12px;
+  background: #008080;
+}
