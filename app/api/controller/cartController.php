@@ -23,13 +23,12 @@ class APICartController
     }
 
 
-    public function addToCart()
+    public function addToCart($ticket_id)
     {
         session_start();
         
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            $this->cartService->addToCart($body["ticket_id"], isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
+            $this->cartService->addToCart($ticket_id, isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
             echo json_encode([ 'msg' => "Item added to cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);
@@ -37,13 +36,12 @@ class APICartController
         }
     }
 
-    public function removeFromCart()
+    public function removeFromCart($ticket_id)
     {
         session_start();
 
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-            $this->cartService->removeFromCart($body["cart_item_id"], isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
+            $this->cartService->removeFromCart($ticket_id, isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id());
             echo json_encode([ 'msg' => "Item removed from cart" ]);
         } catch (Exception $ex) {
             http_response_code(500);

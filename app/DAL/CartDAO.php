@@ -54,26 +54,27 @@ class cartDAO
         $stmt->execute();
     }
     
-    public function removeFromCart($cart_item_id, $account_id = null, $session_id = null)
+    public function removeFromCart($ticket_id, $account_id = null, $session_id = null)
     {
         $cart = $this->getCart($account_id, $session_id);
 
-        $sql = "SELECT * FROM cart_item WHERE id = :cart_item_id LIMIT 1";
+        $sql = "SELECT * FROM cart_item WHERE ticket_id = :ticket_id AND cart_id = :cart_id LIMIT 1";
         $stmt = $this->DB::$connection->prepare($sql);
-        $stmt->bindParam(':cart_item_id', $cart_item_id, PDO::PARAM_INT);
+        $stmt->bindValue(':ticket_id', $ticket_id, PDO::PARAM_INT);
+        $stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
         $stmt->execute();
         $cartItem = $stmt->fetchObject();
 
         if ($cartItem->quantity == 1) {
             $sql = "DELETE FROM cart_item WHERE id = :cart_item_id";
             $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindParam(':cart_item_id', $cart_item_id, PDO::PARAM_INT);
+            $stmt->bindParam(':cart_item_id', $cartItem->id, PDO::PARAM_INT);
             $stmt->execute();
         }
         else {
             $sql = "UPDATE cart_item SET quantity = quantity - 1 WHERE id = :cart_item_id";
             $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindParam(':cart_item_id', $cart_item_id, PDO::PARAM_INT);
+            $stmt->bindParam(':cart_item_id', $cartItem->id, PDO::PARAM_INT);
             $stmt->execute();
         }
         

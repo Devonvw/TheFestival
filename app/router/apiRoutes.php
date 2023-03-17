@@ -194,11 +194,11 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->createCart();
                     break;
-                case "cart/add":
+                case "cart/ticket":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->addToCart();
+                    $controller->addToCart($params["id"]);
                     break;
 
 
@@ -281,11 +281,11 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------DELETE cart routes-----------------------------*/
 
-                case "cart/remove":
+                case "cart/ticket":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->removeFromCart();
+                    $controller->removeFromCart($params["id"]);
                     break;
                 case "cart/clear":
                     //(new Middleware())->adminOnly();

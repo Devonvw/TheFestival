@@ -30,3 +30,8 @@
   transition-duration: 400ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.number::-webkit-inner-spin-button,
+.number::-webkit-outer-spin-button {
+  opacity: 1;
+}
