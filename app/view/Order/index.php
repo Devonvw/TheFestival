@@ -4,7 +4,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 window.addEventListener("load", (event) => {
-    getCart();
+    getOrder();
 });
 
 const formatDate = (input) => {
@@ -13,26 +13,39 @@ const formatDate = (input) => {
     return `${date?.getDate()}-${date?.getMonth()}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
 }
 
-function addTicket(ticketId) {
-    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}`, {
+const createPayment = () => {
+    fetch(`${window.location.origin}/api/payment`, {
         method: "POST",
-        body: null
+        body: JSON.stringify({
+            method: document.querySelector('input[name="rate"]:checked').value,
+            issuer: document.getElementById("idealIssuers").value,
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            country: document.getElementById("country").value,
+            city: document.getElementById("city").value,
+            zipcode: document.getElementById("zipcode").value,
+            address: document.getElementById("address").value,
+        })
     }).then(async (res) => {
-        if (res.ok) getCart();
+        if (res.ok) {
+            const data = await res.json();
+
+            window.location = data?.link;
+        }
     }).catch((res) => {});
 }
 
-function deleteTicket(ticketId) {
-    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}`, {
-        method: "DELETE",
-        body: null
-    }).then(async (res) => {
-        if (res.ok) getCart();
-    }).catch((res) => {});
+const handleIdeal = (e) => {
+    if (e?.value == "Ideal")
+        document.getElementById("idealIssuersWrapper").style.display = "block";
+    else
+        document.getElementById("idealIssuersWrapper").style.display = "none";
 }
 
-function getCart() {
-    fetch(`${window.location.origin}/api/cart`, {
+function getOrder() {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/order?id=${params.get("id")}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -41,65 +54,31 @@ function getCart() {
         if (res.ok) {
             const data = await res.json();
             console.log(data)
-            var cartItemsHTML = "";
+            var orderItemsHTML = "";
 
-            data?.cart_items?.forEach((cartItem) => cartItemsHTML +=
-                `
+            data?.order_items?.forEach((orderItem) => orderItemsHTML += `
             <div class="w-full flex flex-wrap gap-x-4 gap-y-4 border-b border-black pb-4 mb-4">
                             <div class="h-24 w-24 rounded-full bg-gray-300 my-auto"></div>
                             <div class="mr-auto">
                                 <ul>
                                     <li>
-                                        <p>${cartItem?.ticket?.event_name}</p>
+                                        <p>${orderItem?.ticket?.event_name}</p>
                                     </li>
                                     <li>
-                                        <p>${cartItem?.ticket?.event_item_name}</p>
+                                        <p>${orderItem?.ticket?.event_item_name}</p>
                                     </li>
                                     <li>
-                                        <p>${formatDate(cartItem?.ticket?.start)} - ${formatDate(cartItem?.ticket?.end)}</p>
+                                        <p>${formatDate(orderItem?.ticket?.start)} - ${formatDate(orderItem?.ticket?.end)}</p>
                                     </li>
                                     <li class="flex gap-x-2">
-                                        <div class="flex gap-x-2 border rounded-md border-primary">
-                                        <button onclick="addTicket(${cartItem?.ticket?.id})" class="rounded-md border-r border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                                        </svg>
-                                    </button>
-                                    ${cartItem?.quantity}
-                                    <button onclick="deleteTicket(${cartItem?.ticket?.id})" class="rounded-md border-l border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
-                                        </svg>
-                                    </button></div><p> x ${cartItem?.ticket?.persons} person(s)</p>
+                                    <p>${orderItem?.quantity} x ${orderItem?.ticket?.persons} person(s)</p>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="flex">
-                                <div class="mr-8">
-                                    <ul>
-                                        <li>
-                                            <p class="font-medium">Per ticket</p>
-                                        </li>
-                                        <li>
-                                            <p>${cartItem?.ticket?.price},-</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="mr-4">
-                                    <ul>
-                                        <li>
-                                            <p class="font-medium">Total</p>
-                                        </li>
-                                        <li>
-                                            <p>${cartItem?.ticket?.price * cartItem?.quantity},-</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
                         </div>
-                    `
-            )
+            `);
 
-            document.getElementById("cartItems").innerHTML = cartItemsHTML;
+            document.getElementById("orderItems").innerHTML = orderItemsHTML;
 
             document.getElementById("subtotal").innerHTML = `€${data?.subtotal?.toFixed(2)}`;
             document.getElementById("vat").innerHTML = `€${data?.vat?.toFixed(2)}`;
@@ -111,7 +90,7 @@ function getCart() {
 }
 </script>
 <header>
-    <title>Cart - Social</title>
+    <title>Checkout - Social</title>
     <link rel="stylesheet" href="../styles/globals.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
@@ -133,33 +112,16 @@ function getCart() {
 <body>
     <div class="">
         <div class="container mx-auto px-4 py-32">
-            <a href="#" class="text-black text-sm font-medium">Back to Events</a>
-            <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
+            <a href="/cart" class="text-black text-sm font-medium">Back to Cart</a>
+            <h1 class="text-black text-3xl font-bold mt-6">Order was succesfull!</h1>
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="w-full md:w-1/2 lg:w-[63%] pt-4 mt-4 border-t border-black">
-                    <!-- Cart items -->
-                    <div id="cartItems">
-                    </div>
+
                 </div>
                 <div class="w-full md:w-1/2 lg:w-[37%] md:ml-10 lg:ml-20 mt-8 md:mt-4">
                     <div class="bg-white border-2 border-primary rounded-lg p-4">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Order Summary</h2>
-                        <div class="flex justify-between border-b border-gray-300 pb-2">
-                            <p class="text-gray-700">Subtotal</p>
-                            <p id="subtotal" class="text-gray-800">$100.00</p>
-                        </div>
-                        <div class="flex flex-wrap justify-between border-b border-gray-300 mt-2 pb-2">
-                            <p class="text-gray-700">VAT</p>
-                            <p id="vat" class="text-gray-800">$20.00</p>
-                        </div>
-                        <div class="flex flex-wrap justify-between pt-4 mb-4">
-                            <p class="text-gray-700 font-bold">Total</p>
-                            <p id="total" class="text-gray-800 font-bold">$120.00</p>
-                        </div>
-                        <a href="/checkout"
-                            class="p-3 rounded-md w-full flex items-center justify-center bg-primary hover:scale-[1.02] duration-300 text-white font-medium">
-                            Checkout
-                        </a>
+                        <div id="orderItems"></div>
                     </div>
                     <div class="bg-white border-2 border-primary rounded-lg p-4 mt-4">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Contact</h2>
@@ -179,15 +141,6 @@ function getCart() {
                             </svg>
                             <a href="mailto:festivalteamhaarlem@gmail.com">festivalteamhaarlem@gmail.com</a>
                         </div>
-                    </div>
-                    <div class="text-gray-800 text-sm flex items-center justify-between mt-2">
-                        <p class="text-black font-bold text-base">Payment methods</p>
-                        <div class="flex items-center h-8">
-                            <img src="/assets/icons8-ideal-96.png" class="h-full w-full" />
-                            <img src="/assets/icons8-paypal-144.png" class="h-full w-full" />
-
-                        </div>
-
                     </div>
                 </div>
             </div>
