@@ -108,7 +108,7 @@ function getCart() {
             <a href="/cart" class="text-black text-sm font-medium">Back to Cart</a>
             <h1 class="text-black text-3xl font-bold mt-6">Checkout</h1>
             <div class="flex flex-col md:flex-row justify-between">
-                <div class="w-full md:w-1/2 lg:w-3/4 pt-4 mt-4 border-t border-black">
+                <div class="w-full md:w-1/2 lg:w-[63%] pt-4 mt-4 border-t border-black">
                     <form class="flex flex-col gap-y-10">
                         <div>
                             <div class="flex items-center gap-x-2 mb-4"><span
@@ -186,7 +186,7 @@ function getCart() {
                         </div>
                     </form>
                 </div>
-                <div class="w-full md:w-1/2 lg:w-1/4 md:ml-10 lg:ml-20 mt-8 md:mt-4">
+                <div class="w-full md:w-1/2 lg:w-[37%] md:ml-10 lg:ml-20 mt-8 md:mt-4">
                     <div class="bg-white border-2 border-primary rounded-lg p-4">
                         <h2 class="text-gray-800 text-xl font-bold mb-4">Order Summary</h2>
                         <div class="flex justify-between border-b border-gray-300 pb-2">

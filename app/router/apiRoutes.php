@@ -59,13 +59,22 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInstagramFeed();
                     break;
 
-                    /*----------------------GET Cart routes-----------------------------*/
+                /*----------------------GET Cart routes-----------------------------*/
 
                 case "cart":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
                     $controller->getCart();
+                    break;
+
+                /*----------------------GET Order routes-----------------------------*/
+
+                case "order":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrder($params["id"]);
                     break;
 
                 /*----------------------GET payment routes-----------------------------*/

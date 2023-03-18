@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../DAL/PaymentDAO.php';
+require_once __DIR__ . '/../DAL/OrderDAO.php';
 require_once __DIR__ . "/../packages/mollie-api-php/vendor/autoload.php";
 require_once __DIR__ . '/../env/index.php';
 
@@ -32,7 +33,7 @@ class PaymentService {
             "issuer" => $issuer,
         ]);
 
-        return $payment->getCheckoutUrl();
+        return $payment;
     }
 
     private function createPaypalPayment() {
@@ -56,14 +57,19 @@ class PaymentService {
             ],
         ]);
 
-        return $payment->getCheckoutUrl();
+        return $payment;
     }
-
+    
     public function createPayment($account_id, $method, $issuer) {
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
 
-        if ($method == "ideal" && $issuer) $this->createIdealPayment($issuer);
-        else if ($method == "paypal") $this->createPaypalPayment();
+        $payment = null;
+        if ($method == "ideal" && $issuer) $payment = $this->createIdealPayment($issuer);
+        else if ($method == "paypal") $payment = $this->createPaypalPayment();
+
+
+
+        return $payment->getCheckoutUrl();
     }
 
     public function getIdealIssuers() {
@@ -81,10 +87,25 @@ class PaymentService {
     }
 
     public function paymentWebhook($id) {
+        $dao = new PaymentDAO();
+        $orderDAO = new OrderDAO();
+
         $mollie = $this->getMollie();
         $payment = $mollie->payments->get($id);
 
+        $dao->updatePaymentStatus($payment->metadata->order_id, $payment->status);
 
+        switch ($payment->status) {
+            case 'paid':
+                //TODO: Send email with invoice and tickets
+                break;
+            case 'expired':
+            case 'failed':
+            case 'canceled':
+                //TODO: Cancel order, return stock
+                $orderDAO->cancelOrder($payment->metadata->order_id);
+                break;
+        }
     }
 }
 ?>

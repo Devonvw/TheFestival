@@ -14,4 +14,7 @@ class CartController extends Controller
     public function checkout() {
         $this->displayView("");
     }
+    public function orderOverview() {
+        $this->displayView("");
+    }
 }
