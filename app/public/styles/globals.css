@@ -89,3 +89,8 @@ input[type="radio"]:checked ~ .value::after {
   top: 12px;
   background: #008080;
 }
+
+.toastui-calendar-template-time {
+  display: flex;
+  flex-wrap: wrap;
+}

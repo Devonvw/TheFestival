@@ -77,6 +77,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrder($params["id"]);
                     break;
 
+                case "order/tickets":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrderTickets($params["id"]);
+                    break;
+
                 /*----------------------GET payment routes-----------------------------*/
 
                 case "payment/ideal-issuers":

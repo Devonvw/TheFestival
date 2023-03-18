@@ -117,6 +117,16 @@ class OrderDAO
     }
 
     public function getOrderTickets($orderId) {
+        $stmt = $this->DB::$connection->prepare("SELECT oi.order_id, oi.ticket_id, eis.start, eis.end, oi.price, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.name as event_item_name, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id;");
+        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+        $items = $stmt->fetchAll();
 
+        $tickets = [];
+        foreach ($items as $row) {
+            array_push($tickets, new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['ticket_price']));
+        }
+
+        return $tickets;
     }
 }
