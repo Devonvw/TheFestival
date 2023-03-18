@@ -2,6 +2,8 @@
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 <script>
 window.addEventListener("load", (event) => {
     getOrder();
@@ -10,7 +12,7 @@ window.addEventListener("load", (event) => {
 const formatDate = (input) => {
     const date = new Date(input);
 
-    return `${date?.getDate()}-${date?.getMonth()}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
+    return `${date?.getDate()}-${date?.getMonth() + 1}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
 }
 
 const createPayment = () => {
@@ -80,9 +82,43 @@ function getOrder() {
 
             document.getElementById("orderItems").innerHTML = orderItemsHTML;
 
-            document.getElementById("subtotal").innerHTML = `€${data?.subtotal?.toFixed(2)}`;
-            document.getElementById("vat").innerHTML = `€${data?.vat?.toFixed(2)}`;
-            document.getElementById("total").innerHTML = `€${data?.total?.toFixed(2)}`;
+            var Calendar = window.tui.Calendar;
+
+            var cal = new Calendar('#calendar', {
+                defaultView: 'week',
+                isReadOnly: true,
+                week: {
+                    startDayOfWeek: 3,
+                    taskView: false,
+                    dayNames: ["Zo", "Ma", "Di", "Woe", "Do", "Vr", "Za"],
+                },
+
+                template: {
+                    timegridDisplayPrimaryTime: function({
+                        time
+                    }) {
+                        const date = new Date(time);
+                        return `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:00`;
+                    },
+
+                }
+            });
+            cal.setDate("2023-07-27");
+
+            cal.createEvents(data?.order_items?.map((orderItem, index) => ({
+                id: index,
+                calendarId: '1',
+                title: orderItem?.ticket?.event_item_name,
+                category: 'time',
+                start: orderItem?.ticket?.start,
+                end: orderItem?.ticket?.end,
+                backgroundColor: "#008080",
+                color: "#FFF",
+                customStyle: {
+                    display: "flex",
+                    flexWrap: "wrap"
+                }
+            })));
         }
     }).catch((res) => {
         console.log(res)
@@ -116,7 +152,7 @@ function getOrder() {
             <h1 class="text-black text-3xl font-bold mt-6">Order was succesfull!</h1>
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="w-full md:w-1/2 lg:w-[63%] pt-4 mt-4 border-t border-black">
-
+                    <div id="calendar"></div>
                 </div>
                 <div class="w-full md:w-1/2 lg:w-[37%] md:ml-10 lg:ml-20 mt-8 md:mt-4">
                     <div class="bg-white border-2 border-primary rounded-lg p-4">

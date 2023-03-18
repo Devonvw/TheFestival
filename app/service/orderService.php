@@ -10,4 +10,8 @@ class OrderService {
         $dao = new OrderDAO();
         return $dao->getOrder($orderId);
     }
+    public function getOrderTickets($orderId){
+        $dao = new OrderDAO();
+        return $dao->getOrderTickets($orderId);
+    }
 }
