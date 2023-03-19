@@ -18,7 +18,7 @@ const createPayment = () => {
     fetch(`${window.location.origin}/api/payment`, {
         method: "POST",
         body: JSON.stringify({
-            method: document.querySelector('input[name="rate"]:checked').value,
+            method: document.querySelector('input[name="paymentMethod"]:checked').value,
             issuer: document.getElementById("idealIssuers").value,
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
@@ -30,10 +30,11 @@ const createPayment = () => {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-
             window.location = data?.link;
         }
-    }).catch((res) => {});
+    }).catch((res) => {
+        console.log(res);
+    });
 }
 
 const getIdealIssuers = () => {
@@ -46,7 +47,7 @@ const getIdealIssuers = () => {
             const issuerSelect = document.getElementById("idealIssuers");
 
             Object.keys(data).forEach((issuer) => {
-                const newOption = new Option(data[issuer]?.name, data[issuer]?.ideal_ABNANL2A);
+                const newOption = new Option(data[issuer]?.name, data[issuer]?.id);
                 issuerSelect.add(newOption, undefined);
             });
         }
@@ -201,7 +202,7 @@ function getCart() {
                             <p class="text-gray-700 font-bold">Total</p>
                             <p id="total" class="text-gray-800 font-bold">$120.00</p>
                         </div>
-                        <button
+                        <button onclick="createPayment()"
                             class="mt-4 p-3 rounded-md w-full bg-primary hover:scale-[1.02] duration-300 text-white font-medium">Order
                             and pay</button>
                     </div>

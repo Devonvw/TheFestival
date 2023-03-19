@@ -201,6 +201,22 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIOrderController();
                     $controller->createOrder();
                     break;
+
+                /*----------------------POST payment routes-----------------------------*/
+
+                case "payment":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->createPayment();
+                    break;
+
+                case "payment/status":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->paymentWebhook();
+                    break;
                     
                 /*----------------------POST cart routes-----------------------------*/
 

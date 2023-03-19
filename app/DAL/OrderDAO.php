@@ -131,4 +131,13 @@ class OrderDAO
 
         return $tickets;
     }
+
+    public function getAllOrders() {
+        // $sql = "SELECT * FROM `order` WHERE id = :order_id LIMIT 1";
+        // $stmt = $this->DB::$connection->prepare($sql);
+        // $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        // $stmt->execute();
+        // $stmt->setFetchMode(PDO::FETCH_CLASS, "Order");
+        // $order = $stmt->fetch();
+    }
 }
