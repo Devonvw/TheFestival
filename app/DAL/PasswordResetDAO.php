@@ -5,6 +5,7 @@ require_once __DIR__ . '/../DAL/AccountDAO.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/PHPMailer.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/SMTP.php';
+require_once __DIR__ . '/../env/index.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -51,7 +52,7 @@ class PasswordResetDAO
             $mail->Host = 'smtp.gmail.com'; //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
             $mail->Username = 'festivalathaarlem@gmail.com'; //SMTP username
-            $mail->Password = 'keofohcmlvolezef'; //SMTP password
+            $mail->Password = SMPT_PASSWORD; //SMTP password
             
             $mail->Port = 587; //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
