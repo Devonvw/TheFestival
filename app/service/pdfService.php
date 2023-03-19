@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../packages/fpdf185/invoice.php';
+require_once __DIR__ . '/../packages/fpdf185/templates.php';
 
 class PDFService {
     public function createInvoicePDF($order, $userInfo){
@@ -9,7 +9,7 @@ class PDFService {
                         "Grote Markt 22\n" .
                         "2011 RD Haarlem\n");
         $pdf->fact_dev( "Order: ". $order->id, "" );
-        $pdf->addDate(date("m-d-y"));
+        $pdf->addDate(date("d-m-y"));
         $pdf->addClientAdresse($userInfo["name"]. "\n". $userInfo["address"]. "\n". $userInfo["zipcode"]. " ". $userInfo["city"]. "\n". $userInfo["country"]. "\n");
         $cols=array( "TICKET"    => 100,
                     "QUANTITY"  => 23,
@@ -23,7 +23,7 @@ class PDFService {
         $pdf->addLineFormat( $cols);
         $pdf->addLineFormat($cols);
 
-        $y    = 109;
+        $y = 109;
 
         foreach ($order->order_items as $orderItem) {
             $line = array( "TICKET"    => $orderItem->ticket->event_name. " - ". $orderItem->ticket->event_item_name. " - ". $orderItem->ticket->persons. " Person",
@@ -34,47 +34,28 @@ class PDFService {
             $y   += $size + 2;
         }
 
-        $pdf->addCadreTVAs();
-                
-        // invoice = array( "px_unit" => value,
-        //                  "qte"     => qte,
-        //                  "tva"     => code_tva );
-        // tab_tva = array( "1"       => 19.6,
-        //                  "2"       => 5.5, ... );
-        // params  = array( "RemiseGlobale" => [0|1],
-        //                      "remise_tva"     => [1|2...],  // {la remise s'applique sur ce code TVA}
-        //                      "remise"         => value,     // {montant de la remise}
-        //                      "remise_percent" => percent,   // {pourcentage de remise sur ce montant de TVA}
-        //                  "FraisPort"     => [0|1],
-        //                      "portTTC"        => value,     // montant des frais de ports TTC
-        //                                                     // par defaut la TVA = 19.6 %
-        //                      "portHT"         => value,     // montant des frais de ports HT
-        //                      "portTVA"        => tva_value, // valeur de la TVA a appliquer sur le montant HT
-        //                  "AccompteExige" => [0|1],
-        //                      "accompte"         => value    // montant de l'acompte (TTC)
-        //                      "accompte_percent" => percent  // pourcentage d'acompte (TTC)
-        //                  "Remarque" => "texte"              // texte
-        $tot_prods = array( array ( "px_unit" => 600, "qte" => 1, "tva" => 1 ),
-                            array ( "px_unit" =>  10, "qte" => 1, "tva" => 1 ));
-        $tab_tva = array( "1"       => 19.6,
-                        "2"       => 5.5);
-        $params  = array( "RemiseGlobale" => 1,
-                            "remise_tva"     => 1,       // {la remise s'applique sur ce code TVA}
-                            "remise"         => 0,       // {montant de la remise}
-                            "remise_percent" => 10,      // {pourcentage de remise sur ce montant de TVA}
-                        "FraisPort"     => 1,
-                            "portTTC"        => 10,      // montant des frais de ports TTC
-                                                        // par defaut la TVA = 19.6 %
-                            "portHT"         => 0,       // montant des frais de ports HT
-                            "portTVA"        => 19.6,    // valeur de la TVA a appliquer sur le montant HT
-                        "AccompteExige" => 1,
-                            "accompte"         => 0,     // montant de l'acompte (TTC)
-                            "accompte_percent" => 15,    // pourcentage d'acompte (TTC)
-                        "Remarque" => "Avec un acompte, svp..." );
-
-        $pdf->addTVAs( $params, $tab_tva, $tot_prods);
+        $pdf->addTVAs( $order->total, $order->subtotal, $order->vat);
         $pdf->addCadreEurosFrancs();
-        $pdf->Output('F', __DIR__ . '/../pdf/test.pdf');   //save file
+        $pdf->Output('F', __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf');   //save file
+        return __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf';
     }
     
+    public function createTicketsPDF($tickets, $orderId, $userInfo){
+        $pdf = new PDF_Ticket( 'P', 'mm', 'A4' );
+
+        foreach ($tickets as $ticket) {
+            $pdf->AddPage();
+            $pdf->addInformation($ticket->event_item_name,
+            $ticket->event_name . "\n" .
+            "For ". $ticket->persons . " person(s)\n\n" .
+            "Start: ". date_format( date_create($ticket->start), "F j, Y, H:i"). "\n".
+            "End: ". date_format(date_create($ticket->end), "F j, Y, H:i"). "\n");
+            $pdf->addLocationInformation("Location", $ticket->location . "  \n");
+            $pdf->addClientAdresse($userInfo["name"]. "\n". $userInfo["address"]. "\n". $userInfo["zipcode"]. " ". $userInfo["city"]. "\n". $userInfo["country"]. "\n");
+            $pdf->addQRBox();
+        }
+        
+        $pdf->Output('F', __DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');   //save file
+        return __DIR__ . '/../pdf/tickets-'. $orderId .'.pdf';
+    }
 }
