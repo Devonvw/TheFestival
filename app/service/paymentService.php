@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../DAL/PaymentDAO.php';
 require_once __DIR__ . '/../DAL/OrderDAO.php';
+require_once __DIR__ . '/../service/orderService.php';
 require_once __DIR__ . "/../packages/mollie-api-php/vendor/autoload.php";
 require_once __DIR__ . '/../env/index.php';
 
@@ -11,24 +12,20 @@ class PaymentService {
         return $mollie;
     }
 
-    private function createIdealPayment($issuer) {
+    private function createIdealPayment($order, $issuer) {
         $mollie = $this->getMollie();
-
-        //Retrieve shopping cart and calculate total price;
-        //TODO: create getorder function
-        $order = ["totalPrice" => "27,79", "id" => 8];
 
         $payment = $mollie->payments->create([
             "amount" => [
                 "currency" => "EUR",
-                "value" => $order["totalPrice"], // You must send the correct number of decimals, thus we enforce the use of strings
+                "value" => sprintf('%.2F',$order->total), // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
-            "description" => "Order #{$order['totalPrice']}",
-            "redirectUrl" => "",
-            "webhookUrl" => "",
+            "description" => "Order #$order->id",
+            "redirectUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/order?id=".$order->id,
+            "webhookUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/api/payment/status",
             "metadata" => [
-                "order_id" => $order["id"],
+                "order_id" => $order->id,
             ],
             "issuer" => $issuer,
         ]);
@@ -36,40 +33,40 @@ class PaymentService {
         return $payment;
     }
 
-    private function createPaypalPayment() {
+    private function createPaypalPayment($order) {
         $mollie = $this->getMollie();
-
-        //Retrieve shopping cart and calculate total price;
-        //TODO: create getorder function
-        $order = ["totalPrice" => "27,79", "id" => 8];
 
         $payment = $mollie->payments->create([
             "amount" => [
                 "currency" => "EUR",
-                "value" => $order["totalPrice"], // You must send the correct number of decimals, thus we enforce the use of strings
+                "value" => $order->total, // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::PAYPAL,
-            "description" => "Order #{$order['totalPrice']}",
-            "redirectUrl" => "",
-            "webhookUrl" => "",
+            "description" => "Order #$order->id",
+            "redirectUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/order?id=".$order->id,
+            "webhookUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/api/payment/status",
             "metadata" => [
-                "order_id" => $order["id"],
+                "order_id" => $order->id,
             ],
         ]);
 
         return $payment;
     }
     
-    public function createPayment($account_id, $method, $issuer) {
+    public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo) {
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
 
+        $service = new OrderService();
+        $order = $service->createOrder($account_id);
+        
         $payment = null;
-        if ($method == "ideal" && $issuer) $payment = $this->createIdealPayment($issuer);
-        else if ($method == "paypal") $payment = $this->createPaypalPayment();
+        if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);
+        else if ($method == "Paypal") $payment = $this->createPaypalPayment($order);
 
+        $dao = new PaymentDAO();
+        $dao->createPayment($order->id, $payment->id, $paymentAccountInfo);
 
-
-        return $payment->getCheckoutUrl();
+        return json_encode(["link" => $payment->getCheckoutUrl()]);
     }
 
     public function getIdealIssuers() {
