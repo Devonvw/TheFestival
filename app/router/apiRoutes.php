@@ -59,7 +59,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInstagramFeed();
                     break;
 
-                    /*----------------------GET Cart routes-----------------------------*/
+                /*----------------------GET Cart routes-----------------------------*/
 
                 case "cart":
                     //(new Middleware())->adminOnly();
@@ -67,6 +67,33 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->getCart();
                     break;
+
+                /*----------------------GET Order routes-----------------------------*/
+
+                case "order":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrder($params["id"]);
+                    break;
+
+                case "order/tickets":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrderTickets($params["id"]);
+                    break;
+
+                /*----------------------GET payment routes-----------------------------*/
+
+                case "payment/ideal-issuers":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->getIdealIssuers();
+                    break;
+
+
                 default:
                     http_response_code(404);
                     break;
@@ -183,12 +210,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->createCart();
                     break;
-                case "cart/add":
+                case "cart/ticket":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->addToCart();
+                    $controller->addToCart($params["id"]);
                     break;
+
+
                 default:
                     http_response_code(404);
                     break;
@@ -268,11 +297,11 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------DELETE cart routes-----------------------------*/
 
-                case "cart/remove":
+                case "cart/ticket":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->removeFromCart();
+                    $controller->removeFromCart($params["id"]);
                     break;
                 case "cart/clear":
                     //(new Middleware())->adminOnly();
