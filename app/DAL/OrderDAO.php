@@ -12,17 +12,18 @@ class OrderDAO
         $this->DB = new DB();
     }
 
-    public function createOrder($accountId) {
+    public function createOrder($accountId = null, $sessionId = null) {
         $this->DB::$connection->beginTransaction();
 
         //TODO: Handle if not logged in
-        $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id) VALUES (:account_id);");
+        $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id, session_id) VALUES (:account_id, :session_id);");
         $stmt->bindParam(':account_id', $accountId);
+        $stmt->bindValue(':session_id', $accountId ? null : $sessionId);
         $stmt->execute();
         $orderId = $this->DB::$connection->lastInsertId();
 
         $cartDAO = new cartDAO();
-        $cart = $cartDAO->getCart($accountId);
+        $cart = $cartDAO->getCart($accountId, $sessionId);
 
         //Add to price to keep price consistent, if a ticket price changes the order price doesn't
         $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
@@ -61,22 +62,16 @@ class OrderDAO
     public function cancelOrder($orderId) {
         $this->DB::$connection->beginTransaction();
 
-        $sql = "SELECT * FROM order where id = :orderId";
-        $stmt = $this->DB::$connection->prepare($sql);
-        $stmt->bindValue(':orderId', $orderId, PDO::PARAM_INT);
-        $stmt->execute();
-        $order = $stmt->fetchObject();
-
-        $cartDAO = new cartDAO();
-        $cart = $cartDAO->getCart($order->account_id, $order->session_id);
+        $dao = new OrderDAO();
+        $order = $dao->getOrder($orderId);
 
         //Handle stock
         $sql = "UPDATE event_item_slot SET stock = stock + :persons WHERE id = :event_item_slot_id";
 
-        foreach ($cart->cart_items as $cart_item) {
+        foreach ($order->order_items as $order_item) {
             $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindValue(':persons', $cart_item->ticket->persons * $cart_item->quantity, PDO::PARAM_INT);
-            $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
+            $stmt->bindValue(':persons', $order_item->ticket->persons * $order_item->quantity, PDO::PARAM_INT);
+            $stmt->bindValue(':event_item_slot_id', $order_item->ticket->event_item_slot_id, PDO::PARAM_INT);
             $stmt->execute();
         }
 
@@ -133,11 +128,17 @@ class OrderDAO
     }
 
     public function getAllOrders() {
-        // $sql = "SELECT * FROM `order` WHERE id = :order_id LIMIT 1";
-        // $stmt = $this->DB::$connection->prepare($sql);
-        // $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
-        // $stmt->execute();
-        // $stmt->setFetchMode(PDO::FETCH_CLASS, "Order");
-        // $order = $stmt->fetch();
+        $sql = "SELECT `order`.id, `order`.account_id, CONCAT(account.first_name, ' ', account.last_name) as name, SUM(oi.price) as total, `order`.created_at  FROM `order` LEFT JOIN order_item as oi ON oi.order_id = order.id LEFT JOIN account ON account.id = `order`.account_id GROUP BY order.id";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderStatus($orderId) {
+        $sql = "SELECT o.id, op.status FROM `order` as o LEFT JOIN order_payment as op ON op.order_id = o.id WHERE o.id = :order_id;";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchObject();
     }
 }

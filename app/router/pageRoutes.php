@@ -91,6 +91,18 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new DashboardController();
             $controller->contentInformationPage();
             break;
+        case 'dashboard/orders':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->allOrders();
+            break;
+        case 'dashboard/order/edit':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->editOrder();
+            break;
 
             /*----------------------Account routes-----------------------------*/
 

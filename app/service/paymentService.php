@@ -1,9 +1,18 @@
 <?php
 require_once __DIR__ . '/../DAL/PaymentDAO.php';
 require_once __DIR__ . '/../DAL/OrderDAO.php';
+require_once __DIR__ . '/../DAL/InvoiceDAO.php';
+require_once __DIR__ . '/../service/pdfService.php';
 require_once __DIR__ . '/../service/orderService.php';
 require_once __DIR__ . "/../packages/mollie-api-php/vendor/autoload.php";
 require_once __DIR__ . '/../env/index.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/Exception.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/PHPMailer.php';
+require_once __DIR__ . '/../packages/PHPMailer-master/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 class PaymentService {
     private function getMollie() {
@@ -22,8 +31,8 @@ class PaymentService {
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "description" => "Order #$order->id",
-            "redirectUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/order?id=".$order->id,
-            "webhookUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/api/payment/status",
+            "redirectUrl" => NGROK_URL ."/order?id=".$order->id,
+            "webhookUrl" => NGROK_URL ."/api/payment/status",
             "metadata" => [
                 "order_id" => $order->id,
             ],
@@ -43,8 +52,8 @@ class PaymentService {
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::PAYPAL,
             "description" => "Order #$order->id",
-            "redirectUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/order?id=".$order->id,
-            "webhookUrl" => "https://104f-2a02-a458-2851-1-a5d9-9e52-dc1c-8896.eu.ngrok.io/api/payment/status",
+            "redirectUrl" => NGROK_URL ."/order?id=".$order->id,
+            "webhookUrl" => NGROK_URL ."/api/payment/status",
             "metadata" => [
                 "order_id" => $order->id,
             ],
@@ -57,7 +66,7 @@ class PaymentService {
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
 
         $service = new OrderService();
-        $order = $service->createOrder($account_id);
+        $order = $service->createOrder($account_id, $session_id);
         
         $payment = null;
         if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);
@@ -83,25 +92,81 @@ class PaymentService {
 
     }
 
-    public function paymentWebhook($id) {
+    public function paymentWebhook($id, $orderId = null, $newStatus = null) {
         $dao = new PaymentDAO();
         $orderDAO = new OrderDAO();
 
-        $mollie = $this->getMollie();
-        $payment = $mollie->payments->get($id);
+        if ($id) {
+            $mollie = $this->getMollie();
+            $payment = $mollie->payments->get($id);
+            $newStatus = $payment->status;
+            $orderId = $payment->metadata->order_id;
+        }
 
-        $dao->updatePaymentStatus($payment->metadata->order_id, $payment->status);
+        $dao->updatePaymentStatus($orderId, $newStatus);
 
         switch ($payment->status) {
             case 'paid':
                 //TODO: Send email with invoice and tickets
+                $this->handleOrderPaid($orderId);
                 break;
             case 'expired':
             case 'failed':
             case 'canceled':
                 //TODO: Cancel order, return stock
-                $orderDAO->cancelOrder($payment->metadata->order_id);
+                $orderDAO->cancelOrder($orderId);
                 break;
+        }
+    }
+
+    private function handleOrderPaid($orderId) {
+        $pdf = new PDFService();
+        $orderDao = new OrderDAO();
+        $dao = new PaymentDAO();
+        $invoiceDao = new InvoiceDAO();
+
+        $order = $orderDao->getOrder($orderId);
+        $tickets = $orderDao->getOrderTickets($orderId);
+
+        $account = $dao->getPaymentAccountInfo($orderId);
+
+        $invoicePDF = $pdf->createInvoicePDF($order, $account);
+        $invoiceId = $invoiceDao->addInvoiceToOrder($orderId, $invoicePDF);
+
+        $ticketsPDF = $pdf->createTicketsPDF($tickets, $orderId, $account);
+
+        try {
+            $mail = new PHPMailer(true);
+
+            // Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output
+            $mail->isSMTP(); // Send using SMTP
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Password = SMPT_PASSWORD; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            // Recipients
+            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->addAddress($account->email, $account->name); // Add a recipient
+
+            // Content
+            $mail->isHTML(false); // Set email format to plain text
+            $mail->Subject = "Confirmation for order ". $orderId;
+            $mail->Body = "Dear " . $account->name . ",\n\nYour order has been succesfully processed. Included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
+
+            //$mail->AddAttachment($invoicePDF);
+            $mail->AddStringAttachment($invoicePDF, "invoice-".$invoiceId."pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  
+            $mail->AddAttachment($ticketsPDF);
+            $mail->send();
+            $mail->smtpClose();
+        }
+        catch (Exception $ex) {
+            var_dump($ex);
         }
     }
 }

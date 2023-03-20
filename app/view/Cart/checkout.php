@@ -70,7 +70,6 @@ function getCart() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-            console.log(data)
             var cartItemsHTML = "";
 
 

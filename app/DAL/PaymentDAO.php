@@ -26,11 +26,22 @@ class PaymentDAO
 
     function updatePaymentStatus($orderId, $status)
     {
-        $sql = "UPDATE order_payment SET status = :status WHERE order_id = :order_id";
+        $modified_at = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE order_payment SET status = :status, modified_at = :modified_at WHERE order_id = :order_id";
         $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindValue(':status', $status, PDO::PARAM_STR);
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->execute();
     }
 
+    function getPaymentAccountInfo($orderId)
+    {
+        $sql = "SELECT * FROM order_payment WHERE order_id = :order_id";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchObject();
+    }
 }
