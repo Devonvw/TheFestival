@@ -77,11 +77,25 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrder($params["id"]);
                     break;
 
+                case "order/all":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getAllOrders();
+                    break;
+
                 case "order/tickets":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
                     $controller = new APIOrderController();
                     $controller->getOrderTickets($params["id"]);
+                    break;
+
+                case "order/status":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrderStatus($params["id"]);
                     break;
 
                 /*----------------------GET payment routes-----------------------------*/
@@ -93,6 +107,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getIdealIssuers();
                     break;
 
+                /*----------------------GET invoice routes-----------------------------*/
+
+                case "invoice":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/invoiceController.php';
+                    $controller = new APIInvoiceController();
+                    $controller->getInvoice($params["orderId"]);
+                    break;
 
                 default:
                     http_response_code(404);
@@ -242,7 +264,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
         case 'PUT':
             switch ($uri) {
 
-                    /*----------------------PUT account routes-----------------------------*/
+                /*----------------------PUT account routes-----------------------------*/
 
                 case "account":
                     //(new Middleware())->adminOnly();

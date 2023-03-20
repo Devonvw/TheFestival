@@ -46,7 +46,7 @@ class APIPaymentController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->paymentService->paymentWebhook($_POST["id"]);
+            $this->paymentService->paymentWebhook($_POST["id"], isset($body['id']) ? $body['id'] : null, isset($body['status']) ? $body['status'] : null);
             echo json_encode(['msg' => "Succes"]);
         } catch (Exception $ex) {
             http_response_code(500);
