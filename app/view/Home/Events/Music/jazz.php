@@ -157,20 +157,7 @@
         </div>
     </section>
 
-    <section class="bg-primary text-white py-16 mt-10">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-                <p class="text-xl">Get the latest updates about events and promotions</p>
-            </div>
-            <div class="flex justify-center">
-                <form class="flex space-x-2">
-                    <input type="email" name="email" id="email" class="w-64 py-2 px-4 text-black rounded-l-md" placeholder="Your email address">
-                    <button type="submit" class="bg-white text-primary py-2 px-4 rounded-r-md font-bold">Subscribe</button>
-                </form>
-            </div>
-        </div>
-    </section>
+
 
     <div class="calendar-container">
         <div id="calendar"></div>
@@ -309,8 +296,7 @@
         }
 
         function addToCart(eventId) {
-            // Implement the functionality to add the event ticket to the cart
-            alert(`Ticket for event ID ${eventId} added to the cart.`);
+
         }
     </script>
 </body>

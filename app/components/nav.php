@@ -19,7 +19,7 @@
     }
 
     async function logout() {
-        await fetch(`${window.location.origin}/api/user/logout`, {
+        await fetch(`${window.location.origin}/api/account/logout`, {
             method: "POST",
         }).then((res) => {
             window.location.href = "/";

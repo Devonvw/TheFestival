@@ -9,7 +9,7 @@ require_once __DIR__ . '/../env/index.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
-
+//TODO: Captcha for anti bot registration
 class AccountDAO
 {
 
@@ -211,7 +211,7 @@ class AccountDAO
             $update_stmt->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
             $update_stmt->bindValue(':email', trim(htmlspecialchars($new_email)), PDO::PARAM_STR);
             if ($update_stmt->execute()) {
-                $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'e-mail');
+                $this->updateAndSendConfirmationEmail($account->email, $account->first_name, 'e-mail');
 
                 return true;
             } else {
@@ -243,15 +243,15 @@ class AccountDAO
             $update_stmt->bindParam(':id', $_SESSION['id'], PDO::PARAM_INT);
             $update_stmt->bindParam(':password', $password_param);
             if ($update_stmt->execute()) {
-                $this->updateAndSendConfirmationEmail($update_stmt, $account->email, $account->first_name, 'password');
+                $this->updateAndSendConfirmationEmail($account->email, $account->first_name, 'password');
             } else {
                 throw new Exception("Error: Could not update password.", 1);
             }
         }
     }
-    function updateAndSendConfirmationEmail($update_stmt, $email, $firstName, $messageSubject)
+    function updateAndSendConfirmationEmail($email, $firstName, $messageSubject)
     {
-        if ($update_stmt->execute()) {
+         
             // If the email has been updated, send a confirmation email
             $mail = new PHPMailer(true);
 
@@ -278,7 +278,7 @@ class AccountDAO
 
             $mail->send();
             $mail->smtpClose();
-        }
+        
     }
 
 
