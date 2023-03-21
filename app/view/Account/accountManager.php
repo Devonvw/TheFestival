@@ -36,6 +36,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </header>
 
 <body>
+    <?php include __DIR__ . '/../../components/nav.php' ?>
     <h1 class="max-w-md mx-auto text-2xl font-bold mt-5">Manage Account</h1>
 
     <form id="manage_account_form">

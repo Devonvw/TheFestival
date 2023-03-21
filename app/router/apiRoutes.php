@@ -59,7 +59,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInstagramFeed();
                     break;
 
-                /*----------------------GET Cart routes-----------------------------*/
+                    /*----------------------GET Cart routes-----------------------------*/
 
                 case "cart":
                     //(new Middleware())->adminOnly();
@@ -68,7 +68,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getCart();
                     break;
 
-                /*----------------------GET Order routes-----------------------------*/
+                    /*----------------------GET Order routes-----------------------------*/
 
                 case "order":
                     //(new Middleware())->adminOnly();
@@ -91,6 +91,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrderTickets($params["id"]);
                     break;
 
+
                 case "order/status":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
@@ -99,6 +100,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
                 /*----------------------GET payment routes-----------------------------*/
+
 
                 case "payment/ideal-issuers":
                     //(new Middleware())->adminOnly();
@@ -160,6 +162,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->sendConfirmationMail();
                     break;
 
+                case "account/logout":
+                    session_start();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
+                    $controller->logout();
+                    break;
+
                     /*----------------------POST event routes-----------------------------*/
 
                 case "update-event":
@@ -215,7 +224,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationSection($params["information_page_id"]);
                     break;
 
-                /*----------------------POST order routes-----------------------------*/
+                    /*----------------------POST order routes-----------------------------*/
 
                 case "order":
                     //(new Middleware())->adminOnly();
@@ -223,6 +232,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIOrderController();
                     $controller->createOrder();
                     break;
+
 
                 /*----------------------POST payment routes-----------------------------*/
 
@@ -241,6 +251,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
                     
                 /*----------------------POST cart routes-----------------------------*/
+
 
                 case "cart/create":
                     //(new Middleware())->adminOnly();
@@ -309,7 +320,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
                     /*----------------------DELETE event routes-----------------------------*/
-                    
+
                 case "event":
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
