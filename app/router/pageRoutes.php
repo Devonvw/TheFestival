@@ -113,21 +113,21 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller->login();
             break;
         case 'login/reset/password':
-            require __DIR__ . '/../controller/passwordResetController.php';
             session_start();
-            $controller = new PasswordResetController();
+            require __DIR__ . '/../controller/accountController.php';
+            $controller = new AccountController();
             $controller->resetPassword();
             break;
         case 'login/reset/email':
-            require __DIR__ . '/../controller/passwordResetController.php';
+            require __DIR__ . '/../controller/accountController.php';
             session_start();
-            $controller = new PasswordResetController();
+            $controller = new AccountController();
             $controller->resetEmail();
             break;
         case 'login/reset/sendResetLink':
-            require __DIR__ . '/../controller/passwordResetController.php';
+            require __DIR__ . '/../controller/accountController.php';
             session_start();
-            $controller = new PasswordResetController();
+            $controller = new AccountController();
             $controller->sendResetLink();
             break;
         case 'sign-up':
