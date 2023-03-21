@@ -91,7 +91,7 @@ class AccountDAO
         if (empty(trim($last_name))) {
             throw new Exception("Please enter a last name", 1);
         }
-        if(!$this->validateRecaptcha($recaptchaToken)){
+        if (!$this->validateRecaptcha($recaptchaToken)) {
             throw new Exception("reCAPTCHA validation failed", 1);
         }
         if ($stmt = $this->DB::$connection->prepare("INSERT INTO account (email, password, first_name, last_name, type_id) VALUES (:email, :password, :first_name, :last_name, :type_id)")) {
@@ -171,7 +171,6 @@ class AccountDAO
             $stmt->bindValue(':profile_picture', $img_data);
             $stmt->execute();
         }
-        $account = $this->getAccount($_SESSION['id']);
         $update_stmt = $this->DB::$connection->prepare("UPDATE account SET first_name = :first_name, last_name = :last_name where id = :id");
         $update_stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $update_stmt->bindValue(':first_name', trim(htmlspecialchars($first_name)));
@@ -207,10 +206,8 @@ class AccountDAO
             if ($update_stmt->execute()) {
                 $messageSubject = "E-mail";
                 $body = "Dear " . $account->first_name . ",\n\nYour " . $messageSubject . " has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
-                if (sendEmail($account->email, $account->first_name, $messageSubject, $body)) {
-                    echo 'Email sent successfully!';
-                } else {
-                    echo 'There was an error sending the email.';
+                if (!sendEmail($account->email, $account->first_name, $messageSubject, $body)) {
+                    throw new Exception("E-mail could not be sent", 1);
                 }
             } else {
                 throw new Exception("Error: Could not update email.", 1);
@@ -243,10 +240,8 @@ class AccountDAO
             if ($update_stmt->execute()) {
                 $messageSubject = "Password";
                 $body = "Dear " . $account->first_name . ",\n\nYour " . $messageSubject . " has been changed on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
-                if (sendEmail($account->email, $account->first_name, $messageSubject, $body)) {
-                    echo 'Email sent successfully!';
-                } else {
-                    echo 'There was an error sending the email.';
+                if (!sendEmail($account->email, $account->first_name, $messageSubject, $body)) {
+                    throw new Exception("E-mail could not be sent", 1);
                 }
             } else {
                 throw new Exception("Error: Could not update password.", 1);
@@ -282,7 +277,7 @@ class AccountDAO
     function sendConfirmationMail($email)
     {
         $_SESSION['email'] = $email;
-        session_write_close();
+
         if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Invalid email address", 1);
         }
@@ -294,6 +289,8 @@ class AccountDAO
 
         // Step 3: Hash the token
         $hashed_token = hash('sha256', $token);
+        $_SESSION['token'] = $hashed_token;
+        session_write_close();
         $reset_link = "localhost/login/reset/password?token=$hashed_token";
         // Step 4: Store the hashed token and the user's email in the database
         $stmt = $this->DB::$connection->prepare("INSERT INTO password_resets (email, token, expiration) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))");
@@ -302,14 +299,14 @@ class AccountDAO
 
         if ($stmt->execute()) {
             $messageSubject = "Reset Link";
-            $body = "Please click the following link to reset your password: <a href='" . $reset_link . "'>" . $reset_link . "</a>";
-            if (sendEmail($email, $email, $messageSubject, $body)) {
-                echo 'Email sent successfully!';
-            } else {
-                echo 'There was an error sending the email.';
+            $body = "Please click the following link to reset your password: <br><a href='" . $reset_link . "'>" . $reset_link . "</a>";
+
+
+            if (!sendEmail($email, $email, $messageSubject, $body)) {
+                throw new Exception("E-mail could not be sent", 1);
             }
         } else {
-            throw new Exception("Error: Could not update email.", 1);
+            throw new Exception("Error: Could not save token.", 1);
         }
     }
 
@@ -334,16 +331,16 @@ class AccountDAO
         if ($stmt->execute()) {
             $messageSubject = "Password";
             $body = "Dear " . $email . ",\n\nYour " . $messageSubject . " has been updated on our website. If you did not make this change, please contact us immediately.\n\nBest regards,\nThe festival team";
-            if (sendEmail($email, $email, $messageSubject, $body)) {
-                echo 'Email sent successfully!';
-            } else {
-                echo 'There was an error sending the email.';
+            $this->tokenRemover($email);
+            if (!sendEmail($email, $email, $messageSubject, $body)) {
+                throw new Exception("E-mail could not be sent", 1);
             }
+            
         } else {
             throw new Exception("Error: Could not update password.", 1);
         }
 
-        $this->tokenRemover($email);
+        
     }
 
     function tokenRemover($email)
@@ -351,6 +348,9 @@ class AccountDAO
         $stmt = $this->DB::$connection->prepare("DELETE FROM password_resets WHERE email = ?");
         $stmt->bindParam(1, $email);
         $stmt->execute();
+        if (isset($_SESSION["token"])) {
+            unset($_SESSION["token"]);
+        }
     }
     public function validateRecaptcha($recaptchaToken)
     {

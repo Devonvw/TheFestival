@@ -152,7 +152,6 @@ class APIAccountController
     }
     public function resetPassword()
     {
-        session_start();
         try {
             $body = json_decode(file_get_contents('php://input'), true);
             $this->accountService->resetPassword($body["password"], $body['password_confirm']);

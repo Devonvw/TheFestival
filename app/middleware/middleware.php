@@ -16,10 +16,12 @@ class Middleware {
         }
     }
     function validToken() {
-        if (!isset($_SESSION["token"]) || !$_SESSION["token"]) {
+        if (!isset($_SESSION['token']) || !$_SESSION['token']) {
             http_response_code(500);
             echo json_encode([ 'msg' => "Token is invalid or has expired" ]);
+            return false;
         }
+        return true;
     }
 }
 ?>

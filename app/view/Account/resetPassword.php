@@ -1,8 +1,5 @@
 <?php
-if (!isset($_SESSION["token"]) || $_SESSION["token"] !== true) {
-    header("location: /");
-    exit;
-}
+
 ?>
 
 <html>

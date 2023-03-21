@@ -147,11 +147,11 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->updateAccountCustomer();
                     break;
-
-
                 case "account/reset/password":
                     session_start();
-                    (new Middleware())->validToken();
+                    if(!(new Middleware())->validToken()){
+                        return;
+                    }
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->resetPassword();
