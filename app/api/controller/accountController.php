@@ -27,14 +27,14 @@ class APIAccountController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-
-            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], 1);
+            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], 1, $body["recaptchaToken"]);
             echo json_encode(['msg' => "Account successfully created, you can now login"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
 
     public function logout()
     {
@@ -132,6 +132,30 @@ class APIAccountController
             $body = json_decode(file_get_contents('php://input'), true);
             $this->accountService->updatePasswordCustomer($body["current_password"], $body["new_password"], $body["confirm_password"]);
 
+            echo json_encode(['msg' => "Password updated"]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function sendConfirmationMail()
+    {
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+
+            $this->accountService->sendConfirmationMail($body["email"]);
+            echo json_encode(['msg' => "Confirmation mail sent"]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function resetPassword()
+    {
+        session_start();
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+            $this->accountService->resetPassword($body["password"], $body['password_confirm']);
             echo json_encode(['msg' => "Password updated"]);
         } catch (Exception $ex) {
             http_response_code(500);

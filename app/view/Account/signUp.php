@@ -25,31 +25,37 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     }
 
     function signUp() {
-        if (checkPasswords()){
-            fetch(`${window.location.origin}/api/account/sign-up`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({
-                    first_name: document.getElementById('first_name').value,
-                    last_name: document.getElementById('last_name').value,
-                    email: document.getElementById('email').value,
-                    password: document.getElementById('password').value
+        if (checkPasswords()) {
+            grecaptcha.enterprise.execute('6LcjQBwlAAAAALbMpWmrTVTRtkVBuOmA6zhYebFI', {
+                action: 'signup'
+            }).then(function(token) {
+                    fetch(`${window.location.origin}/api/account/sign-up`, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        method: "POST",
+                        body: JSON.stringify({
+                            first_name: document.getElementById('first_name').value,
+                            last_name: document.getElementById('last_name').value,
+                            email: document.getElementById('email').value,
+                            password: document.getElementById('password').value,
+                            recaptchaToken: token // Add the reCAPTCHA token to the request body
 
-                })
-            }).then(async (res) => {
-                if (res.ok) {
-                    ToastSucces((await res.json())?.msg);
-                    //Redirect to login page after 3 seconds
-                    setTimeout(() => {
-                        window.location = "/login";
-                    }, 3000);
-                } else {
-                    ToastError((await res.json())?.msg);
-                }
-            }).catch((res) => {});
-    }}
+                        })
+                    }).then(async (res) => {
+                        if (res.ok) {
+                            ToastSucces((await res.json())?.msg);
+                            //Redirect to login page after 3 seconds
+                            setTimeout(() => {
+                                window.location = "/login";
+                            }, 3000);
+                        } else {
+                            ToastError((await res.json())?.msg);
+                        }
+                    }).catch((res) => {});
+                });
+            }
+        }
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -65,6 +71,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcjQBwlAAAAALbMpWmrTVTRtkVBuOmA6zhYebFI"></script>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />

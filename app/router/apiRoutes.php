@@ -151,14 +151,15 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                 case "account/reset/password":
                     session_start();
-                    require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
-                    $controller = new APIPasswordResetController();
+                    (new Middleware())->validToken();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
                     $controller->resetPassword();
                     break;
                 case "account/reset/sendResetLink":
                     session_start();
-                    require_once __DIR__ . '/../api/controller/PasswordResetcontroller.php';
-                    $controller = new APIPasswordResetController();
+                    require_once __DIR__ . '/../api/controller/accountController.php';
+                    $controller = new APIAccountController();
                     $controller->sendConfirmationMail();
                     break;
 

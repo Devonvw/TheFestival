@@ -32,6 +32,17 @@ class AccountController extends Controller
   {
     $this->displayView("");
   }
+  public function resetPassword()
+  {
+    $this->displayView("");
+  }
+  public function resetEmail()
+  {
+    $this->displayView("");
+  }
+  public function sendResetLink()
+  {
+    $this->displayView("");
+  }
 
 }
-?>
