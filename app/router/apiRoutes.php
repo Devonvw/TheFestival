@@ -77,6 +77,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrder($params["id"]);
                     break;
 
+                case "order/all":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getAllOrders();
+                    break;
+
                 case "order/tickets":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
@@ -84,7 +91,16 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrderTickets($params["id"]);
                     break;
 
-                    /*----------------------GET payment routes-----------------------------*/
+
+                case "order/status":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getOrderStatus($params["id"]);
+                    break;
+
+                /*----------------------GET payment routes-----------------------------*/
+
 
                 case "payment/ideal-issuers":
                     //(new Middleware())->adminOnly();
@@ -93,6 +109,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getIdealIssuers();
                     break;
 
+                /*----------------------GET invoice routes-----------------------------*/
+
+                case "invoice":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/invoiceController.php';
+                    $controller = new APIInvoiceController();
+                    $controller->getInvoice($params["orderId"]);
+                    break;
 
                 default:
                     http_response_code(404);
@@ -209,7 +233,25 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->createOrder();
                     break;
 
-                    /*----------------------POST cart routes-----------------------------*/
+
+                /*----------------------POST payment routes-----------------------------*/
+
+                case "payment":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->createPayment();
+                    break;
+
+                case "payment/status":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/paymentController.php';
+                    $controller = new APIPaymentController();
+                    $controller->paymentWebhook();
+                    break;
+                    
+                /*----------------------POST cart routes-----------------------------*/
+
 
                 case "cart/create":
                     //(new Middleware())->adminOnly();
@@ -233,7 +275,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
         case 'PUT':
             switch ($uri) {
 
-                    /*----------------------PUT account routes-----------------------------*/
+                /*----------------------PUT account routes-----------------------------*/
 
                 case "account":
                     //(new Middleware())->adminOnly();

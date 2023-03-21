@@ -10,7 +10,7 @@ class PDFService {
                         "2011 RD Haarlem\n");
         $pdf->fact_dev( "Order: ". $order->id, "" );
         $pdf->addDate(date("d-m-y"));
-        $pdf->addClientAdresse($userInfo["name"]. "\n". $userInfo["address"]. "\n". $userInfo["zipcode"]. " ". $userInfo["city"]. "\n". $userInfo["country"]. "\n");
+        $pdf->addClientAdresse($userInfo->name. "\n". $userInfo->address. "\n". $userInfo->zipcode. " ". $userInfo->city. "\n". $userInfo->country. "\n");
         $cols=array( "TICKET"    => 100,
                     "QUANTITY"  => 23,
                     "PER TICKET"     => 30,
@@ -36,8 +36,8 @@ class PDFService {
 
         $pdf->addTVAs( $order->total, $order->subtotal, $order->vat);
         $pdf->addCadreEurosFrancs();
-        $pdf->Output('F', __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf');   //save file
-        return __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf';
+        return $pdf->Output('S', __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf');   //save file
+        //return __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf';
     }
     
     public function createTicketsPDF($tickets, $orderId, $userInfo){
@@ -51,7 +51,7 @@ class PDFService {
             "Start: ". date_format( date_create($ticket->start), "F j, Y, H:i"). "\n".
             "End: ". date_format(date_create($ticket->end), "F j, Y, H:i"). "\n");
             $pdf->addLocationInformation("Location", $ticket->location . "  \n");
-            $pdf->addClientAdresse($userInfo["name"]. "\n". $userInfo["address"]. "\n". $userInfo["zipcode"]. " ". $userInfo["city"]. "\n". $userInfo["country"]. "\n");
+            $pdf->addClientAdresse($userInfo->name. "\n". $userInfo->address. "\n". $userInfo->zipcode. " ". $userInfo->city. "\n". $userInfo->country. "\n");
             $pdf->addQRBox();
         }
         

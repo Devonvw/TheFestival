@@ -39,5 +39,11 @@ class DashboardController extends Controller {
     public function addEvents() {
         require __DIR__ . "/../view/Dashboard/events/addEvent.php";
     }
+    public function allOrders() {
+        require __DIR__ . "/../view/Dashboard/orders/index.php";
+    }
+    public function editOrder() {
+        require __DIR__ . "/../view/Dashboard/orders/edit.php";
+    }
 }
 ?>
