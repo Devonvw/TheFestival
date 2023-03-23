@@ -36,6 +36,30 @@ class PaymentDAO
         $stmt->execute();
     }
 
+    function addPayLater($orderId, $id)
+    {
+        $modified_at = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE order_payment SET pay_later_id = :id, modified_at = :modified_at WHERE order_id = :order_id";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindParam(':modified_at', $modified_at);
+        $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    function handlePayLater($id)
+    {
+        $modified_at = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE order_payment SET status = 'kaas', modified_at = :modified_at WHERE pay_later_id = :id";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindParam(':modified_at', $modified_at);
+       //$stmt->bindValue(':test', $payment, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $id, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
     function getPaymentAccountInfo($orderId)
     {
         $sql = "SELECT * FROM order_payment WHERE order_id = :order_id";

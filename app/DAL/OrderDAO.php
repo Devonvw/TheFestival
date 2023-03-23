@@ -45,13 +45,23 @@ class OrderDAO
         $stmt->execute();
 
         //Handle stock
-        $sql = "UPDATE event_item_slot SET stock = stock - :persons WHERE id = :event_item_slot_id";
+        $sql = "UPDATE event_item_slot SET stock = stock - :persons WHERE id = :event_item_slot_id;";
 
         foreach ($cart->cart_items as $cart_item) {
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':persons', $cart_item->ticket->persons * $cart_item->quantity, PDO::PARAM_INT);
             $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
             $stmt->execute();
+
+            $stmt = $this->DB::$connection->prepare("SELECT stock FROM event_item_slot WHERE id = :event_item_slot_id LIMIT 1;");
+            $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $stock = $stmt->fetchObject();
+
+            if ($stock->stock < 0) {
+                $this->DB::$connection->rollBack();
+                throw new Exception('You tried to order tickets for ' .$cart_item->ticket->persons * $cart_item->quantity. " person(s) for the following event: " . $cart_item->ticket->event_item_name . ". But there are only tickets for ". $stock->stock + $cart_item->ticket->persons * $cart_item->quantity. " person(s) left. Reduce the amount of tickets and try again.", 1);
+            }
         }
 
         $this->DB::$connection->commit();
