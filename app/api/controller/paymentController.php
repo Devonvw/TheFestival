@@ -53,4 +53,19 @@ class APIPaymentController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
+    public function paymentLinkWebhook()
+    {
+        session_start();
+
+        try {
+            $body = json_decode(file_get_contents('php://input'), true);
+
+            $this->paymentService->paymentLinkWebhook($_POST["id"], isset($body['id']) ? $body['id'] : null, isset($body['status']) ? $body['status'] : null);
+            echo json_encode(['msg' => "Succes"]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
 }

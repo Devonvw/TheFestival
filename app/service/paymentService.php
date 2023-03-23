@@ -88,8 +88,59 @@ class PaymentService {
         }
     }
 
-    public function payLater() {
+    public function createPayLater($orderId) {
+        $dao = new PaymentDAO();
+        $service = new OrderService();
 
+        $mollie = $this->getMollie();
+
+        $order = $service->getOrder($orderId);
+
+        $paymentLink = $mollie->paymentLinks->create([
+            "amount" => [
+                "currency" => "EUR",
+                "value" => number_format((float)$order->total, 2, '.', ''), // You must send the correct number of decimals, thus we enforce the use of strings
+            ],
+            "description" => "Bicycle tires",
+            "redirectUrl" => NGROK_URL ."/order?id=".$orderId,
+            "webhookUrl" => NGROK_URL ."/api/payment/link", // optional
+            "expiresAt" => (new DateTime("now +24 hours"))->format(DateTime::ATOM)
+        ]);
+
+        $dao->addPayLater($orderId, $paymentLink->id);
+        $account = $dao->getPaymentAccountInfo($orderId);
+
+        try {
+            $mail = new PHPMailer(true);
+
+            // Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output
+            $mail->isSMTP(); // Send using SMTP
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Password = SMPT_PASSWORD; // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            // Recipients
+            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->addAddress($account->email, $account->name); // Add a recipient
+
+            // Content
+            $mail->isHTML(false); // Set email format to plain text
+            $mail->Subject = "Payment failed for order ". $orderId;
+            $mail->Body = "Dear " . $account->name . ",\n\nYour payment for order $orderId failed. You can still pay with this link.". $paymentLink->getCheckoutUrl() . " This link is expires within 24 hours.\n\nBest regards,\nThe festival team";
+
+            //$mail->AddAttachment($invoicePDF);
+            $mail->send();
+            $mail->smtpClose();
+        }
+        catch (Exception $ex) {
+            var_dump($ex);
+        }
     }
 
     public function paymentWebhook($id, $orderId = null, $newStatus = null) {
@@ -112,11 +163,43 @@ class PaymentService {
                 break;
             case 'expired':
             case 'failed':
+                $this->createPayLater($orderId);
+                break;
             case 'canceled':
                 //TODO: Cancel order, return stock
                 $orderDAO->cancelOrder($orderId);
                 break;
         }
+    }
+
+    public function paymentLinkWebhook($id, $orderId = null, $newStatus = null) {
+        $dao = new PaymentDAO();
+        $orderDAO = new OrderDAO();
+
+        if ($id) {
+            $mollie = $this->getMollie();
+            $payment = $mollie->paymentLinks->get($id);
+        }
+
+        $dao->handlePayLater($id);
+
+
+        // $dao->updatePaymentStatus($orderId, $newStatus);
+
+        // switch ($payment->status) {
+        //     case 'paid':
+        //         //TODO: Send email with invoice and tickets
+        //         $this->handleOrderPaid($orderId);
+        //         break;
+        //     case 'expired':
+        //     case 'failed':
+        //         $this->createPayLater($orderId);
+        //         break;
+        //     case 'canceled':
+        //         //TODO: Cancel order, return stock
+        //         $orderDAO->cancelOrder($orderId);
+        //         break;
+        // }
     }
 
     private function handleOrderPaid($orderId) {

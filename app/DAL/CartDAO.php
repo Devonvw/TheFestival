@@ -65,6 +65,8 @@ class cartDAO
         $stmt->execute();
         $cartItem = $stmt->fetchObject();
 
+        if (!$cartItem) throw new Exception("This ticket doesn't exist in your cart.", 1);
+
         if ($cartItem->quantity == 1) {
             $sql = "DELETE FROM cart_item WHERE id = :cart_item_id";
             $stmt = $this->DB::$connection->prepare($sql);
