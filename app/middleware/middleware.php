@@ -15,13 +15,11 @@ class Middleware {
             echo json_encode([ 'msg' => "Only logged in can call this route" ]);
         }
     }
-    function validToken() {
+    public function validToken() {
         if (!isset($_SESSION['token']) || !$_SESSION['token']) {
             http_response_code(500);
-            echo json_encode([ 'msg' => "Token is invalid or has expired" ]);
-            return false;
+            json_encode(['msg' => "Token is invalid or has expired"]);
         }
-        return true;
     }
 }
 ?>

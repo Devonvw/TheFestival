@@ -321,6 +321,7 @@ class AccountDAO
         if (strlen(trim($password)) < 6) {
             throw new Exception("New password must have at least 6 characters", 1);
         }
+        
         $email = $_SESSION['email'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
