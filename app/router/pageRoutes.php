@@ -114,6 +114,7 @@ function handleRoutes($uri, $requestMethod, $content)
             break;
         case 'login/reset/password':
             session_start();
+            (new Middleware())->validToken();
             require __DIR__ . '/../controller/accountController.php';
             $controller = new AccountController();
             $controller->resetPassword();

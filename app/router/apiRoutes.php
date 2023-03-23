@@ -149,9 +149,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
                 case "account/reset/password":
                     session_start();
-                    if(!(new Middleware())->validToken()){
-                        return;
-                    }
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->resetPassword();

@@ -38,15 +38,17 @@
         }
 
         .fc-event {
-            background-color: #4299e1;
-            border-color: #3182ce;
+            background-color: #008080;
+            border-color: #008080;
             color: #fff;
         }
 
-        .fc-event:hover {
-            background-color: #008080;
+        .fc-col-header{
+            border-right: none;
         }
-
+        .fc-scroller-harness{
+            border-right: none;
+        }
         :root {
             --fc-border-color: #008080;
             --fc-daygrid-event-dot-width: 8px;
@@ -208,8 +210,8 @@
                 },
                 initialView: 'dayGridMonth',
                 initialDate: '2023-07-01',
-                slotMinTime: '16:00:00',
-                slotMaxTime: '20:00:00',
+                slotMinTime: '14:00:00',
+                slotMaxTime: '23:00:00',
                 dayHeaderFormat: {
                     weekday: 'long',
                     day: 'numeric',

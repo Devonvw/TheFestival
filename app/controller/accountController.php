@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/controller.php';
 require_once __DIR__ . '/../service/accountService.php';
+require_once __DIR__ . '/../middleware/middleware.php';
 
 class AccountController extends Controller
 {
