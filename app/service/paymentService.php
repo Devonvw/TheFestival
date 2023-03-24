@@ -48,7 +48,7 @@ class PaymentService {
         $payment = $mollie->payments->create([
             "amount" => [
                 "currency" => "EUR",
-                "value" => $order->total, // You must send the correct number of decimals, thus we enforce the use of strings
+                "value" => sprintf('%.2F', $order->total), // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::PAYPAL,
             "description" => "Order #$order->id",
@@ -67,6 +67,8 @@ class PaymentService {
 
         $service = new OrderService();
         $order = $service->createOrder($account_id, $session_id);
+
+        echo $method;
         
         $payment = null;
         if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);
@@ -99,7 +101,7 @@ class PaymentService {
         $paymentLink = $mollie->paymentLinks->create([
             "amount" => [
                 "currency" => "EUR",
-                "value" => number_format((float)$order->total, 2, '.', ''), // You must send the correct number of decimals, thus we enforce the use of strings
+                "value" => sprintf('%.2F', $order->total), // You must send the correct number of decimals, thus we enforce the use of strings
             ],
             "description" => "Bicycle tires",
             "redirectUrl" => NGROK_URL ."/order?id=".$orderId,
@@ -132,7 +134,7 @@ class PaymentService {
             // Content
             $mail->isHTML(false); // Set email format to plain text
             $mail->Subject = "Payment failed for order ". $orderId;
-            $mail->Body = "Dear " . $account->name . ",\n\nYour payment for order $orderId failed. You can still pay with this link.". $paymentLink->getCheckoutUrl() . " This link is expires within 24 hours.\n\nBest regards,\nThe festival team";
+            $mail->Body = "Dear " . $account->name . ",\n\nYour payment for order $orderId failed. You can still pay with this link.". $paymentLink->getCheckoutUrl() . " This link expires within 24 hours.\n\nBest regards,\nThe festival team";
 
             //$mail->AddAttachment($invoicePDF);
             $mail->send();
@@ -178,28 +180,18 @@ class PaymentService {
 
         if ($id) {
             $mollie = $this->getMollie();
-            $payment = $mollie->paymentLinks->get($id);
+            $paymentLink = $mollie->paymentLinks->get($id);
+            $orderId = ($dao->getOrderIdByPaymentLink($id))->id;
         }
 
-        $dao->handlePayLater($id);
-
-
-        // $dao->updatePaymentStatus($orderId, $newStatus);
-
-        // switch ($payment->status) {
-        //     case 'paid':
-        //         //TODO: Send email with invoice and tickets
-        //         $this->handleOrderPaid($orderId);
-        //         break;
-        //     case 'expired':
-        //     case 'failed':
-        //         $this->createPayLater($orderId);
-        //         break;
-        //     case 'canceled':
-        //         //TODO: Cancel order, return stock
-        //         $orderDAO->cancelOrder($orderId);
-        //         break;
-        // }
+        if (new DateTime($paymentLink->expiresAt) < new DateTime()) {
+             $dao->handlePayLater($id, 'expired');
+             $orderDAO->cancelOrder($orderId);
+        }
+        else if ($paymentLink->paidAt) {
+            $dao->handlePayLater($id, 'paid');
+            $this->handleOrderPaid($orderId);
+        }
     }
 
     private function handleOrderPaid($orderId) {
