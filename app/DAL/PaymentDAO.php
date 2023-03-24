@@ -48,23 +48,31 @@ class PaymentDAO
         $stmt->execute();
     }
 
-    function handlePayLater($id)
+    function handlePayLater($id, $status)
     {
         $modified_at = date('Y-m-d H:i:s');
 
-        $sql = "UPDATE order_payment SET status = 'kaas', modified_at = :modified_at WHERE pay_later_id = :id";
+        $sql = "UPDATE order_payment SET status = :status, modified_at = :modified_at WHERE pay_later_id = :id";
         $stmt = $this->DB::$connection->prepare($sql);
         $stmt->bindParam(':modified_at', $modified_at);
-       //$stmt->bindValue(':test', $payment, PDO::PARAM_STR);
+        $stmt->bindValue(':status', $status, PDO::PARAM_STR);
         $stmt->bindValue(':id', $id, PDO::PARAM_STR);
         $stmt->execute();
     }
 
     function getPaymentAccountInfo($orderId)
     {
-        $sql = "SELECT * FROM order_payment WHERE order_id = :order_id";
+        $sql = "SELECT * FROM order_payment WHERE order_id = :order_id LIMIT 1";
         $stmt = $this->DB::$connection->prepare($sql);
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchObject();
+    }
+
+    function getOrderIdByPaymentLink($id) {
+        $sql = "SELECT order_id as id FROM order_payment WHERE pay_later_id = :id LIMIT 1";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchObject();
     }

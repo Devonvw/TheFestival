@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../DAL/OrderDAO.php';
+require_once __DIR__ . '/../DAL/InvoiceDAO.php';
 require_once __DIR__ . '/../service/pdfService.php';
 require_once __DIR__ . '/../service/orderService.php';
-
 
 class OrderService {
     public function createOrder($accountId, $session_id){

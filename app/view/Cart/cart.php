@@ -99,6 +99,9 @@ function getCart() {
                     `
             )
 
+            if (!data?.cart_items?.length) cartItemsHTML =
+                `<div class="w-full flex items-center justify-center"><p>Your cart is empty..</p></div>`
+
             document.getElementById("cartItems").innerHTML = cartItemsHTML;
 
             document.getElementById("subtotal").innerHTML = `€${data?.subtotal?.toFixed(2)}`;
