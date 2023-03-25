@@ -11,6 +11,7 @@ class PaymentDAO
     }
 
     function createPayment($orderId, $id, $paymentAccountInfo) {
+
         $sql = "INSERT INTO order_payment (order_id, mollie_id, status, email, name, country, city, address, zipcode) VALUES (:order_id, :mollie_id, '', :email, :name, :country, :city, :address, :zipcode);";
         $stmt = $this->DB::$connection->prepare($sql);
         $stmt->bindValue(':mollie_id', $id, PDO::PARAM_STR);

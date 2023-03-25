@@ -26,7 +26,7 @@ function Export(type) {
 
             let selectedCols = [];
 
-            const headers = ["Id", "Account ID", "Name", "Total", "Created At"]
+            const headers = ["Id", "Account ID", "Status", "Name", "Total", "Created At"]
 
             headers.forEach((column, index) => {
                 if (document.getElementById(column)?.checked) selectedCols.push(column);
@@ -48,9 +48,12 @@ function Export(type) {
             } else if (type == "excel") {
                 var wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Orders");
+                XLSX.writeFile(wb, filename);
             }
         }
-    }).catch((res) => {});
+    }).catch((res) => {
+        console.log(res)
+    });
 }
 
 function downloadInvoice(id) {
@@ -89,19 +92,19 @@ function getOrders() {
 
             const dataArray = data.map(item => Object.values(item).concat([false]));
 
-            const headers = ["Id", "Account ID", "Name", "Total", "Created At"];
+            const headers = ["Id", "Account ID", "Status", "Name", "Total", "Created At"];
 
             new simpleDatatables.DataTable("table", {
                 data: {
-                    headings: ["Id", "Account ID", "Name", "Total", "Created At", ""],
+                    headings: ["Id", "Account ID", "Status", "Name", "Total", "Created At", ""],
                     data: dataArray,
                 },
                 columns: [{
-                    select: 3,
+                    select: 4,
                     render: (value, _td, _rowIndex, _cellIndex) =>
-                        `€${value.toFixed(2)}`
+                        `€${value?.toFixed(2)}`
                 }, {
-                    select: 5,
+                    select: 6,
                     sortable: false,
                     render: (value, _td, _rowIndex, _cellIndex) => {
                         return `
@@ -120,7 +123,8 @@ function getOrders() {
 
             var columnsHTML = "";
 
-            ["Id", "Account ID", "Name", "Total", "Created At"].forEach((column, index) => columnsHTML +=
+            ["Id", "Account ID", "Status", "Name", "Total", "Created At"].forEach((column, index) =>
+                columnsHTML +=
                 `
                 <div><label for="${column}" class="block text-sm font-medium text-gray-900">
                     ${column}

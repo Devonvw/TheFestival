@@ -27,6 +27,7 @@ class InvoiceDAO
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->execute();
         $invoice = $stmt->fetchObject();
+        if (!$invoice) throw new Exception("This order doesn't have an invoice.", 1);
         $invoice->file = base64_encode($invoice->file);
         return $invoice;
     }

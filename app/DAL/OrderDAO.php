@@ -15,7 +15,6 @@ class OrderDAO
     public function createOrder($accountId = null, $sessionId = null) {
         $this->DB::$connection->beginTransaction();
 
-        //TODO: Handle if not logged in
         $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id, session_id) VALUES (:account_id, :session_id);");
         $stmt->bindParam(':account_id', $accountId);
         $stmt->bindValue(':session_id', $accountId ? null : $sessionId);
@@ -24,6 +23,11 @@ class OrderDAO
 
         $cartDAO = new cartDAO();
         $cart = $cartDAO->getCart($accountId, $sessionId);
+
+        if (count($cart->cart_items) == 0) {
+            $this->DB::$connection->rollBack();
+            throw new Exception("Your cart doesn't contain tickets.", 1);
+        } 
 
         //Add to price to keep price consistent, if a ticket price changes the order price doesn't
         $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
@@ -138,7 +142,7 @@ class OrderDAO
     }
 
     public function getAllOrders() {
-        $sql = "SELECT `order`.id, `order`.account_id, CONCAT(account.first_name, ' ', account.last_name) as name, SUM(oi.price) as total, `order`.created_at  FROM `order` LEFT JOIN order_item as oi ON oi.order_id = order.id LEFT JOIN account ON account.id = `order`.account_id GROUP BY order.id";
+        $sql = "SELECT `order`.id, `order`.account_id, order_payment.status, CONCAT(account.first_name, ' ', account.last_name) as name, SUM(oi.price) as total, `order`.created_at  FROM `order` LEFT JOIN order_item as oi ON oi.order_id = order.id LEFT JOIN account ON account.id = `order`.account_id LEFT JOIN order_payment ON order_payment.order_id = order.id GROUP BY order.id";
         $stmt = $this->DB::$connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
