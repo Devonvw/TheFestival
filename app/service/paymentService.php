@@ -63,13 +63,18 @@ class PaymentService {
     }
     
     public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo) {
+        if (!$method) throw new Exception("Dont forget to choose a payment method.", 1);
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
+        if (!$paymentAccountInfo["name"]) throw new Exception("Don't forget to fill in your name.", 1);
+        if (!$paymentAccountInfo["email"]) throw new Exception("Don't forget to fill in your email.", 1);
+        if (!$paymentAccountInfo["country"]) throw new Exception("Don't forget to fill in your country.", 1);
+        if (!$paymentAccountInfo["city"]) throw new Exception("Don't forget to fill in your city.", 1);
+        if (!$paymentAccountInfo["zipcode"]) throw new Exception("Don't forget to fill in your zipcode.", 1);
+        if (!$paymentAccountInfo["address"]) throw new Exception("Don't forget to fill in your address.", 1);
 
         $service = new OrderService();
         $order = $service->createOrder($account_id, $session_id);
 
-        echo $method;
-        
         $payment = null;
         if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);
         else if ($method == "Paypal") $payment = $this->createPaypalPayment($order);
@@ -158,7 +163,7 @@ class PaymentService {
 
         $dao->updatePaymentStatus($orderId, $newStatus);
 
-        switch ($payment->status) {
+        switch ($newStatus) {
             case 'paid':
                 //TODO: Send email with invoice and tickets
                 $this->handleOrderPaid($orderId);

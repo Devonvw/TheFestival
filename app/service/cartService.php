@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../DAL/CartDAO.php';
+require_once __DIR__ . '/../env/index.php';
 
 class CartService {
 
@@ -24,6 +25,13 @@ class CartService {
         return $dao->getCart($account_id, $session_id);
     }
 
-    
+    public function getCartShareLink($account_id, $session_id){
+        $dao = new cartDAO();
+        return NGROK_URL ."/cart/shared?token=".$dao->getCartShareToken($account_id, $session_id);
+    }
 
+    public function getSharedCart($token){
+        $dao = new cartDAO();
+        return $dao->getCart(null, null, $token);
+    }
 }

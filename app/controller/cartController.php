@@ -17,4 +17,7 @@ class CartController extends Controller
     public function orderOverview() {
         $this->displayView("");
     }
+    public function shared() {
+        $this->displayView("");
+    }
 }

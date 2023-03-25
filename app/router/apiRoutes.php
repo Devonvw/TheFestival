@@ -67,6 +67,19 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->getCart();
                     break;
+                case "cart/shared":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->getSharedCart($params["token"]);
+                    break;
+                case "cart/share-link":
+                    //(new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->getCartShareLink();
+                    break;
+                
 
                     /*----------------------GET Order routes-----------------------------*/
 
@@ -90,7 +103,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIOrderController();
                     $controller->getOrderTickets($params["id"]);
                     break;
-
 
                 case "order/status":
                     //(new Middleware())->adminOnly();
@@ -270,7 +282,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APICartController();
                     $controller->addToCart($params["id"]);
                     break;
-
 
                 default:
                     http_response_code(404);

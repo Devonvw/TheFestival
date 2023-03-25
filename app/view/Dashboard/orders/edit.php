@@ -23,8 +23,8 @@ function editOrderStatus(e) {
         })
     }).then(async (res) => {
         if (res.ok) window.location = "/dashboard/orders";
-        document.getElementById('error').innerHTML = (await res.json())?.msg;
-        document.getElementById('errorWrapper').classList.remove('hidden');
+
+        ToastError((await res.json())?.msg);
     }).catch((res) => {});
 }
 
@@ -36,10 +36,13 @@ function getOrderStatus() {
         },
         method: "GET",
     }).then(async (res) => {
+        const data = await res.json();
+
         if (!res.ok) {
+            ToastError((await res.json())?.msg);
             window.location = "/dashboard/orders";
         }
-        const data = await res.json();
+
         document.getElementById('statusses').value = data?.status;
         document.getElementById('orderId').innerHTML = `Edit order ${data?.id}`;
     }).catch((res) => {});
@@ -79,15 +82,6 @@ function getOrderStatus() {
                             class="text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                             Edit order
                         </h1>
-                        <div class="bg-red-200 p-2 w-full rounded-lg flex text-red-700 items-center text-sm hidden"
-                            id="errorWrapper"><svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3"
-                                fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            <p id="error"></p>
-                        </div>
                         <form id="editForm" class="space-y-4 md:space-y-6" onsubmit="editOrderStatus(event)">
                             <div class="mt-4" id="statussesWrapper"><label for="statusses">Choose new
                                     status</label>

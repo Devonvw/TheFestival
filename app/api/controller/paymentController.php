@@ -30,9 +30,9 @@ class APIPaymentController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $paymentAccountInfo = ["email" => $body["email"], "name" => $body["name"], "country" => $body["country"], "city" => $body["city"], "address" => $body["address"], "zipcode" => $body["zipcode"]];
+            $paymentAccountInfo = ["email" => isset($body["email"]) ? $body["email"] : null, "name" => isset($body["name"]) ? $body["name"] : null, "country" => isset($body["country"]) ? $body["country"] : null, "city" => isset($body["city"]) ? $body["city"] : null, "address" => isset($body["address"]) ? $body["address"] : null, "zipcode" => isset($body["zipcode"]) ? $body["zipcode"] : null];
 
-            echo $this->paymentService->createPayment(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id(), $body["method"], isset($body["issuer"]) ? $body["issuer"] : null, $paymentAccountInfo);
+            echo $this->paymentService->createPayment(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id(), isset($body["method"]) ? $body["method"] : null , isset($body["issuer"]) ? $body["issuer"] : null, $paymentAccountInfo);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -46,7 +46,7 @@ class APIPaymentController
         try {
             $body = json_decode(file_get_contents('php://input'), true);
 
-            $this->paymentService->paymentWebhook($_POST["id"], isset($body['id']) ? $body['id'] : null, isset($body['status']) ? $body['status'] : null);
+            $this->paymentService->paymentWebhook(isset($_POST["id"]) ? $_POST["id"] : null, isset($body['id']) ? $body['id'] : null, isset($body['status']) ? $body['status'] : null);
             echo json_encode(['msg' => "Succes"]);
         } catch (Exception $ex) {
             http_response_code(500);
