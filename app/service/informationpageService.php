@@ -7,6 +7,11 @@ class InformationPageService {
         return $dao->getInformationPages();
     }
 
+    public function getInformationPageUrls() {
+        $dao = new InformationPageDAO();
+        return $dao->getInformationPageUrls();
+    }
+
     public function getInformationPage($id, $url) {
         $dao = new InformationPageDAO();
         return $dao->getInformationPage($id, $url);
