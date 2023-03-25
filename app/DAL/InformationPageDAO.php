@@ -25,6 +25,13 @@ require_once __DIR__ . '/../DAL/Database.php';
           return $pages;
         }
 
+        function getInformationPageUrls() {
+            $stmt = $this->DB::$connection->prepare("SELECT information_page.url, information_page.meta_title as title from information_page where information_page.id != 1;");
+  
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+          }
+
         function getInformationPage($id, $url) {
           $data = null;
 

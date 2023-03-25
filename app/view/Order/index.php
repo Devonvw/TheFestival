@@ -47,7 +47,7 @@ const handleIdeal = (e) => {
 function getOrder() {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/order?id=${params.get("id")}`, {
+    fetch(`${window.location.origin}/api/order/status?id=${params.get("id")}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -55,10 +55,9 @@ function getOrder() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-
             if (data?.status != 'paid') window.location = "/cart";
 
-            fetch(`${window.location.origin}/api/order/status?id=${params.get("id")}`, {
+            fetch(`${window.location.origin}/api/order?id=${params.get("id")}`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },

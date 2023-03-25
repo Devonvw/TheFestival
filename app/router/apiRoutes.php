@@ -39,6 +39,11 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIInformationPageController();
                     $controller->getInformationPages();
                     break;
+                case "information-page/urls":
+                    require_once __DIR__ . '/../api/controller/informationPageController.php';
+                    $controller = new APIInformationPageController();
+                    $controller->getInformationPageUrls();
+                    break;
                 case "information-page/page":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
