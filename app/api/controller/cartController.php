@@ -87,6 +87,7 @@ class APICartController
 
     public function getSharedCart($token)
     {
+
         session_start();
         
         try {
