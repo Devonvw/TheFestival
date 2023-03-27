@@ -16,10 +16,14 @@ class OrderService {
     }
 
     public function getOrder($orderId){
+        if (!$orderId) throw new Exception("Please specify an id.", 1);
+
         $dao = new OrderDAO();
         return $dao->getOrder($orderId);
     }
     public function getOrderTickets($orderId){
+        if (!$orderId) throw new Exception("Please specify an id.", 1);
+
         $dao = new OrderDAO();
         return $dao->getOrderTickets($orderId);
     }
@@ -30,6 +34,8 @@ class OrderService {
     }
 
     public function getOrderStatus($orderId){
+        if (!$orderId) throw new Exception("Please specify an id.", 1);
+
         $dao = new OrderDAO();
         return $dao->getOrderStatus($orderId);
     }

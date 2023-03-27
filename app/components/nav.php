@@ -37,6 +37,8 @@ function getContentPages() {
             `);
 
             document.getElementById("contentPages").innerHTML = contentPagesHTML;
+            document.getElementById("contentPagesFooter").innerHTML = contentPagesHTML;
+
         }
     }).catch((res) => {});
 }

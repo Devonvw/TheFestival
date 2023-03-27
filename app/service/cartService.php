@@ -9,10 +9,14 @@ class CartService {
         $dao->createCart($account_id, $session_id);
     }
     public function addToCart($ticket_id, $account_id, $session_id){
+        if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
+
         $dao = new cartDAO();
         $dao->addToCart($ticket_id, $account_id, $session_id);
     }
     public function removeFromCart($ticket_id, $account_id, $session_id){
+        if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
+
         $dao = new cartDAO();
         $dao->removeFromCart($ticket_id, $account_id, $session_id);
     }
@@ -31,6 +35,8 @@ class CartService {
     }
 
     public function getSharedCart($token){
+        if (!$token) throw new Exception("Please specify a token.", 1);
+
         $dao = new cartDAO();
         return $dao->getCart(null, null, $token);
     }
