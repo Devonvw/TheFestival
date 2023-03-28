@@ -15,7 +15,6 @@ class OrderDAO
     public function createOrder($accountId = null, $sessionId = null) {
         $this->DB::$connection->beginTransaction();
 
-        //TODO: Handle if not logged in
         $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id, session_id) VALUES (:account_id, :session_id);");
         $stmt->bindParam(':account_id', $accountId);
         $stmt->bindValue(':session_id', $accountId ? null : $sessionId);
@@ -24,6 +23,11 @@ class OrderDAO
 
         $cartDAO = new cartDAO();
         $cart = $cartDAO->getCart($accountId, $sessionId);
+
+        if (count($cart->cart_items) == 0) {
+            $this->DB::$connection->rollBack();
+            throw new Exception("Your cart doesn't contain tickets.", 1);
+        } 
 
         //Add to price to keep price consistent, if a ticket price changes the order price doesn't
         $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
@@ -45,13 +49,23 @@ class OrderDAO
         $stmt->execute();
 
         //Handle stock
-        $sql = "UPDATE event_item_slot SET stock = stock - :persons WHERE id = :event_item_slot_id";
+        $sql = "UPDATE event_item_slot SET stock = stock - :persons WHERE id = :event_item_slot_id;";
 
         foreach ($cart->cart_items as $cart_item) {
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':persons', $cart_item->ticket->persons * $cart_item->quantity, PDO::PARAM_INT);
             $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
             $stmt->execute();
+
+            $stmt = $this->DB::$connection->prepare("SELECT stock FROM event_item_slot WHERE id = :event_item_slot_id LIMIT 1;");
+            $stmt->bindValue(':event_item_slot_id', $cart_item->ticket->event_item_slot_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $stock = $stmt->fetchObject();
+
+            if ($stock->stock < 0) {
+                $this->DB::$connection->rollBack();
+                throw new Exception('You tried to order tickets for ' .$cart_item->ticket->persons * $cart_item->quantity. " person(s) for the following event: " . $cart_item->ticket->event_item_name . ". But there are only tickets for ". $stock->stock + $cart_item->ticket->persons * $cart_item->quantity. " person(s) left. Reduce the amount of tickets and try again.", 1);
+            }
         }
 
         $this->DB::$connection->commit();
@@ -128,7 +142,7 @@ class OrderDAO
     }
 
     public function getAllOrders() {
-        $sql = "SELECT `order`.id, `order`.account_id, CONCAT(account.first_name, ' ', account.last_name) as name, SUM(oi.price) as total, `order`.created_at  FROM `order` LEFT JOIN order_item as oi ON oi.order_id = order.id LEFT JOIN account ON account.id = `order`.account_id GROUP BY order.id";
+        $sql = "SELECT `order`.id, `order`.account_id, order_payment.status, CONCAT(account.first_name, ' ', account.last_name) as name, SUM(oi.price) as total, `order`.created_at  FROM `order` LEFT JOIN order_item as oi ON oi.order_id = order.id LEFT JOIN account ON account.id = `order`.account_id LEFT JOIN order_payment ON order_payment.order_id = order.id GROUP BY order.id";
         $stmt = $this->DB::$connection->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

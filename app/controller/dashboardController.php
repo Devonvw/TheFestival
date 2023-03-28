@@ -13,24 +13,38 @@ class DashboardController extends Controller {
 
     // router maps this to /article and /article/index automatically
     public function index() {
+        $this->adminOnly();
+        
         $this->displayView("");
     }
     public function accounts() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/accounts/index.php";
     }
     public function editAccount() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/accounts/edit.php";
     }
     public function contentHomePage() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/content/homePage.php";
     }
     public function contentInformationPages() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/content/informationPages/index.php";
     }
     public function contentInformationPage() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/content/informationPages/page.php";
     }
     public function events() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/events/index.php";
     }
     public function viewEventItems() {
@@ -38,11 +52,15 @@ class DashboardController extends Controller {
     }
     public function editEventItems() {
         require __DIR__ . "/../view/Dashboard/events/editeventItems.php";
-    }
+
     public function allOrders() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/orders/index.php";
     }
     public function editOrder() {
+        $this->adminOnly();
+
         require __DIR__ . "/../view/Dashboard/orders/edit.php";
     }
 }

@@ -47,7 +47,7 @@ const handleIdeal = (e) => {
 function getOrder() {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/order?id=${params.get("id")}`, {
+    fetch(`${window.location.origin}/api/order/status?id=${params.get("id")}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -55,10 +55,19 @@ function getOrder() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-            console.log(data)
-            var orderItemsHTML = "";
+            if (data?.status != 'paid') window.location = "/cart";
 
-            data?.order_items?.forEach((orderItem) => orderItemsHTML += `
+            fetch(`${window.location.origin}/api/order?id=${params.get("id")}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: "GET",
+            }).then(async (res) => {
+                if (res.ok) {
+                    const data = await res.json();
+                    var orderItemsHTML = "";
+
+                    data?.order_items?.forEach((orderItem) => orderItemsHTML += `
             <div class="w-full flex flex-wrap gap-x-4 gap-y-4 border-b border-black pb-4 mb-4">
                             <div class="h-24 w-24 rounded-full bg-gray-300 my-auto"></div>
                             <div class="mr-auto">
@@ -80,45 +89,49 @@ function getOrder() {
                         </div>
             `);
 
-            document.getElementById("orderItems").innerHTML = orderItemsHTML;
+                    document.getElementById("orderItems").innerHTML = orderItemsHTML;
 
-            var Calendar = window.tui.Calendar;
+                    var Calendar = window.tui.Calendar;
 
-            var cal = new Calendar('#calendar', {
-                defaultView: 'week',
-                isReadOnly: true,
-                week: {
-                    startDayOfWeek: 3,
-                    taskView: false,
-                    dayNames: ["Zo", "Ma", "Di", "Woe", "Do", "Vr", "Za"],
-                },
+                    var cal = new Calendar('#calendar', {
+                        defaultView: 'week',
+                        isReadOnly: true,
+                        week: {
+                            startDayOfWeek: 3,
+                            taskView: false,
+                            dayNames: ["Zo", "Ma", "Di", "Woe", "Do", "Vr", "Za"],
+                        },
 
-                template: {
-                    timegridDisplayPrimaryTime: function({
-                        time
-                    }) {
-                        const date = new Date(time);
-                        return `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:00`;
-                    },
+                        template: {
+                            timegridDisplayPrimaryTime: function({
+                                time
+                            }) {
+                                const date = new Date(time);
+                                return `${date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()}:00`;
+                            },
 
+                        }
+                    });
+                    cal.setDate("2023-07-27");
+
+                    cal.createEvents(data?.order_items?.map((orderItem, index) => ({
+                        id: index,
+                        calendarId: '1',
+                        title: orderItem?.ticket?.event_item_name,
+                        category: 'time',
+                        start: orderItem?.ticket?.start,
+                        end: orderItem?.ticket?.end,
+                        backgroundColor: "#008080",
+                        color: "#FFF",
+                        customStyle: {
+                            display: "flex",
+                            flexWrap: "wrap"
+                        }
+                    })));
                 }
+            }).catch((res) => {
+                console.log(res)
             });
-            cal.setDate("2023-07-27");
-
-            cal.createEvents(data?.order_items?.map((orderItem, index) => ({
-                id: index,
-                calendarId: '1',
-                title: orderItem?.ticket?.event_item_name,
-                category: 'time',
-                start: orderItem?.ticket?.start,
-                end: orderItem?.ticket?.end,
-                backgroundColor: "#008080",
-                color: "#FFF",
-                customStyle: {
-                    display: "flex",
-                    flexWrap: "wrap"
-                }
-            })));
         }
     }).catch((res) => {
         console.log(res)

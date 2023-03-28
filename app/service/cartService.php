@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../DAL/CartDAO.php';
+require_once __DIR__ . '/../env/index.php';
 
 class CartService {
 
@@ -8,10 +9,14 @@ class CartService {
         $dao->createCart($account_id, $session_id);
     }
     public function addToCart($ticket_id, $account_id, $session_id){
+        if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
+
         $dao = new cartDAO();
         $dao->addToCart($ticket_id, $account_id, $session_id);
     }
     public function removeFromCart($ticket_id, $account_id, $session_id){
+        if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
+
         $dao = new cartDAO();
         $dao->removeFromCart($ticket_id, $account_id, $session_id);
     }
@@ -24,6 +29,15 @@ class CartService {
         return $dao->getCart($account_id, $session_id);
     }
 
-    
+    public function getCartShareLink($account_id, $session_id){
+        $dao = new cartDAO();
+        return NGROK_URL ."/cart/shared?token=".$dao->getCartShareToken($account_id, $session_id);
+    }
 
+    public function getSharedCart($token){
+        if (!$token) throw new Exception("Please specify a token.", 1);
+
+        $dao = new cartDAO();
+        return $dao->getCart(null, null, $token);
+    }
 }

@@ -7,10 +7,54 @@
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@6.0"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.1/xlsx.full.min.js"></script>
+<script src="/utils/downloadFile.js"></script>
 <script>
 window.addEventListener("load", (event) => {
     getOrders()
 });
+
+function Export(type) {
+    fetch(`${window.location.origin}/api/order/all`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+
+            let selectedCols = [];
+
+            const headers = ["Id", "Account ID", "Status", "Name", "Total", "Created At"]
+
+            headers.forEach((column, index) => {
+                if (document.getElementById(column)?.checked) selectedCols.push(column);
+            })
+
+            const excelData = data?.map((obj) => Object.fromEntries(Object.entries(obj).filter(([key],
+                    index) =>
+                selectedCols?.includes(headers[index])
+            )));
+
+            filename = 'orders.xlsx';
+            var ws = XLSX.utils.json_to_sheet(excelData);
+
+            if (type == "csv") {
+                var csv = XLSX.utils.sheet_to_csv(ws, {
+                    strip: true
+                });
+                downloadFile(csv, 'orders.csv', 'text/csv;encoding:utf-8');
+            } else if (type == "excel") {
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Orders");
+                XLSX.writeFile(wb, filename);
+            }
+        }
+    }).catch((res) => {
+        console.log(res)
+    });
+}
 
 function downloadInvoice(id) {
     fetch(`${window.location.origin}/api/invoice?orderId=${id}`, {
@@ -48,17 +92,19 @@ function getOrders() {
 
             const dataArray = data.map(item => Object.values(item).concat([false]));
 
+            const headers = ["Id", "Account ID", "Status", "Name", "Total", "Created At"];
+
             new simpleDatatables.DataTable("table", {
                 data: {
-                    headings: ["Id", "Account ID", "Name", "Total", "Created At", ""],
+                    headings: ["Id", "Account ID", "Status", "Name", "Total", "Created At", ""],
                     data: dataArray,
                 },
                 columns: [{
-                    select: 3,
+                    select: 4,
                     render: (value, _td, _rowIndex, _cellIndex) =>
-                        `€${value.toFixed(2)}`
+                        `€${value?.toFixed(2)}`
                 }, {
-                    select: 5,
+                    select: 6,
                     sortable: false,
                     render: (value, _td, _rowIndex, _cellIndex) => {
                         return `
@@ -71,8 +117,23 @@ function getOrders() {
                             </button>
                         </div>`
                     }
-                }]
+                }],
+
             })
+
+            var columnsHTML = "";
+
+            ["Id", "Account ID", "Status", "Name", "Total", "Created At"].forEach((column, index) =>
+                columnsHTML +=
+                `
+                <div><label for="${column}" class="block text-sm font-medium text-gray-900">
+                    ${column}
+                </label>
+                <input type="checkbox" id="${column}" name="${column}" /></div>
+                `
+            )
+
+            document.getElementById("exportColumns").innerHTML = columnsHTML;
         }
     }).catch((res) => {});
 }
@@ -107,6 +168,13 @@ function getOrders() {
                     <h2 class="text-2xl font-semibold">Orders</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8">
+                    <div class="flex gap-x-4 mb-10"><button onclick="Export('excel')"
+                            class="p-3 bg-primary text-white rounded-md">Export
+                            Excel</button><button onclick="Export('csv')"
+                            class="p-3 bg-primary text-white rounded-md">Export
+                            CSV</button>
+                        <div id="exportColumns" class="flex gap-6"></div>
+                    </div>
                     <table class="table"></table>
                 </div>
             </div>

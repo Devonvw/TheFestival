@@ -7,7 +7,14 @@ class InformationPageService {
         return $dao->getInformationPages();
     }
 
+    public function getInformationPageUrls() {
+        $dao = new InformationPageDAO();
+        return $dao->getInformationPageUrls();
+    }
+
     public function getInformationPage($id, $url) {
+        if (!$id && !$url) throw new Exception("Please specify an id or url.", 1);
+
         $dao = new InformationPageDAO();
         return $dao->getInformationPage($id, $url);
     }
@@ -23,6 +30,8 @@ class InformationPageService {
     }
 
     public function editInformationPage($id, $url, $title, $subtitle, $metaDescription, $metaTitle, $image, $sections) {
+        if (!$id) throw new Exception("Please specify an id.", 1);
+         
         $dao = new InformationPageDAO();
         $dao->editInformationPage($id, $url, $title, $subtitle, $metaDescription, $metaTitle, $image, $sections);
     }
@@ -33,16 +42,22 @@ class InformationPageService {
     }
 
     public function deleteInformationPage($id) {
+        if (!$id) throw new Exception("Please specify an id.", 1);
+
         $dao = new InformationPageDAO();
         $dao->deleteInformationPage($id);
     }
 
     public function addInformationSection($informationPageId) {
+        if (!$informationPageId) throw new Exception("Please specify a page id.", 1);
+
         $dao = new InformationPageDAO();
         return $dao->addInformationSection($informationPageId);
     }
 
     public function deleteInformationSection($id) {
+        if (!$id) throw new Exception("Please specify an id.", 1);
+
         $dao = new InformationPageDAO();
         return $dao->deleteInformationSection($id);
     }

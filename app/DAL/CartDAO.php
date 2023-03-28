@@ -65,6 +65,8 @@ class cartDAO
         $stmt->execute();
         $cartItem = $stmt->fetchObject();
 
+        if (!$cartItem) throw new Exception("This ticket doesn't exist in your cart.", 1);
+
         if ($cartItem->quantity == 1) {
             $sql = "DELETE FROM cart_item WHERE id = :cart_item_id";
             $stmt = $this->DB::$connection->prepare($sql);
@@ -106,7 +108,7 @@ class cartDAO
         $stmt->execute();
     }
 
-public function getCart($account_id = null, $session_id = null)
+public function getCart($account_id = null, $session_id = null, $token = null)
     {
         $cart = null;
 
@@ -114,6 +116,13 @@ public function getCart($account_id = null, $session_id = null)
             $sql = "SELECT * FROM cart WHERE account_id = :account_id LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
+            $cart = $stmt->fetch();
+        } else if ($token !== null) {
+            $sql = "SELECT * FROM cart WHERE share_token = :token LIMIT 1";
+            $stmt = $this->DB::$connection->prepare($sql);
+            $stmt->bindValue(':token', $token, PDO::PARAM_INT);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
             $cart = $stmt->fetch();
@@ -169,5 +178,31 @@ public function getCart($account_id = null, $session_id = null)
         $cart->cart_items = $cart_items;
 
         return $cart;
+    }
+
+    public function getCartShareToken($account_id, $session_id) {
+        $cart = $this->getCart($account_id, $session_id);
+
+        $sql = "SELECT * FROM cart WHERE id = :cart_id";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
+        $stmt->execute();
+        $cart = $stmt->fetchObject();
+
+        if (!$cart->share_token) {
+            $token = uniqid();
+            $hashed_token = hash('sha256', $token);
+    
+            //Insert token
+            $sql = "UPDATE cart SET share_token = :token WHERE id = :cart_id";
+            $stmt = $this->DB::$connection->prepare($sql);
+            $stmt->bindValue(':token', $hashed_token, PDO::PARAM_STR);
+            $stmt->bindValue(':cart_id', $cart->id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $hashed_token;
+        }
+
+        return $cart->share_token;
     }
 }

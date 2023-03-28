@@ -4,7 +4,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 window.addEventListener("load", (event) => {
-    getCart();
+    getSharedCart();
 });
 
 const formatDate = (input) => {
@@ -13,28 +13,10 @@ const formatDate = (input) => {
     return `${date?.getDate()}-${date?.getMonth() + 1}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
 }
 
-function addTicket(ticketId) {
-    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}`, {
-        method: "POST",
-        body: null
-    }).then(async (res) => {
-        if (res.ok) getCart();
-        else ToastError((await res.json())?.msg);
-    }).catch((res) => {});
-}
+function getSharedCart() {
+    const params = new URLSearchParams(window.location.search)
 
-function deleteTicket(ticketId) {
-    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}`, {
-        method: "DELETE",
-        body: null
-    }).then(async (res) => {
-        if (res.ok) getCart();
-        else ToastError((await res.json())?.msg);
-    }).catch((res) => {});
-}
-
-function getShareLink() {
-    fetch(`${window.location.origin}/api/cart/share-link`, {
+    fetch(`${window.location.origin}/api/cart/shared?token=${params.get('id')}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -42,31 +24,7 @@ function getShareLink() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-
-            navigator.clipboard.writeText(data?.link);
-
-            var tooltip = document.getElementById("myTooltip");
-            tooltip.innerHTML = "Link Copied";
-        } else {
-            ToastError((await res.json())?.msg);
-
-        }
-    }).catch((res) => {});
-}
-
-function getCart() {
-    fetch(`${window.location.origin}/api/cart`, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: "GET",
-    }).then(async (res) => {
-        if (res.ok) {
-            const data = await res.json();
-
-            if (!data?.cart_items?.length) document.getElementById("checkout").classList.add(
-                "pointer-events-none");
-
+            console.log(data)
             var cartItemsHTML = "";
 
             data?.cart_items?.forEach((cartItem) => cartItemsHTML +=
@@ -83,18 +41,6 @@ function getCart() {
                                     </li>
                                     <li>
                                         <p>${formatDate(cartItem?.ticket?.start)} - ${formatDate(cartItem?.ticket?.end)}</p>
-                                    </li>
-                                    <li class="flex gap-x-2">
-                                        <div class="flex gap-x-2 border rounded-md border-primary">
-                                        <button onclick="addTicket(${cartItem?.ticket?.id})" class="rounded-md border-r border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                                        </svg>
-                                    </button>
-                                    ${cartItem?.quantity}
-                                    <button onclick="deleteTicket(${cartItem?.ticket?.id})" class="rounded-md border-l border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
-                                        </svg>
-                                    </button></div><p> x ${cartItem?.ticket?.persons} person(s)</p>
                                     </li>
                                 </ul>
                             </div>
@@ -143,7 +89,7 @@ function getCart() {
 }
 </script>
 <header>
-    <title>Cart - Social</title>
+    <title>Shared Cart - Social</title>
     <link rel="stylesheet" href="../styles/globals.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
@@ -166,15 +112,7 @@ function getCart() {
     <div class="">
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
-            <div class="flex items-center justify-between mt-6">
-                <h1 class="text-black text-3xl font-bold">Your Cart</h1>
-                <div class="tooltip"><button onclick="getShareLink()" class="flex items-center gap-x-2">Share
-                        cart<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-                        </svg><span class="tooltiptext" id="myTooltip">Copy to clipboard</span></button> </div>
-            </div>
+            <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="w-full md:w-1/2 lg:w-[63%] pt-4 mt-4 border-t border-black">
                     <!-- Cart items -->
@@ -196,7 +134,7 @@ function getCart() {
                             <p class="text-gray-700 font-bold">Total</p>
                             <p id="total" class="text-gray-800 font-bold">$120.00</p>
                         </div>
-                        <a href="/checkout" id="checkout"
+                        <a href="/checkout"
                             class="p-3 rounded-md w-full flex items-center justify-center bg-primary hover:scale-[1.02] duration-300 text-white font-medium">
                             Checkout
                         </a>

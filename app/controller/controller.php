@@ -7,4 +7,11 @@ class Controller {
         require __DIR__ . "/../view/$directory/$view.php";
     }
 
+    function adminOnly() {
+        if ((isset($_SESSION["type_id"]) ? $_SESSION["type_id"] : 0) != 3) {
+            header("location: /");
+            exit;
+        } 
+    }
+
 }
