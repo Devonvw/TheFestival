@@ -61,17 +61,17 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new DashboardController();
             $controller->events();
             break;
-        case 'dashboard/events/edit':
+        case 'dashboard/events/event-items':
             require __DIR__ . '/../controller/dashboardController.php';
             session_start();
             $controller = new DashboardController();
-            $controller->editEvents();
+            $controller->viewEventItems();
             break;
-        case 'dashboard/events/add':
+        case 'dashboard/events/event-item/edit':
             require __DIR__ . '/../controller/dashboardController.php';
             session_start();
             $controller = new DashboardController();
-            $controller->addEvents();
+            $controller->editEventItems();
             break;
         case 'dashboard/content/home-page':
             require __DIR__ . '/../controller/dashboardController.php';
