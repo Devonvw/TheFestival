@@ -84,6 +84,7 @@ function getInformationPage() {
         </div>
         <div class="flex flex-col" id="sections">
         </div>
+        <?php include __DIR__ . '/../../components/footer.php' ?>
     </div>
 </body>
 

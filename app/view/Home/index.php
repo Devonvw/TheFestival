@@ -118,46 +118,7 @@ function getHomePage() {
         <div class="flex">
             <div id="section1" class="my-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto"></div>
         </div>
-        <div class="bg-primary-light mb-60">
-            <div class="max-w-5xl px-4 md:px-6 lg:px-8 mx-auto grid grid-cols-12">
-                <div
-                    class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center -translate-y-12">
-                    <div class="bg-gray-400 rounded-full h-52 w-52"></div>
-                    <h3 class="mt-4 font-semibold text-2xl">History</h3>
-                    <div class="flex items-center justify-center -translate-y-4">
-                        <div class="h-[3px] w-24 bg-black translate-x-3"></div><svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                        </svg>
-                    </div>
-                </div>
-                <div
-                    class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center -translate-y-12">
-                    <div class="bg-gray-400 rounded-full h-52 w-52"></div>
-                    <h3 class="mt-4 font-semibold text-2xl">Culture</h3>
-                    <div class="flex items-center justify-center -translate-y-4">
-                        <div class="h-[3px] w-24 bg-black translate-x-3"></div><svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                        </svg>
-                    </div>
-                </div>
-                <div
-                    class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center -translate-y-12">
-                    <div class="bg-gray-400 rounded-full h-52 w-52"></div>
-                    <h3 class="mt-4 font-semibold text-2xl">Food</h3>
-                    <div class="flex items-center justify-center -translate-y-4">
-                        <div class="h-[3px] w-24 bg-black translate-x-3"></div><svg xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="flex">
             <div id="section2" class="mb-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto"></div>
         </div>
@@ -169,7 +130,7 @@ function getHomePage() {
         </div>
         <div class="bg-primary-light py-14">
             <div class="max-w-6xl px-4 md:px-6 lg:px-8 mx-auto">
-                <div class="grid grid-cols-12 gap-x-24">
+                <div class="grid grid-cols-12 md:gap-x-12 lg:gap-x-24">
                     <div
                         class="group col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center px-4">
                         <a href="https://www.weeronline.nl/Europa/Nederland/Haarlem/4058263" target="_blank"><img
@@ -196,16 +157,20 @@ function getHomePage() {
                                 width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 
-                        <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">View Haarlem on
-                            Google Maps</h5>
-                        <div
-                            class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
-                            <div class="h-[3px] w-full bg-primary translate-x-3"></div><svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="text-primary w-12 h-12">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
+                        <div>
+                            <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">View
+                                Haarlem on
+                                Google Maps</h5>
+
+                            <div
+                                class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
+                                <div class="h-[3px] w-full bg-primary"></div><svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                    class="text-primary w-12 h-12 -translate-x-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                     <div

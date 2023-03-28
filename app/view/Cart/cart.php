@@ -164,6 +164,7 @@ function getCart() {
 
 <body>
     <div class="">
+        <?php include __DIR__ . '/../../components/nav.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <div class="flex items-center justify-between mt-6">
