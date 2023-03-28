@@ -52,6 +52,7 @@ class DashboardController extends Controller {
     }
     public function editEventItems() {
         require __DIR__ . "/../view/Dashboard/events/editeventItems.php";
+    }
 
     public function allOrders() {
         $this->adminOnly();

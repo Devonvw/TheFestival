@@ -30,13 +30,29 @@ function getContentPages() {
         if (res.ok) {
             const data = await res.json();
 
+            var contentPagesMobileHTML = "";
             var contentPagesHTML = "";
 
-            data?.forEach((page) => contentPagesHTML += `
+            data?.forEach((page) => {
+                contentPagesHTML += `
                     <li><a href="/content/${page?.url}">${page?.title}</a></li>
-            `);
+            `;
+
+                contentPagesMobileHTML += `
+                <li>
+                    <a href="/content/${page?.url}"
+                        class="relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                        <span
+                            class="text-base text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md">
+                            ${page?.title}
+                        </span>
+                    </a>
+                </li>
+            `
+            });
 
             document.getElementById("contentPages").innerHTML = contentPagesHTML;
+            document.getElementById("contentPagesMobile").innerHTML = contentPagesMobileHTML;
             document.getElementById("contentPagesFooter").innerHTML = contentPagesHTML;
 
         }
@@ -61,50 +77,60 @@ async function logout() {
     </svg>
 
     <div class="flex flex-row justify-between px-4 py-6 fixed top-0 w-screen z-50" style="position: absolute;">
-        <a href="/">
+        <a href="/" class="h-3/5 w-3/5">
             <img src="../assets/festival_logo.png"
-                class="text-teal-800 font-black uppercase text-4xl leading-tight tracking-tight px-8 h-4/5" />
+                class="text-teal-800 font-black uppercase text-4xl leading-tight tracking-tight px-8 h-3/5 lg:h-4/5" />
         </a>
         <div class="hidden md:flex flex-row items-center text-xs sm:text-sm">
             <div
-                class="overflow-visible dropdown relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                <a href="/culture" class="group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5
+                class="overflow-visible dropdown relative inline-flex items-center justify-center p-0.5 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <p class="group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5
                     transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                     HAARLEM
-                </a>
-                <ul class="dropdown-content bg-white rounded-b-lg overflow-hidden w-max" id="contentPages">
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
-                    <li><a href="#">Link 1</a></li>
+                </p>
+                <ul class="dropdown-content !mt-0 bg-white rounded-b-lg overflow-hidden w-max" id="contentPages">
                 </ul>
             </div>
             <a href="/festival"
-                class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="relative inline-flex items-center justify-center p-0.5 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
                     class="group-hover:text-white uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-teal-800">
                     FESTIVAL
                 </span>
             </a>
             <a href="/"
-                class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="relative inline-flex items-center justify-center p-0.5 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <img src="../assets/britainLogo.svg"
                     class="text-teal-800 font-black uppercase text-4xl leading-tight tracking-tight px-8 h-6" />
             </a>
             <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login"
-                class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="relative inline-flex items-center justify-center p-0.5 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
                     class="text-teal-800 group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-teal-800">
                     Login
                 </span>
             </a><a href="/sign-up"
-                class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="relative inline-flex items-center justify-center p-0.5 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
                     class="text-teal-800 group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-teal-800">
                     Signup
                 </span>
             </a><?php else : ?>
+            <a href="/cart"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-white my-auto mr-4 hover:scale-105">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                </svg>
+            </a>
+            <a href="/customer/manage-account">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 text-white my-auto mr-4 hover:scale-105">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </a>
             <button type="button" name="logoutBtn" onclick="logout()"
-                class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="relative inline-flex items-center justify-center p-0.5overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
                     class="text-white group-hover:text-teal-800 uppercase font-bold relative px-3 py-1.5 sm:px-5 sm:py-2.5 transition-all ease-in duration-75 bg-teal-800 rounded-md group-hover:bg-white">
                     Logout
@@ -112,6 +138,19 @@ async function logout() {
             </button>
             <?php endif; ?>
         </div>
+        <a href="/cart" class="md:hidden"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white my-auto mr-4 hover:scale-105">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+        </a>
+        <a href="/customer/manage-account" class="md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-white my-auto mr-4 hover:scale-105">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </a>
         <button id="burger" class=" md:hidden"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="1.5" stroke="currentColor" class="cursor-pointer h-10 w-10 top-1/4 text-teal-800">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -131,50 +170,37 @@ async function logout() {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg></button>
         </div>
-        <div class="flex flex-col text-xs sm:text-base my-auto">
-            <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login"
-                class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+        <div class="h-full py-8 flex flex-col text-xs sm:text-base">
+            <p
+                class="mb-1 relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
-                    class="w-full text-center text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-blue-400">
+                    class="border-b text-xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75">
+                    Haarlem
+                </span>
+            </p>
+            <ul class="mb-6 flex flex-col gap-y-1 items-center" id="contentPagesMobile"></ul>
+            <a href="/festival"
+                class="mb-4 relative inline-flex items-center justify-center p-0.5 mr-2 overflow-hidden font-medium text-gray-100 rounded-lg group">
+                <span
+                    class="border-b text-xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75">
+                    FESTIVAL
+                </span>
+            </a>
+            <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"])) : ?><a href="/login"
+                class="mt-auto bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                <span
+                    class="w-full text-center text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md">
                     Login
                 </span>
             </a><a href="/sign-up"
                 class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
-                    class="text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-blue-400">
+                    class="text-black group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md">
                     Signup
                 </span>
             </a><?php else : ?>
-            <a href="/"
-                class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 mt-44 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                <span
-                    class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
-                    HISTORY
-                </span>
-            </a>
-            <a href="/culture"
-                class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                <span
-                    class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
-                    CULTURE
-                </span>
-            </a>
-            <a href="/food"
-                class="relative inline-flex items-center justify-center p-0.5 mb-8 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                <span
-                    class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
-                    FOOD
-                </span>
-            </a>
-            <a href="/festival"
-                class="relative inline-flex items-center justify-center p-0.5 mb-64 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-                <span
-                    class="text-3xl text-white group-hover:text-white uppercase font-bold relative px-5 py-2.5 transition-all ease-in duration-75 rounded-md group-hover:bg-blue-400">
-                    FESTIVAL
-                </span>
-            </a>
             <button type="button" name="logoutBtn" onclick="logout()"
-                class="bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+                class="mt-auto bg-teal-800 relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden font-medium text-gray-900 rounded-lg group dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
                 <span
                     class="w-full text-white group-hover:text-teal-800 uppercase font-bold relative x-5 py-2.5 transition-all ease-in duration-75 bg-teal-800 rounded-md group-hover:bg-white">
                     Logout
@@ -183,7 +209,7 @@ async function logout() {
             <?php endif; ?>
         </div>
         <div class="text-teal-800 font-chivo text-[13px] mt-8">
-            ©Social 2023
+            ©TheFestival 2023
         </div>
     </div>
 </nav>
