@@ -24,11 +24,25 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------GET Event routes-----------------------------*/
 
-                case "event/all":
+                case "event/main-events":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
-                    $controller->getAllEvents();
+                    $controller->getMainEvents();
+                    break;
+                case "event/event-items":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->getEventItems($params["id"]);
+                    break;
+                case "event/event-item":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->getEventItem($params["id"]);
                     break;
 
                     /*----------------------GET Information pages routes-----------------------------*/
@@ -120,7 +134,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrderStatus(isset($params["id"]) ? $params["id"] : null);
                     break;
 
-                /*----------------------GET payment routes-----------------------------*/
+                    /*----------------------GET payment routes-----------------------------*/
 
                 //Retrieve all ideal issuers. Open for everyone
                 case "payment/ideal-issuers":
@@ -129,7 +143,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getIdealIssuers();
                     break;
 
-                /*----------------------GET invoice routes-----------------------------*/
+                    /*----------------------GET invoice routes-----------------------------*/
 
                 //Retrieve invoice by order id. Admin only
                 case "invoice":
@@ -190,27 +204,30 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------POST event routes-----------------------------*/
 
-                case "update-event":
+
+                case "event/add":
                     session_start();
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
-                    $controller->updateEvent($params["id"]);
+                    $controller->addMainEvent();
                     break;
-                case "event":
-                    session_start();
-                    // (new Middleware())->adminOnly();
-                    require_once __DIR__ . '/../api/controller/eventController.php';
-                    $controller = new APIEventController();
-                    $controller->addEvent();
-                    break;
-                case "event/item":
+                case "event/event-item/add":
                     session_start();
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->addEventItem();
                     break;
+                case "event/event-item/edit":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->editEventItem($params["id"]);
+                    break;
+
+
 
 
                     /*----------------------POST information page routes-----------------------------*/
@@ -247,7 +264,9 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationSection(isset($params["information_page_id"]) ? $params["information_page_id"] : null);
                     break;
 
+
                 /*----------------------POST payment routes-----------------------------*/
+
 
                 //Create payment and order. Open for everyone
                 case "payment":
@@ -272,6 +291,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     
                 /*----------------------POST cart routes-----------------------------*/
 
+
                 //Add ticket to cart. Open for everyone
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
@@ -287,7 +307,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
         case 'PUT':
             switch ($uri) {
 
-                /*----------------------PUT account routes-----------------------------*/
+                    /*----------------------PUT account routes-----------------------------*/
 
                 case "account":
                     //(new Middleware())->adminOnly();
@@ -337,7 +357,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
-                    $controller->deleteEvent($params["id"]);
+                    $controller->deleteMainEvent();
+                    break;
+                case "event/event-item":
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->deleteEventItem($params['id']);
                     break;
 
                     /*----------------------DELETE information pages routes-----------------------------*/

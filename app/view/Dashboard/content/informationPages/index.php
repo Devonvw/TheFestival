@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: /");
     exit;
@@ -26,24 +26,24 @@
     <meta name="theme-color" content="#ffffff" />
 </header>
 <script>
-window.addEventListener("load", (event) => {
-    getInformationPages();
-});
+    window.addEventListener("load", (event) => {
+        getInformationPages();
+    });
 
-function getInformationPages() {
-    fetch(`${window.location.origin}/api/information-page`, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: "GET",
-    }).then(async (res) => {
-        if (res.ok) {
-            const data = await res.json();
-            console.log(data)
-            var pagesHTML = "";
+    function getInformationPages() {
+        fetch(`${window.location.origin}/api/information-page`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: "GET",
+        }).then(async (res) => {
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data)
+                var pagesHTML = "";
 
-            data?.forEach((page) => pagesHTML +=
-                `<div class="border border-primary flex items-center justify-between rounded-md p-2">
+                data?.forEach((page) => pagesHTML +=
+                    `<div class="border border-primary flex items-center justify-between rounded-md p-2">
                 <h3 class="text-lg font-normal">${page?.title ? page?.title :
                 `Page ${page?.id}`}</h3>
                 <div class="flex items-center gap-x-2"><a href="/dashboard/content/information-pages/page?id=${page?.id}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-gray-500 w-6 h-6">
@@ -54,43 +54,43 @@ function getInformationPages() {
 </svg>
 </button></div>
                 </div>`
-            )
+                )
 
-            document.getElementById("pages").innerHTML = pagesHTML;
-        }
-    }).catch((res) => {
-        console.log(res)
-    });
-}
+                document.getElementById("pages").innerHTML = pagesHTML;
+            }
+        }).catch((res) => {
+            console.log(res)
+        });
+    }
 
-function addInformationPage() {
-    fetch(`${window.location.origin}/api/information-page`, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify({})
-    }).then(async (res) => {
-        if (res.ok) {
-            ToastSucces((await res.json())?.msg);
-            getInformationPages();
-        }
-    }).catch((res) => {});
-}
+    function addInformationPage() {
+        fetch(`${window.location.origin}/api/information-page`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({})
+        }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
+                getInformationPages();
+            }
+        }).catch((res) => {});
+    }
 
-function deleteInformationPage(id) {
-    fetch(`${window.location.origin}/api/information-page?id=${id}`, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: "DELETE",
-    }).then(async (res) => {
-        if (res.ok) {
-            ToastSucces((await res.json())?.msg);
-            getInformationPages();
-        }
-    }).catch((res) => {});
-}
+    function deleteInformationPage(id) {
+        fetch(`${window.location.origin}/api/information-page?id=${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE",
+        }).then(async (res) => {
+            if (res.ok) {
+                ToastSucces((await res.json())?.msg);
+                getInformationPages();
+            }
+        }).catch((res) => {});
+    }
 </script>
 
 <body>
@@ -102,8 +102,7 @@ function deleteInformationPage(id) {
                     <h2 class="text-2xl font-semibold">Information pages</h2>
                 </div>
                 <div class="px-4 md:px-6 lg:px-8 mt-10">
-                    <div class="w-full flex items-center justify-end"><button onclick="addInformationPage()"
-                            class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Add
+                    <div class="w-full flex items-center justify-end"><button onclick="addInformationPage()" class="border-2 border-primary text-white bg-primary rounded-md p-2 hover:text-black hover:bg-transparent">Add
                             page</button>
                     </div>
                     <div id="pages" class="flex flex-col gap-y-4 mt-4"></div>
