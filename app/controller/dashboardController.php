@@ -37,7 +37,16 @@ class DashboardController extends Controller {
         require __DIR__ . "/../view/Dashboard/events/eventItems.php";
     }
     public function editEventItems() {
-        require __DIR__ . "/../view/Dashboard/events/editeventItems.php";
+        require __DIR__ . "/../view/Dashboard/events/editEventItems.php";
+    }
+    public function editEventItemSlots() {
+        require __DIR__ . "/../view/Dashboard/events/editEventItemSlots.php";
+    }
+    public function eventItemTickets() {
+        require __DIR__ . "/../view/Dashboard/events/eventItemTickets.php";
+    }
+    public function eventItemSlots() {
+        require __DIR__ . "/../view/Dashboard/events/eventItemSlots.php";
     }
     public function allOrders() {
         require __DIR__ . "/../view/Dashboard/orders/index.php";

@@ -7,7 +7,6 @@ class EventItem {
   public $location;
   public $venue;
   public $cousine;
-  public $capacity;
   public $image;
 
 
@@ -21,7 +20,6 @@ class EventItem {
       $this->location = $location;
       $this->venue = $venue;
       $this->cousine = $cousine;
-      $this->capacity = $capacity;
       $this->image = $image;
 
 

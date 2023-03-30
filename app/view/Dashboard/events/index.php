@@ -33,7 +33,54 @@
     <meta name="theme-color" content="#ffffff" />
 </header>
 
-<script>
+
+
+
+<body>
+    <div class="">
+        <div class="w-screen relative">
+            <?php include __DIR__ . '/../../../components/dashboard/sidebar.php' ?>
+            <div class="dashboard-right min-h-screen ml-auto">
+
+                <header class="bg-primary py-5">
+                    <h1 class="text-center text-white text-3xl font-bold">Event Dashboard</h1>
+                </header>
+
+
+                <div class="flex flex-col items-center h-screen bg-gray-100">
+                    <div class="flex justify-center mt-10">
+                        <button id="redirectToSlotsManager" class="bg-primary text-white py-2 px-4 rounded-md mb-6 mr-4">Manage slots</button>
+                        <button id="redirectToTickets" class="bg-primary text-white py-2 px-4 rounded-md mb-6">Manage tickets</button>
+                    </div>
+
+
+                    <h1 class="text-3xl font-bold mt-8 mb-8">Current Events</h1>
+                    <div class="flex items-center justify-end mb-8">
+                        <button id="btn" class="bg-primary hover:bg-primary-light text-white font-bold py-2 px-4 rounded"><a href="/dashboard/events/event-items">Add Event</a></button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="event-grid">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Box Template -->
+    <template id="event-box-template">
+        <div class="bg-white rounded-lg shadow p-6 relative">
+            <div class="absolute top-0 right-0 m-2 flex items-center">
+                <a class="hover:text-blue-500 flex items-center view-event-items"><span id="email" class="mr-2"></span><i class="fas fa-pencil-alt"></i></a>
+                <button class="bg-transparent p-1 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 delete-button" type="button" aria-label="Delete">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+            </div>
+            <h2 class="text-xl font-bold mb-2 event-name"></h2>
+            <p class="text-gray-500 mb-2 event-description"></p>
+
+        </div>
+    </template>
+    <script>
     window.addEventListener("load", () => {
         getEvents();
     });
@@ -93,45 +140,14 @@
                 console.log(error);
             });
     }
+    //event listener for the "Slots Manager" button
+    document.getElementById('redirectToSlotsManager').addEventListener('click', redirectToSlotsManager);
+
+    // Function to redirect to the slots manager
+    function redirectToSlotsManager() {
+        window.location.href = `events/event-items/slots`;
+    }
 </script>
-
-
-<body>
-    <div class="">
-        <div class="w-screen relative">
-            <?php include __DIR__ . '/../../../components/dashboard/sidebar.php' ?>
-            <div class="dashboard-right min-h-screen ml-auto">
-                <header class="bg-primary py-5">
-                    <h1 class="text-center text-white text-3xl font-bold">Event Dashboard</h1>
-                </header>
-
-                <div class="flex flex-col items-center h-screen bg-gray-100">
-                    <h1 class="text-3xl font-bold mt-8 mb-8">Current Events</h1>
-                    <div class="flex items-center justify-end mb-8">
-                        <button id="btn" class="bg-primary hover:bg-primary-light text-white font-bold py-2 px-4 rounded"><a href="/dashboard/events/event-items">Add Event</a></button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="event-grid">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Event Box Template -->
-    <template id="event-box-template">
-        <div class="bg-white rounded-lg shadow p-6 relative">
-            <div class="absolute top-0 right-0 m-2 flex items-center">
-                <a class="hover:text-blue-500 flex items-center view-event-items"><span id="email" class="mr-2"></span><i class="fas fa-pencil-alt"></i></a>
-                <button class="bg-transparent p-1 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 delete-button" type="button" aria-label="Delete">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </div>
-            <h2 class="text-xl font-bold mb-2 event-name"></h2>
-            <p class="text-gray-500 mb-2 event-description"></p>
-
-        </div>
-    </template>
 </body>
 
 </html>

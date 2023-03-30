@@ -68,9 +68,6 @@
             ${eventItem.location}
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-            ${eventItem.capacity}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
             ${eventItem.venue}
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -80,8 +77,11 @@
             <img src="data:image/jpeg;base64,${eventItem.image}" alt="Event Item Image" class="w-16 h-16 rounded">
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-            <a href="event-item/edit?id=${eventItem.id}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-            <button class="text-red-600 hover:text-red-900">Delete</button>
+            <div class="flex flex-col space-y-2">
+  <a href="event-item/edit?id=${eventItem.id}"><button class="bg-indigo-500 text-white py-1 px-11 rounded-md hover:bg-indigo-600">Edit</button></a>
+  <button class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
+</div>
+
         </td>
     `;
         return row;
@@ -117,7 +117,6 @@
         formData.append("event_id", eventId);
 
         formData.append("location", document.getElementById('location').value);
-        formData.append("capacity", document.getElementById('capacity').value);
         formData.append("venue", document.getElementById('venue').value);
         formData.append("cousine", document.getElementById('cousine').value);
         formData.append("image", document.getElementById('image').files ? document.getElementById('image')
@@ -181,10 +180,6 @@
                                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                                 <input type="text" name="location" id="location" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
-                            <div class="col-span-1">
-                                <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-                                <input type="number" name="capacity" id="capacity" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            </div>
 
                             <div class="col-span-1">
                                 <label for="cousine" class="block text-sm font-medium text-gray-700">Cousine</label>
@@ -226,9 +221,6 @@
                                 </th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Location
-                                </th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Capacity
                                 </th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Venue
