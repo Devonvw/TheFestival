@@ -22,65 +22,7 @@
         ]
     });
 </script>
-<script>
-    window.addEventListener("load", () => {
-        getEventItem();
-    });
 
-
-    function getEventItem() {
-        const params = new URLSearchParams(window.location.search)
-        fetch(`${window.location.origin}/api/event/event-item?id=${params.get("id")}`, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: "GET",
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                // Update the form fields with the fetched data
-                document.getElementById('event_item_name').value = data.name;
-                document.getElementById('location').value = data.location;
-                document.getElementById('capacity').value = data.capacity;
-                document.getElementById('cousine').value = data.cousine;
-                document.getElementById('venue').value = data.venue;
-                tinymce.get('description').setContent(data.description);
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-
-    const editEventItem = (e) => {
-        e.preventDefault();
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventId = urlParams.get('id');
-
-        const formData = new FormData();
-        formData.append("name", document.getElementById('event_item_name').value);
-
-        formData.append("location", document.getElementById('location').value);
-        formData.append("capacity", document.getElementById('capacity').value);
-        formData.append("venue", document.getElementById('venue').value);
-        formData.append("cousine", document.getElementById('cousine').value);
-        formData.append("image", document.getElementById('image').files ? document.getElementById('image')
-            .files[0] : null);
-        formData.append("description", tinymce.get('description').getContent());
-        fetch(`${window.location.origin}/api/event/event-item/edit?id=${params.get("id")}`, {
-            method: "POST",
-            body: formData
-        }).then(async (res) => {
-            if (!res.ok) {
-                ToastError((await res.json())?.msg);
-
-            }
-
-        }).catch((res) => {});
-    }
-</script>
 <header>
     <title>Event - Edit</title>
     <link rel="stylesheet" href="../../../styles/globals.css">
@@ -116,6 +58,9 @@
 
             <div class="container mx-auto px-4 py-10">
                 <h1 class="text-3xl font-semibold mb-6">Event item</h1>
+                
+
+
 
                 <!-- Edit Form -->
                 <div class="bg-white rounded-lg p-6 shadow mb-10">
@@ -129,10 +74,6 @@
                             <div class="col-span-1">
                                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                                 <input type="text" name="location" id="location" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            </div>
-                            <div class="col-span-1">
-                                <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-                                <input type="number" name="capacity" id="capacity" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             </div>
 
                             <div class="col-span-1">
@@ -160,7 +101,63 @@
         </div>
     </div>
 
+    <script>
+    window.addEventListener("load", () => {
+        getEventItem();
+    });
 
+    function getEventItem() {
+        const params = new URLSearchParams(window.location.search)
+        fetch(`${window.location.origin}/api/event/event-item?id=${params.get("id")}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: "GET",
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                // Update the form fields with the fetched data
+                document.getElementById('event_item_name').value = data.name;
+                document.getElementById('location').value = data.location;
+                document.getElementById('cousine').value = data.cousine;
+                document.getElementById('venue').value = data.venue;
+                tinymce.get('description').setContent(data.description);
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+
+    const editEventItem = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+
+        const formData = new FormData();
+        formData.append("name", document.getElementById('event_item_name').value);
+
+        formData.append("location", document.getElementById('location').value);
+        formData.append("venue", document.getElementById('venue').value);
+        formData.append("cousine", document.getElementById('cousine').value);
+        formData.append("image", document.getElementById('image').files ? document.getElementById('image')
+            .files[0] : null);
+        formData.append("description", tinymce.get('description').getContent());
+        fetch(`${window.location.origin}/api/event/event-item/edit?id=${params.get("id")}`, {
+            method: "POST",
+            body: formData
+        }).then(async (res) => {
+            if (!res.ok) {
+                ToastError((await res.json())?.msg);
+
+            }
+
+        }).catch((res) => {});
+    }
+    
+</script>
 </body>
 
 </html>

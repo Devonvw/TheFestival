@@ -73,6 +73,18 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new DashboardController();
             $controller->editEventItems();
             break;
+        case 'dashboard/events/event-items/slots':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->eventItemSlots();
+            break;
+        case 'dashboard/events/event-items/slot/edit':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->editEventItemSlots();
+            break;
         case 'dashboard/content/home-page':
             require __DIR__ . '/../controller/dashboardController.php';
             session_start();

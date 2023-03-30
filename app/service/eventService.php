@@ -20,17 +20,23 @@ class EventService
         $dao = new EventDAO();
         $dao->deleteMainEvent();
     }
-    public function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $capacity, $image)
+    public function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image)
     {
         $dao = new EventDAO();
-        $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $capacity, $image);
+        $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image);
     }
 
-    public function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $capacity, $image)
+    public function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image)
     {
         $dao = new EventDAO();
-        $dao->updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $capacity, $image);
+        $dao->updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image);
     }
+    public function updateEventItemSlot($id, $start, $end, $stock, $capacity)
+    {
+        $dao = new EventDAO();
+        $dao->updateEventItemSlot($id, $start, $end, $stock, $capacity);
+    }
+    
 
     public function getEventItem($id)
     {
@@ -43,7 +49,21 @@ class EventService
         $dao = new EventDAO();
         return $dao->getEventItems($id);
     }
-
+    public function getEventItemTickets()
+    {
+        $dao = new EventDAO();
+        return $dao->getEventItemTickets();
+    }
+    public function getEventItemSlots()
+    {
+        $dao = new EventDAO();
+        return $dao->getEventItemSlots();
+    }
+    public function getEventItemSlotById($id)
+    {
+        $dao = new EventDAO();
+        return $dao->getEventItemSlotById($id);
+    }
     public function deleteEventItem($id)
     {
         $dao = new EventDAO();

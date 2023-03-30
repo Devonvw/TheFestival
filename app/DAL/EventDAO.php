@@ -24,7 +24,7 @@ class EventDAO
       if ($row['image'] && !is_null($row['image'])) {
         $row['image'] = base64_encode($row['image']);
       }
-      $event_items[] = new EventItem($row['id'], $row['event_id'], $row['name'], $row['description'], $row['location'], $row['venue'], $row['cousine'], $row['capacity'], $row['image']);
+      $event_items[] = new EventItem($row['id'], $row['event_id'], $row['name'], $row['description'], $row['location'], $row['venue'], $row['cousine'], $row['image']);
     }
 
     return $event_items;
@@ -56,7 +56,46 @@ class EventDAO
     }
     return $events;
   }
+  function getEventItemTickets()
+  {
+    $stmt = $this->DB::$connection->prepare("SELECT * FROM event WHERE ");
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $events = [];
+    foreach ($data as $row) {
+      $events[] = new Event($row['id'], $row['name'], $row['description']);
+    }
+    return $events;
+  }
+  function getEventItemSlots()
+  {
+    $stmt = $this->DB::$connection->prepare("SELECT event_item_slot.id as slotId, event.name as eventName, event_item.name as eventItemName, event_item_slot.start, event_item_slot.end, event_item_slot.stock, event_item_slot.capacity FROM event_item_slot INNER JOIN event_item ON event_item.id = event_item_slot.event_item_id INNER JOIN event ON event.id = event_item.event_id");
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    $eventItemSlots = [];
+    foreach ($data as $row) {
+      $eventItemSlots[] = array(
+        'slotId' => $row['slotId'],
+        'eventName' => $row['eventName'],
+        'eventItemName' => $row['eventItemName'],
+        'start' => $row['start'],
+        'end' => $row['end'],
+        'stock' => $row['stock'],
+        'capacity' => $row['capacity']
+      );
+    }
+    return $eventItemSlots;
+  }
+  function getEventItemSlotById($id)
+  {
+    $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE id = :id LIMIT 1");
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $slot = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $slot;
+  }
   function addMainEvent($name, $description)
   {
     $stmt = $this->DB::$connection->prepare("INSERT INTO event (name, description) VALUES (:name, :description)");
@@ -75,7 +114,7 @@ class EventDAO
 
 
 
-  function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $capacity, $image)
+  function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image)
   {
     if ($image && $image["size"] > 2 * 1024 * 1024) {
       throw new Exception("This image is bigger than 2MB", 1);
@@ -87,7 +126,7 @@ class EventDAO
       $img_data = file_get_contents($image['tmp_name']);
     }
 
-    $stmt = $this->DB::$connection->prepare("INSERT INTO event_item (event_id, name, description, location, venue, cousine, capacity, image) VALUES (:event_id, :name, :description, :location, :venue, :cousine, :capacity, :image)");
+    $stmt = $this->DB::$connection->prepare("INSERT INTO event_item (event_id, name, description, location, venue, cousine, image) VALUES (:event_id, :name, :description, :location, :venue, :cousine, :image)");
     $name_param = trim(htmlspecialchars($name));
     $description_param = trim(htmlspecialchars($description));
     $location_param = trim(htmlspecialchars($location));
@@ -100,7 +139,6 @@ class EventDAO
     $stmt->bindValue(':location', $location_param);
     $stmt->bindValue(':venue', $venue_param);
     $stmt->bindValue(':cousine', $cousine_param);
-    $stmt->bindValue(':capacity', $capacity, PDO::PARAM_INT);
     $stmt->bindValue(':image', $img_data);
     if ($stmt->execute()) {
       return true;
@@ -124,7 +162,7 @@ class EventDAO
     }
   }
 
-  function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $capacity, $image)
+  function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image)
   {
     if ($image && $image["size"] > 2 * 1024 * 1024) {
       throw new Exception("This image is bigger than 2MB", 1);
@@ -155,7 +193,6 @@ class EventDAO
     $update_stmt->bindValue(':location', $location_param);
     $update_stmt->bindValue(':venue', $venue_param);
     $update_stmt->bindValue(':cousine', $cousine_param);
-    $update_stmt->bindValue(':capacity', $capacity, PDO::PARAM_INT);
   }
   function deleteEventItem($id)
   {
@@ -176,6 +213,28 @@ class EventDAO
 
     $update_stmt->bindValue(':name', trim(htmlspecialchars($name)));
     $update_stmt->bindValue(':description', trim(htmlspecialchars($description)));
+
+    $update_stmt->execute();
+  }
+  function updateEventItemSlot($id, $start, $end, $stock, $capacity)
+  {
+    $start_date = new DateTime($start);
+    $end_date = new DateTime($end);
+
+    if ($start_date > $end_date) {
+      throw new Exception("Start date has to be before end date", 1);
+    }
+    if ($stock > $capacity) {
+      throw new Exception("The stock can't be higher than the capacity", 1);
+    }
+
+
+    $update_stmt = $this->DB::$connection->prepare("UPDATE event_item_slot SET start = :start, end = :end, stock = :stock, capacity = :capacity where id = :id");
+    $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $update_stmt->bindValue(':start', trim(htmlspecialchars($start)));
+    $update_stmt->bindValue(':end', trim(htmlspecialchars($end)));
+    $update_stmt->bindValue(':stock', trim(htmlspecialchars($stock)));
+    $update_stmt->bindValue(':capacity', trim(htmlspecialchars($capacity)));
 
     $update_stmt->execute();
   }
