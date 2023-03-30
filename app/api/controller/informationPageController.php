@@ -14,8 +14,6 @@ class APIInformationPageController
     public function getInformationPages()
     {
         try {
-            session_start();
-
             echo json_encode($this->informationPageService->getInformationPages());
         } catch (Exception $ex){
             http_response_code(500);
