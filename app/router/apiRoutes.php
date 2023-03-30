@@ -127,7 +127,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                 //Retrieve order by id. Open for everyone
                 case "order":
-                    //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
                     $controller = new APIOrderController();
                     $controller->getOrder(isset($params["id"]) ? $params["id"] : null);
