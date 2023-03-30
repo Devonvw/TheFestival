@@ -14,6 +14,12 @@ window.addEventListener("load", (event) => {
     getInstagramFeed();
 });
 
+const formatDate = (input) => {
+    const date = new Date(input);
+
+    return `${date?.getDate()}-${date?.getMonth() + 1}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
+}
+
 const getInstagramFeed = () => {
     fetch(`${window.location.origin}/api/instagram-feed`, {
         headers: {
@@ -31,6 +37,7 @@ const getInstagramFeed = () => {
                 `<a class="tranform hover:scale-[1.02] duration-300 col-span-12 md:col-span-6 lg:col-span-4" href="${item?.permalink}" target="_blank"><div class="rounded-md overflow-hidden shadow-xl">
                             <img src="${item?.media_url}" class="h-60 w-full object-cover" />
                             <p class="p-3">${item?.caption}</p>
+                            <p class="px-3 pb-2 text-xs">${formatDate(item?.timestamp)}</p>
                         </div></a>`
             )
 
@@ -165,24 +172,30 @@ function getHomePage() {
                 <div class="grid grid-cols-12 gap-x-24">
                     <div
                         class="group col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center px-4">
-                        <img src="/assets/weather.jpg" alt="Weather"
-                            class="h-32 w-36 rounded-lg shadow-lg object-cover" />
-                        <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">Check the
-                            weather in Haarlem</h5>
-                        <div
-                            class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
-                            <div class="h-[3px] w-full bg-primary translate-x-3"></div><svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="text-primary w-12 h-12">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
-                        </div>
+                        <a href="https://www.weeronline.nl/Europa/Nederland/Haarlem/4058263" target="_blank"><img
+                                src="/assets/weather.jpg" alt="Weather"
+                                class="h-32 w-36 rounded-lg shadow-lg object-cover" /></a>
+                        <a href="https://www.weeronline.nl/Europa/Nederland/Haarlem/4058263" target="_blank">
+                            <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">Check the
+                                weather in Haarlem</h5>
+                            <div
+                                class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
+                                <div class="h-[3px] w-full bg-primary"></div><svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                    class="text-primary w-12 h-12 -translate-x-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                </svg>
+                            </div>
+                        </a>
                     </div>
                     <div
                         class="group col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center px-4">
-                        <img src="/assets/google-maps.png" alt="Weather"
-                            class="h-32 w-36 rounded-lg shadow-lg object-cover" />
+                        <div class="h-32 w-60 rounded-lg shadow-lg object-cover overflow-hidden"><iframe
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d155983.42204623704!2d4.6109772173803245!3d52.34791468628256!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1snl!2snl!4v1679757788523!5m2!1snl!2snl"
+                                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+
                         <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">View Haarlem on
                             Google Maps</h5>
                         <div
@@ -197,23 +210,28 @@ function getHomePage() {
                     </div>
                     <div
                         class="group col-span-12 md:col-span-6 lg:col-span-4 flex flex-col items-center justify-center px-4">
-                        <img src="/assets/9292.png" alt="Weather" class="h-32 w-36 rounded-lg shadow-lg object-cover" />
-                        <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">Plan your train
-                            journey to Haarlem</h5>
-                        <div
-                            class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
-                            <div class="h-[3px] w-full bg-primary translate-x-3"></div><svg
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="text-primary w-12 h-12">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
-                        </div>
+                        <a href="https://9292.nl/" target="_blank"><img src=" /assets/9292.png" alt="Weather"
+                                class="h-32 w-36 rounded-lg shadow-lg object-cover" /></a>
+                        <a href="https://9292.nl/" target="_blank">
+                            <h5 class="mt-4 font-medium text-primary duration-300 group-hover:translate-x-2">Plan your
+                                train
+                                journey to Haarlem</h5>
+                            <div
+                                class="flex items-center justify-center -translate-y-3 w-full duration-300 group-hover:translate-x-2">
+                                <div class="h-[3px] w-full bg-primary"></div><svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                    class="text-primary -translate-x-3 w-12 h-12">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                </svg>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
         </div>
+        <?php include __DIR__ . '/../../components/footer.php' ?>
     </div>
 </body>
 

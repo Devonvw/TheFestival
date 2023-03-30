@@ -4,6 +4,7 @@ class Cart {
   public $id;
   public $account_id;
   public $session_id;
+  public $share_token;
   public $cart_items;
   public $total;
   public $subtotal;

@@ -55,7 +55,9 @@ class PDFService {
             $pdf->addQRBox();
         }
         
-        $pdf->Output('F', __DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');   //save file
+        $pdf->Output('F', __DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
+        unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
+        
         return __DIR__ . '/../pdf/tickets-'. $orderId .'.pdf';
     }
 }
