@@ -14,6 +14,11 @@ class EventService
         $dao = new EventDAO();
         $dao->addMainEvent($name, $description);
     }
+    public function updateMainEvent($id, $name, $description)
+    {
+        $dao = new EventDAO();
+        $dao->updateMainEvent($id, $name, $description);
+    }
 
     public function deleteMainEvent()
     {

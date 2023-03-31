@@ -61,7 +61,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------GET Information pages routes-----------------------------*/
 
-                //Retrieve all information pages for the dashboard. Admin only
+                    //Retrieve all information pages for the dashboard. Admin only
                 case "information-page":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -69,63 +69,63 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getInformationPages();
                     break;
 
-                //Retrieve all information pages for the navbar and footer. Open for everyone
+                    //Retrieve all information pages for the navbar and footer. Open for everyone
                 case "information-page/urls":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
                     $controller->getInformationPageUrls();
                     break;
 
-                //Retrieve a single information page for the dashboard and website. Open for everyone
+                    //Retrieve a single information page for the dashboard and website. Open for everyone
                 case "information-page/page":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
                     $controller->getInformationPage(isset($params["id"]) ? $params["id"] : null, isset($params["url"]) ? $params["url"] : null);
                     break;
 
-                //Retrieve the home page for the dashboard and website. Open for everyone
+                    //Retrieve the home page for the dashboard and website. Open for everyone
                 case "information-page/home-page":
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
                     $controller = new APIInformationPageController();
                     $controller->getHomePage();
                     break;
 
-/*----------------------------------------GET Instagram routes-----------------------------*/
+                    /*----------------------------------------GET Instagram routes-----------------------------*/
 
-                //Retrieve the instagram feed for the home page. Open for everyone
+                    //Retrieve the instagram feed for the home page. Open for everyone
                 case "instagram-feed":
                     require_once __DIR__ . '/../api/controller/instagramController.php';
                     $controller = new APIInstagramController();
                     $controller->getInstagramFeed();
                     break;
 
-/*----------------------------------------GET Cart routes-----------------------------*/
+                    /*----------------------------------------GET Cart routes-----------------------------*/
 
-                //Retrieve your own cart. Open for everyone
+                    //Retrieve your own cart. Open for everyone
                 case "cart":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
                     $controller->getCart();
                     break;
 
-                //Retrieve the cart of someone else via a link. Open for everyone
+                    //Retrieve the cart of someone else via a link. Open for everyone
                 case "cart/shared":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
                     $controller->getSharedCart(isset($params["token"]) ? $params["token"] : null);
                     break;
 
-                //Create a link of your own cart to share with someone else. Open for everyone
+                    //Create a link of your own cart to share with someone else. Open for everyone
                 case "cart/share-link":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
                     $controller->getCartShareLink();
                     break;
-                
 
-                /*----------------------GET Order routes-----------------------------*/
 
-                //Retrieve order by id. Open for everyone
+                    /*----------------------GET Order routes-----------------------------*/
+
+                    //Retrieve order by id. Open for everyone
                 case "order":
                     //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
@@ -133,7 +133,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrder(isset($params["id"]) ? $params["id"] : null);
                     break;
 
-                //Retrieve all orders. Admin only
+                    //Retrieve all orders. Admin only
                 case "order/all":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
@@ -141,7 +141,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getAllOrders();
                     break;
 
-                //Retrieve order status by id. Open for everyone
+                    //Retrieve order status by id. Open for everyone
                 case "order/status":
                     require_once __DIR__ . '/../api/controller/orderController.php';
                     $controller = new APIOrderController();
@@ -150,7 +150,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------GET payment routes-----------------------------*/
 
-                //Retrieve all ideal issuers. Open for everyone
+                    //Retrieve all ideal issuers. Open for everyone
                 case "payment/ideal-issuers":
                     require_once __DIR__ . '/../api/controller/paymentController.php';
                     $controller = new APIPaymentController();
@@ -159,7 +159,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------GET invoice routes-----------------------------*/
 
-                //Retrieve invoice by order id. Admin only
+                    //Retrieve invoice by order id. Admin only
                 case "invoice":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/invoiceController.php';
@@ -226,6 +226,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->addMainEvent();
                     break;
+                case "event/edit":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->editMainEvent($params["id"]);
+                    break;
                 case "event/event-item/add":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -252,7 +259,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------POST information page routes-----------------------------*/
 
-                //Edit information page. Admin only
+                    //Edit information page. Admin only
                 case "information-page":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -260,7 +267,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->addInformationPage();
                     break;
 
-                //Edit home page. Admin only
+                    //Edit home page. Admin only
                 case "information-page/edit-home-page":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -268,7 +275,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->editHomePage();
                     break;
 
-                //Edit information page. Admin only
+                    //Edit information page. Admin only
                 case "information-page/edit-page":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -276,7 +283,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->editInformationPage(isset($params["id"]) ? $params["id"] : null);
                     break;
 
-                //Add information section to page. Admin only
+                    //Add information section to page. Admin only
                 case "information-page/information-section":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -285,34 +292,34 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
 
-                /*----------------------POST payment routes-----------------------------*/
+                    /*----------------------POST payment routes-----------------------------*/
 
 
-                //Create payment and order. Open for everyone
+                    //Create payment and order. Open for everyone
                 case "payment":
                     require_once __DIR__ . '/../api/controller/paymentController.php';
                     $controller = new APIPaymentController();
                     $controller->createPayment();
                     break;
 
-                //Webhook for mollie payment. Open for everyone
+                    //Webhook for mollie payment. Open for everyone
                 case "payment/status":
                     require_once __DIR__ . '/../api/controller/paymentController.php';
                     $controller = new APIPaymentController();
                     $controller->paymentWebhook();
                     break;
 
-                //Webhook for mollie payment link. Open for everyone
+                    //Webhook for mollie payment link. Open for everyone
                 case "payment/link":
                     require_once __DIR__ . '/../api/controller/paymentController.php';
                     $controller = new APIPaymentController();
                     $controller->paymentLinkWebhook();
                     break;
-                    
-                /*----------------------POST cart routes-----------------------------*/
+
+                    /*----------------------POST cart routes-----------------------------*/
 
 
-                //Add ticket to cart. Open for everyone
+                    //Add ticket to cart. Open for everyone
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
@@ -354,6 +361,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->updatePasswordCustomer();
                     break;
 
+
+
                 default:
                     http_response_code(404);
                     break;
@@ -388,7 +397,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------DELETE information pages routes-----------------------------*/
 
-                //Delete information page. Admin only
+                    //Delete information page. Admin only
                 case "information-page":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -396,7 +405,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->deleteInformationPage(isset($params["id"]) ? $params["id"] : null);
                     break;
 
-                //Delete information section from page. Admin only
+                    //Delete information section from page. Admin only
                 case "information-page/information-section":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/informationPageController.php';
@@ -406,7 +415,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------DELETE cart routes-----------------------------*/
 
-                //Delete ticket from cart. Open for everyone
+                    //Delete ticket from cart. Open for everyone
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
