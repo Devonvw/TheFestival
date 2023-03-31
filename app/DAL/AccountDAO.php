@@ -3,7 +3,7 @@ require_once __DIR__ . '/../model/Account.php';
 require_once __DIR__ . '/../DAL/Database.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../env/index.php';
-require_once __DIR__ . '/../public/utils/sendEmail.php';
+require_once __DIR__ . '/../utilsphp/sendEmail.php';
 
 use PHPMailer\PHPMailer\Exception;
 
