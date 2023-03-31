@@ -48,18 +48,23 @@ class DashboardController extends Controller {
         require __DIR__ . "/../view/Dashboard/events/index.php";
     }
     public function viewEventItems() {
+        $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/eventItems.php";
     }
     public function editEventItems() {
+        $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/editeventItems.php";
     }
     public function editEventItemSlots() {
+        $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/editEventItemSlots.php";
     }
     public function eventItemTickets() {
+        $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/eventItemTickets.php";
     }
     public function eventItemSlots() {
+        $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/eventItemSlots.php";
     }
     public function allOrders() {

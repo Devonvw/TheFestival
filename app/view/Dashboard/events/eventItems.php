@@ -109,9 +109,6 @@
 
     const addEventItem = (e) => {
         e.preventDefault();
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventId = urlParams.get('id');
-
         const formData = new FormData();
         formData.append("name", document.getElementById('event_item_name').value);
         formData.append("event_id", eventId);

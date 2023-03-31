@@ -25,9 +25,19 @@ class APIEventController
     public function addMainEvent()
     {
         try {
-            $body = json_decode(file_get_contents('php://input'), true);
-
-            $this->eventService->addMainEvent($body["e_name"], $body["e_description"]);
+            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
+            $this->eventService->addMainEvent($_POST["name"], $image);
+            json_encode(['msg' => "Event succesfully added."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function editMainEvent($id)
+    {
+        try {
+            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
+            $this->eventService->updateMainEvent($id, $_POST["name"], $image);
             json_encode(['msg' => "Event succesfully added."]);
         } catch (Exception $ex) {
             http_response_code(500);

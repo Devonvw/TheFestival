@@ -7,7 +7,7 @@ class Event {
 
 
   function __construct($id = null, $name = null, $description = null) {
-    if(!is_null($id) && !is_null($name) && !is_null($description)) {
+    if(!is_null($id)) {
       $this->id = $id;
       $this->name = $name;
       $this->description = $description;

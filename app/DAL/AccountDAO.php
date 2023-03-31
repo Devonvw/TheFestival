@@ -284,15 +284,13 @@ class AccountDAO
         if (empty(trim($email))) {
             throw new Exception("Please enter an email.", 1);
         }
-        // Step 2: Generate a unique token for the user
+        //generate a unique token for the user
         $token = uniqid();
 
-        // Step 3: Hash the token
         $hashed_token = hash('sha256', $token);
         $_SESSION['token'] = $hashed_token;
         session_write_close();
         $reset_link = "localhost/login/reset/password?token=$hashed_token";
-        // Step 4: Store the hashed token and the user's email in the database
         $stmt = $this->DB::$connection->prepare("INSERT INTO password_resets (email, token, expiration) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))");
         $stmt->bindParam(1, $email);
         $stmt->bindParam(2, $hashed_token);

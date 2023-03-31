@@ -98,12 +98,24 @@ class EventDAO
   }
   function addMainEvent($name, $description)
   {
-    $stmt = $this->DB::$connection->prepare("INSERT INTO event (name, description) VALUES (:name, :description)");
-    $name_param = trim(htmlspecialchars($name));
-    $description_param = trim(htmlspecialchars($description));
+    if ($description && $description["size"] > 2 * 1024 * 1024) {
+      throw new Exception("This image is bigger than 2MB", 1);
+    }
 
-    $stmt->bindParam(':name', $name_param);
-    $stmt->bindParam(':description', $description_param);
+    if ($description && !is_uploaded_file($description['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
+
+    if ($description && !is_null($description)) {
+      $img_data = file_get_contents($description['tmp_name']);
+      $stmt = $this->DB::$connection->prepare("INSERT INTO event (description) VALUES (:description)");
+      
+      $stmt->bindValue(':description', $img_data);
+      $stmt->execute();
+    }
+
+    $stmt = $this->DB::$connection->prepare("INSERT INTO event (name) VALUES (:name)");
+    $name_param = trim(htmlspecialchars($name));
+
+    $stmt->bindValue(':name', $name_param);
 
     if ($stmt->execute()) {
       return true;
@@ -206,16 +218,28 @@ class EventDAO
     }
   }
 
-  function updateMainEvent($name, $description)
+  function updateMainEvent($id, $name, $description)
   {
+    if ($description && $description["size"] > 2 * 1024 * 1024) {
+      throw new Exception("This image is bigger than 2MB", 1);
+    }
+    if ($description && !is_uploaded_file($description['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
 
-    $update_stmt = $this->DB::$connection->prepare("UPDATE event_item SET name = :name, description = :description where id = :id");
+    if ($description && !is_null($description)) {
+      $img_data = file_get_contents($description['tmp_name']);
 
+      $stmt = $this->DB::$connection->prepare("UPDATE event SET description = :description where id = :id");
+      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+      $stmt->bindValue(':description', $img_data);
+      $stmt->execute();
+    }
+    $update_stmt = $this->DB::$connection->prepare("UPDATE event SET name = :name, description = :description where id = :id");
+    $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $update_stmt->bindValue(':name', trim(htmlspecialchars($name)));
-    $update_stmt->bindValue(':description', trim(htmlspecialchars($description)));
 
     $update_stmt->execute();
   }
+
   function updateEventItemSlot($id, $start, $end, $stock, $capacity)
   {
     $start_date = new DateTime($start);
