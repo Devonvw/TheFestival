@@ -127,13 +127,13 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
@@ -225,13 +225,13 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
@@ -248,6 +248,7 @@ class PaymentService {
         catch (Exception $ex) {
             var_dump($ex);
         }
+        unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
     }
 }
 ?>

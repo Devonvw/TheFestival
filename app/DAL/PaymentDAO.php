@@ -73,7 +73,7 @@ class PaymentDAO
     function getOrderIdByPaymentLink($id) {
         $sql = "SELECT order_id as id FROM order_payment WHERE pay_later_id = :id LIMIT 1";
         $stmt = $this->DB::$connection->prepare($sql);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetchObject();
     }
