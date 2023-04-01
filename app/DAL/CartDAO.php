@@ -34,9 +34,9 @@ class cartDAO
         }
     }
 
-    public function addToCart($ticket_id, $account_id = null, $session_id = null)
+    public function addToCart($ticket_id, $account_id = null, $session_id = null, $token = null)
     {
-        $cart = $this->getCart($account_id, $session_id);
+        $cart = $this->getCart($account_id, $session_id, $token);
 
         //Handle cart quantity
         $sql = "INSERT INTO cart_item (ticket_id, cart_id) VALUES (:ticket_id, :cart_id) ON DUPLICATE KEY UPDATE quantity = quantity + 1";
@@ -54,9 +54,9 @@ class cartDAO
         $stmt->execute();
     }
     
-    public function removeFromCart($ticket_id, $account_id = null, $session_id = null)
+    public function removeFromCart($ticket_id, $account_id = null, $session_id = null, $token = null)
     {
-        $cart = $this->getCart($account_id, $session_id);
+        $cart = $this->getCart($account_id, $session_id, $token);
 
         $sql = "SELECT * FROM cart_item WHERE ticket_id = :ticket_id AND cart_id = :cart_id LIMIT 1";
         $stmt = $this->DB::$connection->prepare($sql);
@@ -122,7 +122,7 @@ public function getCart($account_id = null, $session_id = null, $token = null)
         } else if ($token !== null) {
             $sql = "SELECT * FROM cart WHERE share_token = :token LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindValue(':token', $token, PDO::PARAM_INT);
+            $stmt->bindValue(':token', $token, PDO::PARAM_STR);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
             $cart = $stmt->fetch();

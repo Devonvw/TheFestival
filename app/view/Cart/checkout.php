@@ -5,6 +5,7 @@
 <script>
 window.addEventListener("load", (event) => {
     getCart();
+    getAccountInfo();
     getIdealIssuers();
 });
 
@@ -12,6 +13,25 @@ const formatDate = (input) => {
     const date = new Date(input);
 
     return `${date?.getDate()}-${date?.getMonth()}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
+}
+
+const getAccountInfo = () => {
+    fetch(`${window.location.origin}/api/me`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "GET",
+    }).then(async (res) => {
+        if (res.ok) {
+            const data = await res.json();
+
+            // Set the value of the first_name and last_name input fields
+            document.getElementById('name').value = `${data.first_name} ${data.last_name}`;
+            document.getElementById('email').value = data.email;
+        }
+    }).catch((res) => {
+        console.log(res)
+    });
 }
 
 const createPayment = () => {

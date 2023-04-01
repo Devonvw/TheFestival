@@ -22,7 +22,10 @@ function editOrderStatus(e) {
             status: document.getElementById('statusses').value,
         })
     }).then(async (res) => {
-        if (res.ok) window.location = "/dashboard/orders";
+        if (res.ok) {
+            ToastSucces((await res.json())?.msg);
+            window.location = "/dashboard/orders";
+        }
 
         ToastError((await res.json())?.msg);
     }).catch((res) => {});
@@ -39,7 +42,7 @@ function getOrderStatus() {
         const data = await res.json();
 
         if (!res.ok) {
-            ToastError((await res.json())?.msg);
+            ToastError(data?.msg);
             window.location = "/dashboard/orders";
         }
 
