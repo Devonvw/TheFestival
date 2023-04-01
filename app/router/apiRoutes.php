@@ -322,7 +322,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->addToCart(isset($params["id"]) ? $params["id"] : null);
+                    $controller->addToCart(isset($params["id"]) ? $params["id"] : null, null);
+                    break;
+                    //Add ticket to cart. Open for everyone
+                case "cart/shared/ticket":
+                    require_once __DIR__ . '/../api/controller/cartController.php';
+                    $controller = new APICartController();
+                    $controller->addToCart(isset($params["id"]) ? $params["id"] : null, isset($params["token"]) ? $params["token"] : null);
                     break;
 
                 default:
@@ -415,10 +421,10 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     /*----------------------DELETE cart routes-----------------------------*/
 
                     //Delete ticket from cart. Open for everyone
-                case "cart/ticket":
+                case "cart/shared/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->removeFromCart(isset($params["id"]) ? $params["id"] : null);
+                    $controller->removeFromCart(isset($params["id"]) ? $params["id"] : null, isset($params["token"]) ? $params["token"] : null);
                     break;
 
                 default:

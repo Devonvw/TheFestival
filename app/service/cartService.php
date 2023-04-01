@@ -8,17 +8,17 @@ class CartService {
         $dao = new cartDAO();
         $dao->createCart($account_id, $session_id);
     }
-    public function addToCart($ticket_id, $account_id, $session_id){
+    public function addToCart($ticket_id, $account_id, $session_id, $token){
         if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
 
         $dao = new cartDAO();
-        $dao->addToCart($ticket_id, $account_id, $session_id);
+        $dao->addToCart($ticket_id, $account_id, $session_id, $token);
     }
-    public function removeFromCart($ticket_id, $account_id, $session_id){
+    public function removeFromCart($ticket_id, $account_id, $session_id, $token){
         if (!$ticket_id) throw new Exception("Please specify a ticket.", 1);
 
         $dao = new cartDAO();
-        $dao->removeFromCart($ticket_id, $account_id, $session_id);
+        $dao->removeFromCart($ticket_id, $account_id, $session_id, $token);
     }
     public function clearCart($account_id, $session_id){
         $dao = new cartDAO();

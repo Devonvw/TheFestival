@@ -2,13 +2,13 @@
 require_once __DIR__ . '/../packages/fpdf185/templates.php';
 
 class PDFService {
-    public function createInvoicePDF($order, $userInfo){
+    public function createInvoicePDF($invoiceId, $order, $userInfo){
         $pdf = new PDF_Invoice( 'P', 'mm', 'A4' );
         $pdf->AddPage();
         $pdf->addSociete( "The Festival",
                         "Grote Markt 22\n" .
                         "2011 RD Haarlem\n");
-        $pdf->fact_dev( "Order: ". $order->id, "" );
+        $pdf->fact_dev( "Invoice: ". $invoiceId, "" );
         $pdf->addDate(date("d-m-y"));
         $pdf->addClientAdresse($userInfo->name. "\n". $userInfo->address. "\n". $userInfo->zipcode. " ". $userInfo->city. "\n". $userInfo->country. "\n");
         $cols=array( "TICKET"    => 100,

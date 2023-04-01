@@ -67,6 +67,8 @@ function downloadInvoice(id) {
             a.href = "data:application/pdf;base64," + data?.file; //Image Base64 Goes here
             a.download = `invoice-${data?.id}.pdf`; //File name Here
             a.click(); //Downloaded file
+        } else {
+            ToastError((await res.json())?.msg);
         }
     }).catch((res) => {});
 }

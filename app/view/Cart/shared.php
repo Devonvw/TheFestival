@@ -13,10 +13,34 @@ const formatDate = (input) => {
     return `${date?.getDate()}-${date?.getMonth() + 1}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
 }
 
+function addTicket(ticketId) {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/cart/shared/ticket?id=${ticketId}&token=${params.get('token')}`, {
+        method: "POST",
+        body: null
+    }).then(async (res) => {
+        if (res.ok) getSharedCart();
+        else ToastError((await res.json())?.msg);
+    }).catch((res) => {});
+}
+
+function deleteTicket(ticketId) {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/cart/shared/ticket?id=${ticketId}&token=${params.get('token')}`, {
+        method: "DELETE",
+        body: null
+    }).then(async (res) => {
+        if (res.ok) getSharedCart();
+        else ToastError((await res.json())?.msg);
+    }).catch((res) => {});
+}
+
 function getSharedCart() {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/cart/shared?token=${params.get('id')}`, {
+    fetch(`${window.location.origin}/api/cart/shared?token=${params.get('token')}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -41,6 +65,18 @@ function getSharedCart() {
                                     </li>
                                     <li>
                                         <p>${formatDate(cartItem?.ticket?.start)} - ${formatDate(cartItem?.ticket?.end)}</p>
+                                    </li>
+                                    <li class="flex gap-x-2">
+                                        <div class="flex gap-x-2 border rounded-md border-primary">
+                                        <button onclick="addTicket(${cartItem?.ticket?.id})" class="rounded-md border-r border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                        </svg>
+                                    </button>
+                                    ${cartItem?.quantity}
+                                    <button onclick="deleteTicket(${cartItem?.ticket?.id})" class="rounded-md border-l border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+                                        </svg>
+                                    </button></div><p> x ${cartItem?.ticket?.persons} person(s)</p>
                                     </li>
                                 </ul>
                             </div>
