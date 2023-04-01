@@ -167,8 +167,8 @@ public function getCart($account_id = null, $session_id = null, $token = null)
 
         foreach ($items as $row) {
             $total += $row['price'] * $row['quantity'];
-            $subtotal += ($row['price'] * $row['quantity']) / 1.21;
-            $vat +=  $row['price'] * $row['quantity'] - ($row['price'] * $row['quantity']) / 1.21;
+            $subtotal += ($row['price'] * $row['quantity']) / 1.09;
+            $vat +=  $row['price'] * $row['quantity'] - ($row['price'] * $row['quantity']) / 1.09;
             array_push($cart_items, new CartItem($row['id'], $row['cart_id'], new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['location'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['price']), $row['quantity'], $row['created_at']));
         }
 
