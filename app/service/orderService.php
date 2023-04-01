@@ -5,10 +5,10 @@ require_once __DIR__ . '/../service/pdfService.php';
 require_once __DIR__ . '/../service/orderService.php';
 
 class OrderService {
-    public function createOrder($accountId, $session_id){
+    public function createOrder($accountId, $session_id, $token){
         $dao = new OrderDAO();
 
-        $orderId = $dao->createOrder($accountId, $session_id);
+        $orderId = $dao->createOrder($accountId, $session_id, $token);
 
         $order = $dao->getOrder($orderId);
 

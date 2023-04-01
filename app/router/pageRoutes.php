@@ -203,6 +203,13 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller->shared();
             break;
 
+        case "checkout/shared":
+            require __DIR__ . '/../controller/cartController.php';
+            session_start();
+            $controller = new CartController();
+            $controller->checkoutShared();
+            break;
+
             /*----------------------Order routes-----------------------------*/
 
         case "order":

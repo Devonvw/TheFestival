@@ -23,7 +23,7 @@ class APIPaymentController
         }
     }
 
-    public function createPayment()
+    public function createPayment($token)
     {
         session_start();
         
@@ -32,7 +32,7 @@ class APIPaymentController
 
             $paymentAccountInfo = ["email" => isset($body["email"]) ? $body["email"] : null, "name" => isset($body["name"]) ? $body["name"] : null, "country" => isset($body["country"]) ? $body["country"] : null, "city" => isset($body["city"]) ? $body["city"] : null, "address" => isset($body["address"]) ? $body["address"] : null, "zipcode" => isset($body["zipcode"]) ? $body["zipcode"] : null];
 
-            echo $this->paymentService->createPayment(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id(), isset($body["method"]) ? $body["method"] : null , isset($body["issuer"]) ? $body["issuer"] : null, $paymentAccountInfo);
+            echo $this->paymentService->createPayment(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id(), isset($body["method"]) ? $body["method"] : null , isset($body["issuer"]) ? $body["issuer"] : null, $paymentAccountInfo, $token);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
