@@ -462,7 +462,7 @@ function addCadreEurosFrancs()
 	$this->SetXY( $r1, $y1+5 );
 	$this->Cell(20,4, "TOTAL", 0, 0, "C");
 	$this->SetXY( $r1, $y1+10 );
-	$this->Cell(20,4, "VAT", 0, 0, "C");
+	$this->Cell(20,4, "VAT 9%", 0, 0, "C");
 	$this->SetXY( $r1, $y1+15 );
 	$this->Cell(20,4, "SUBTOTAL", 0, 0, "C");
 }
