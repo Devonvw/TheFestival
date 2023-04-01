@@ -12,17 +12,17 @@ class OrderDAO
         $this->DB = new DB();
     }
 
-    public function createOrder($accountId = null, $sessionId = null) {
+    public function createOrder($accountId = null, $sessionId = null, $token = null) {
         $this->DB::$connection->beginTransaction();
 
+        $cartDAO = new cartDAO();
+        $cart = $cartDAO->getCart($accountId, $sessionId, $token);
+
         $stmt = $this->DB::$connection->prepare("INSERT INTO `order` (account_id, session_id) VALUES (:account_id, :session_id);");
-        $stmt->bindParam(':account_id', $accountId);
-        $stmt->bindValue(':session_id', $accountId ? null : $sessionId);
+        $stmt->bindParam(':account_id', $cart->account_id);
+        $stmt->bindValue(':session_id', $cart->account_id ? null : $cart->session_id);
         $stmt->execute();
         $orderId = $this->DB::$connection->lastInsertId();
-
-        $cartDAO = new cartDAO();
-        $cart = $cartDAO->getCart($accountId, $sessionId);
 
         if (count($cart->cart_items) == 0) {
             $this->DB::$connection->rollBack();

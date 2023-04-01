@@ -20,4 +20,8 @@ class CartController extends Controller
     public function shared() {
         $this->displayView("");
     }
+
+    public function checkoutShared() {
+        $this->displayView("");
+    }
 }

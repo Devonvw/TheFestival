@@ -82,7 +82,7 @@ function getInformationPage() {
                 <p id="headerSubtitle" class="text-2xl font-normal text-center"></p>
             </div>
         </div>
-        <div class="flex flex-col" id="sections">
+        <div class="flex flex-col information-page" id="sections">
         </div>
         <?php include __DIR__ . '/../../components/footer.php' ?>
     </div>

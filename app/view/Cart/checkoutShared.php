@@ -25,7 +25,6 @@ const getAccountInfo = () => {
         if (res.ok) {
             const data = await res.json();
 
-            // Set the value of the first_name and last_name input fields
             document.getElementById('name').value = `${data.first_name} ${data.last_name}`;
             document.getElementById('email').value = data.email;
         }
@@ -35,7 +34,9 @@ const getAccountInfo = () => {
 }
 
 const createPayment = () => {
-    fetch(`${window.location.origin}/api/payment`, {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/payment?token=${params.get('token')}`, {
         method: "POST",
         body: JSON.stringify({
             method: document.querySelector('input[name="paymentMethod"]:checked')?.value,
@@ -86,7 +87,9 @@ const handleIdeal = (e) => {
 }
 
 function getCart() {
-    fetch(`${window.location.origin}/api/cart`, {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/cart?token=${params.get('token')}`, {
         headers: {
             'Content-Type': 'application/json'
         },

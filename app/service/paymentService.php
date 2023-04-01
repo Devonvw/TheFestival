@@ -62,7 +62,7 @@ class PaymentService {
         return $payment;
     }
     
-    public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo) {
+    public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo, $token) {
         if (!$method) throw new Exception("Dont forget to choose a payment method.", 1);
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
         if (!$paymentAccountInfo["name"]) throw new Exception("Don't forget to fill in your name.", 1);
@@ -73,7 +73,7 @@ class PaymentService {
         if (!$paymentAccountInfo["address"]) throw new Exception("Don't forget to fill in your address.", 1);
 
         $service = new OrderService();
-        $order = $service->createOrder($account_id, $session_id);
+        $order = $service->createOrder($account_id, $session_id, $token);
 
         $payment = null;
         if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);

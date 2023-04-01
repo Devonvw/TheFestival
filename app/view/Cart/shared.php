@@ -5,6 +5,10 @@
 <script>
 window.addEventListener("load", (event) => {
     getSharedCart();
+
+    const params = new URLSearchParams(window.location.search)
+    document.getElementById("checkoutBtn").href = `/checkout/shared?token=${params.get('token')}`;
+
 });
 
 const formatDate = (input) => {
@@ -16,7 +20,7 @@ const formatDate = (input) => {
 function addTicket(ticketId) {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/cart/shared/ticket?id=${ticketId}&token=${params.get('token')}`, {
+    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}&token=${params.get('token')}`, {
         method: "POST",
         body: null
     }).then(async (res) => {
@@ -28,7 +32,7 @@ function addTicket(ticketId) {
 function deleteTicket(ticketId) {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/cart/shared/ticket?id=${ticketId}&token=${params.get('token')}`, {
+    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}&token=${params.get('token')}`, {
         method: "DELETE",
         body: null
     }).then(async (res) => {
@@ -40,7 +44,7 @@ function deleteTicket(ticketId) {
 function getSharedCart() {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/cart/shared?token=${params.get('token')}`, {
+    fetch(`${window.location.origin}/api/cart?token=${params.get('token')}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -146,6 +150,7 @@ function getSharedCart() {
 
 <body>
     <div class="">
+        <?php include __DIR__ . '/../../components/nav.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
@@ -170,7 +175,7 @@ function getSharedCart() {
                             <p class="text-gray-700 font-bold">Total</p>
                             <p id="total" class="text-gray-800 font-bold">$120.00</p>
                         </div>
-                        <a href="/checkout"
+                        <a id="checkoutBtn" href="/checkout/shared"
                             class="p-3 rounded-md w-full flex items-center justify-center bg-primary hover:scale-[1.02] duration-300 text-white font-medium">
                             Checkout
                         </a>

@@ -178,3 +178,44 @@ input[type="radio"]:checked ~ .value::after {
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
+
+.information-page h1 {
+  font-size: 3rem; /* 48px */
+  line-height: 1;
+  font-weight: 600;
+}
+.information-page h2 {
+  font-size: 2.25rem; /* 36px */
+  line-height: 2.5rem; /* 40px */
+  font-weight: 600;
+}
+.information-page h3 {
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+  font-weight: 600;
+}
+.information-page h4 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+  font-weight: 600;
+}
+.information-page h5 {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem; /* 28px */
+  font-weight: 600;
+}
+.information-page h6 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+  font-weight: 600;
+}
+
+.information-page a {
+  color: #008080;
+  text-decoration: underline;
+}
+
+.information-page a:hover {
+  color: #008080;
+  font-weight: 500;
+}

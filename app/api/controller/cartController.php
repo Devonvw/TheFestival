@@ -61,12 +61,12 @@ class APICartController
         }
     }
 
-    public function getCart()
+    public function getCart($token)
     {
         session_start();
         
         try {
-            echo json_encode($this->cartService->getCart(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id()));
+            echo json_encode($this->cartService->getCart(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id(), $token));
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -79,19 +79,6 @@ class APICartController
         
         try {
             echo json_encode([ 'link' => $this->cartService->getCartShareLink(isset($_SESSION['id']) ? $_SESSION['id'] : null, session_id())]);
-        } catch (Exception $ex) {
-            http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
-        }
-    }
-
-    public function getSharedCart($token)
-    {
-
-        session_start();
-        
-        try {
-            echo json_encode($this->cartService->getSharedCart($token));
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
