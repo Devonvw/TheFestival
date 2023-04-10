@@ -62,7 +62,7 @@ class PaymentService {
         return $payment;
     }
     
-    public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo) {
+    public function createPayment($account_id, $session_id, $method, $issuer, $paymentAccountInfo, $token) {
         if (!$method) throw new Exception("Dont forget to choose a payment method.", 1);
         if ($method == "ideal" && !$issuer) throw new Exception("Dont forget to choose a bank.", 1);
         if (!$paymentAccountInfo["name"]) throw new Exception("Don't forget to fill in your name.", 1);
@@ -73,7 +73,7 @@ class PaymentService {
         if (!$paymentAccountInfo["address"]) throw new Exception("Don't forget to fill in your address.", 1);
 
         $service = new OrderService();
-        $order = $service->createOrder($account_id, $session_id);
+        $order = $service->createOrder($account_id, $session_id, $token);
 
         $payment = null;
         if ($method == "Ideal" && $issuer) $payment = $this->createIdealPayment($order, $issuer);
@@ -127,13 +127,13 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
@@ -210,8 +210,9 @@ class PaymentService {
 
         $account = $dao->getPaymentAccountInfo($orderId);
 
-        $invoicePDF = $pdf->createInvoicePDF($order, $account);
-        $invoiceId = $invoiceDao->addInvoiceToOrder($orderId, $invoicePDF);
+        $invoiceId = $invoiceDao->createInvoiceOrder($orderId);
+        $invoicePDF = $pdf->createInvoicePDF($invoiceId, $order, $account);
+        $invoiceDao->addInvoiceToOrder($orderId, $invoicePDF);
 
         $ticketsPDF = $pdf->createTicketsPDF($tickets, $orderId, $account);
 
@@ -225,13 +226,13 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'Festivalathaarlem@gmail.com'; // SMTP username
+            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('Festivalathaarlem@gmail.com', 'Festival Team');
+            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
@@ -248,6 +249,7 @@ class PaymentService {
         catch (Exception $ex) {
             var_dump($ex);
         }
+        unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
     }
 }
 ?>

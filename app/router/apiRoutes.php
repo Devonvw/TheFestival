@@ -101,19 +101,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------------------------GET Cart routes-----------------------------*/
 
-                    //Retrieve your own cart. Open for everyone
+                    //Retrieve a cart. Open for everyone
                 case "cart":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->getCart();
+                    $controller->getCart(isset($params["token"]) ? $params["token"] : null);
                     break;
 
-                    //Retrieve the cart of someone else via a link. Open for everyone
-                case "cart/shared":
-                    require_once __DIR__ . '/../api/controller/cartController.php';
-                    $controller = new APICartController();
-                    $controller->getSharedCart(isset($params["token"]) ? $params["token"] : null);
-                    break;
 
                     //Create a link of your own cart to share with someone else. Open for everyone
                 case "cart/share-link":
@@ -127,7 +121,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     //Retrieve order by id. Open for everyone
                 case "order":
-                    //(new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/orderController.php';
                     $controller = new APIOrderController();
                     $controller->getOrder(isset($params["id"]) ? $params["id"] : null);
@@ -299,7 +292,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                 case "payment":
                     require_once __DIR__ . '/../api/controller/paymentController.php';
                     $controller = new APIPaymentController();
-                    $controller->createPayment();
+                    $controller->createPayment(isset($params["token"]) ? $params["token"] : null);
                     break;
 
                     //Webhook for mollie payment. Open for everyone
@@ -323,7 +316,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->addToCart(isset($params["id"]) ? $params["id"] : null);
+                    $controller->addToCart(isset($params["id"]) ? $params["id"] : null, isset($params["token"]) ? $params["token"] : null);
                     break;
 
                 default:
@@ -419,7 +412,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                 case "cart/ticket":
                     require_once __DIR__ . '/../api/controller/cartController.php';
                     $controller = new APICartController();
-                    $controller->removeFromCart(isset($params["id"]) ? $params["id"] : null);
+                    $controller->removeFromCart(isset($params["id"]) ? $params["id"] : null, isset($params["token"]) ? $params["token"] : null);
                     break;
 
                 default:

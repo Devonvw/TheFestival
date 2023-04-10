@@ -44,7 +44,6 @@ function getInformationPage() {
     }).then(async (res) => {
         if (res.ok) {
             const data = await res.json();
-            console.log(data);
 
             if (data?.image) document.getElementById('header').style.backgroundImage =
                 `url('${getImage(data?.image)}')`;
@@ -62,6 +61,8 @@ function getInformationPage() {
             });
 
             document.getElementById("sections").innerHTML = sectionsHTML;
+
+            document.getElementById("facebookBtn").setAttribute("data-href", window.location.href);
         }
     }).catch((res) => {
         console.log(res)
@@ -70,6 +71,10 @@ function getInformationPage() {
 </script>
 
 <body>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v16.0&appId=4731276436960002&autoLogAppEvents=1"
+        nonce="z6VwweeS"></script>
     <div class="">
         <?php include __DIR__ . '/../../components/nav.php' ?>
         <div id="header" class="h-screen bg-cover relative">
@@ -77,12 +82,16 @@ function getInformationPage() {
             </div>
             <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
                 <h1 id="headerTitle" class="text-7xl font-semibold text-center"></h1>
+
             </div>
             <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
                 <p id="headerSubtitle" class="text-2xl font-normal text-center"></p>
             </div>
         </div>
-        <div class="flex flex-col" id="sections">
+        <div class="flex flex-col information-page" id="sections">
+        </div>
+        <div class="container mx-auto">
+            <div class="fb-share-button" data-href="" data-layout="" data-size=""></div>
         </div>
         <?php include __DIR__ . '/../../components/footer.php' ?>
     </div>

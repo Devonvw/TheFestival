@@ -4,12 +4,14 @@ require_once __DIR__ . '/../DAL/Database.php';
 
 class Middleware {
     function adminOnly() {
+        if (session_status() == PHP_SESSION_NONE) session_start();
         if ((isset($_SESSION["type_id"]) ? $_SESSION["type_id"] : 0) != 3) {
             http_response_code(500);
             echo json_encode([ 'msg' => "Only admins can call this route" ]);
         }
     }
     function loggedInOnly() {
+        if (session_status() == PHP_SESSION_NONE) session_start();
         if (!isset($_SESSION["loggedin"]) || !$_SESSION["loggedin"]) {
             http_response_code(500);
             echo json_encode([ 'msg' => "Only logged in can call this route" ]);

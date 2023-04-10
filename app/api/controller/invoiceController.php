@@ -13,8 +13,6 @@ class APIInvoiceController
 
     public function getInvoice($orderId)
     {
-        session_start();
-
         try {
             echo json_encode($this->invoiceService->getInvoice($orderId));
         } catch (Exception $ex) {

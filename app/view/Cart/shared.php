@@ -5,6 +5,10 @@
 <script>
 window.addEventListener("load", (event) => {
     getSharedCart();
+
+    const params = new URLSearchParams(window.location.search)
+    document.getElementById("checkoutBtn").href = `/checkout/shared?token=${params.get('token')}`;
+
 });
 
 const formatDate = (input) => {
@@ -13,10 +17,34 @@ const formatDate = (input) => {
     return `${date?.getDate()}-${date?.getMonth() + 1}-${date?.getFullYear()} ${date?.getHours() < 10 ? `0${date?.getHours()}` : date?.getHours()}:${date?.getMinutes() < 10 ? `0${date?.getMinutes()}` : date?.getMinutes()}`;
 }
 
+function addTicket(ticketId) {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}&token=${params.get('token')}`, {
+        method: "POST",
+        body: null
+    }).then(async (res) => {
+        if (res.ok) getSharedCart();
+        else ToastError((await res.json())?.msg);
+    }).catch((res) => {});
+}
+
+function deleteTicket(ticketId) {
+    const params = new URLSearchParams(window.location.search)
+
+    fetch(`${window.location.origin}/api/cart/ticket?id=${ticketId}&token=${params.get('token')}`, {
+        method: "DELETE",
+        body: null
+    }).then(async (res) => {
+        if (res.ok) getSharedCart();
+        else ToastError((await res.json())?.msg);
+    }).catch((res) => {});
+}
+
 function getSharedCart() {
     const params = new URLSearchParams(window.location.search)
 
-    fetch(`${window.location.origin}/api/cart/shared?token=${params.get('id')}`, {
+    fetch(`${window.location.origin}/api/cart?token=${params.get('token')}`, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -41,6 +69,18 @@ function getSharedCart() {
                                     </li>
                                     <li>
                                         <p>${formatDate(cartItem?.ticket?.start)} - ${formatDate(cartItem?.ticket?.end)}</p>
+                                    </li>
+                                    <li class="flex gap-x-2">
+                                        <div class="flex gap-x-2 border rounded-md border-primary">
+                                        <button onclick="addTicket(${cartItem?.ticket?.id})" class="rounded-md border-r border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                        </svg>
+                                    </button>
+                                    ${cartItem?.quantity}
+                                    <button onclick="deleteTicket(${cartItem?.ticket?.id})" class="rounded-md border-l border-primary p-0.5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+                                        </svg>
+                                    </button></div><p> x ${cartItem?.ticket?.persons} person(s)</p>
                                     </li>
                                 </ul>
                             </div>
@@ -110,6 +150,7 @@ function getSharedCart() {
 
 <body>
     <div class="">
+        <?php include __DIR__ . '/../../components/nav.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <h1 class="text-black text-3xl font-bold mt-6">Your Cart</h1>
@@ -134,7 +175,7 @@ function getSharedCart() {
                             <p class="text-gray-700 font-bold">Total</p>
                             <p id="total" class="text-gray-800 font-bold">$120.00</p>
                         </div>
-                        <a href="/checkout"
+                        <a id="checkoutBtn" href="/checkout/shared"
                             class="p-3 rounded-md w-full flex items-center justify-center bg-primary hover:scale-[1.02] duration-300 text-white font-medium">
                             Checkout
                         </a>

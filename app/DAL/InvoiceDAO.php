@@ -17,6 +17,14 @@ class InvoiceDAO
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->bindValue(':file', $invoicePDF);
         $stmt->execute();
+    }
+
+    function createInvoiceOrder($orderId)
+    {
+        $sql = "INSERT INTO order_invoice (order_id) VALUES (:order_id);";
+        $stmt = $this->DB::$connection->prepare($sql);
+        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->execute();
         return $this->DB::$connection->lastInsertId();
     }
 

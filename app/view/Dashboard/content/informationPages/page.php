@@ -147,7 +147,10 @@ const editInformationPage = (e) => {
     }).then(async (res) => {
         if (!res.ok) {
             ToastError((await res.json())?.msg);
+        } else {
+            ToastSucces((await res.json())?.msg);
         }
+
     }).catch((res) => {});
 }
 
