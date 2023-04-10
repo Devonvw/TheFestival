@@ -136,12 +136,12 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 const data = await res.json();
                 console.log(data);
 
-                // Set the value of the first_name and last_name input fields
+                //setting the value of the first_name and last_name input fields
                 document.getElementById('first_name').value = data.first_name;
                 document.getElementById('last_name').value = data.last_name;
                 document.getElementById('email').innerHTML = data.email;
 
-                // Decode the base64-encoded profile picture and set the src attribute of the profile_picture_preview element
+                //decoding the base64-encoded profile picture and set the src attribute of the profile_picture_preview element
 
                 if (data?.profile_picture) {
                     const profile_picture_preview = document.getElementById('profile_picture_preview');

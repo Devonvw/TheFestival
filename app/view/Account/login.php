@@ -21,7 +21,26 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
                 })
             }).then(async (res) => {
             if (res.ok) {
-                window.location = "/customer/manage-account";
+                const data = await res.json();
+                fetch(`${window.location.origin}/api/me`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: "GET",
+                }).then(async (res) => {
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.type_id == 3) {
+                            window.location.href = "/dashboard";
+                        } else {
+                            window.location.href = "/";
+                        }
+                    } else {
+                        console.log("Error retrieving account data");
+                    }
+                }).catch((res) => {
+                    console.log(res)
+                });
             } else {
                 document.getElementById('error').innerHTML = (await res.json())?.msg;
                 document.getElementById('errorWrapper').classList.remove('hidden');
@@ -50,7 +69,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 <body>
     <div class="">
-        
+
         <div class="h-[80vh] flex justify-center items-center mt-32">
             <div class="max-w-xl">
                 <div class="w-80 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-xl xl:p-0 dark:bg-teal-800 dark:border-gray-700">
