@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../model/Event.php';
 require __DIR__ . '/../model/EventItem.php';
+require __DIR__ . '/../model/Ticket.php';
 require_once __DIR__ . '/../DAL/Database.php';
 
 class EventDAO
@@ -52,21 +53,50 @@ class EventDAO
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $events = [];
     foreach ($data as $row) {
+      if ($row['description'] && !is_null($row['description'])) {
+        $row['description'] = base64_encode($row['description']);
+      }
       $events[] = new Event($row['id'], $row['name'], $row['description']);
     }
     return $events;
   }
   function getEventItemTickets()
   {
-    $stmt = $this->DB::$connection->prepare("SELECT * FROM event WHERE ");
+    $stmt = $this->DB::$connection->prepare(
+      "SELECT 
+        eist.id, 
+        eist.event_item_slot_id, 
+        eis.start, 
+        eis.end, 
+        ei.location, 
+        ei.name as event_item_name, 
+        e.name as event_name, 
+        eist.persons, 
+        eist.price
+      FROM event_item_slot_ticket eist
+      JOIN event_item_slot eis ON eis.id = eist.event_item_slot_id
+      JOIN event_item ei ON ei.id = eis.event_item_id
+      JOIN event e ON e.id = ei.event_id"
+    );
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $events = [];
+    $tickets = [];
     foreach ($data as $row) {
-      $events[] = new Event($row['id'], $row['name'], $row['description']);
+      $tickets[] = new Ticket(
+        $row['id'],
+        $row['event_item_slot_id'],
+        $row['start'],
+        $row['end'],
+        $row['location'],
+        $row['event_item_name'],
+        $row['event_name'],
+        $row['persons'],
+        $row['price']
+      );
     }
-    return $events;
+    return $tickets;
   }
+
   function getEventItemSlots()
   {
     $stmt = $this->DB::$connection->prepare("SELECT event_item_slot.id as slotId, event.name as eventName, event_item.name as eventItemName, event_item_slot.start, event_item_slot.end, event_item_slot.stock, event_item_slot.capacity FROM event_item_slot INNER JOIN event_item ON event_item.id = event_item_slot.event_item_id INNER JOIN event ON event.id = event_item.event_id");
@@ -107,7 +137,7 @@ class EventDAO
     if ($description && !is_null($description)) {
       $img_data = file_get_contents($description['tmp_name']);
       $stmt = $this->DB::$connection->prepare("INSERT INTO event (description) VALUES (:description)");
-      
+
       $stmt->bindValue(':description', $img_data);
       $stmt->execute();
     }
@@ -259,6 +289,22 @@ class EventDAO
     $update_stmt->bindValue(':end', trim(htmlspecialchars($end)));
     $update_stmt->bindValue(':stock', trim(htmlspecialchars($stock)));
     $update_stmt->bindValue(':capacity', trim(htmlspecialchars($capacity)));
+
+    $update_stmt->execute();
+  }
+  public function updateEventItemTicket($id, $price, $persons)
+  {
+    if ($price < 0) {
+      throw new Exception("Price can't be negative", 1);
+    }
+    if ($persons <= 0) {
+      throw new Exception("The number of persons should be greater than 0", 1);
+    }
+
+    $update_stmt = $this->DB::$connection->prepare("UPDATE event_item_slot_ticket SET price = :price, persons = :persons WHERE id = :id");
+    $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $update_stmt->bindValue(':price', trim(htmlspecialchars($price)));
+    $update_stmt->bindValue(':persons', trim(htmlspecialchars($persons)));
 
     $update_stmt->execute();
   }

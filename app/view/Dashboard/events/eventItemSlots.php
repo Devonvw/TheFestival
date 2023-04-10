@@ -146,10 +146,10 @@
             const stockFilter = document.getElementById('stock_filter').value;
 
 
-            // Construct the API URL
+            //constructing the API URL
             const apiUrl = `/api/event/event-item/slots?event_item=${eventItemFilter}&start_date=${startDateFilter}&end_date=${endDateFilter}&search=${searchFilter}&stock=${stockFilter}`;
 
-            // Fetch slots data based on filter values
+            //fetching slots data based on filter values
             fetch(apiUrl)
                 .then((response) => response.json())
                 .then((eventItemSlots) => {
