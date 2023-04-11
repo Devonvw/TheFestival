@@ -44,12 +44,19 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItem($params["id"]);
                     break;
-                case "event/event-item/slots":
+                case "events/event-items/slots":
                     session_start();
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->getEventItemSlots();
+                    break;
+                case "event/event-item/slots":
+                    session_start();
+                    (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->getEventItemSlotsByEventItemId($params["id"]);
                     break;
                 case "event/event-item/tickets":
                     session_start();
@@ -58,6 +65,13 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemTickets();
                     break;
+                case "event/event-item/ticket":
+                    session_start();
+                    (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->getEventItemTicketById($params["id"]);
+                    break;
                 case "event/event-item/slot":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -65,6 +79,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemSlotById($params["id"]);
                     break;
+
 
                     /*----------------------GET Information pages routes-----------------------------*/
 
@@ -218,21 +233,6 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------POST event routes-----------------------------*/
 
-
-                case "event/add":
-                    session_start();
-                    // (new Middleware())->adminOnly();
-                    require_once __DIR__ . '/../api/controller/eventController.php';
-                    $controller = new APIEventController();
-                    $controller->addMainEvent();
-                    break;
-                case "event/edit":
-                    session_start();
-                    // (new Middleware())->adminOnly();
-                    require_once __DIR__ . '/../api/controller/eventController.php';
-                    $controller = new APIEventController();
-                    $controller->editMainEvent($params["id"]);
-                    break;
                 case "event/event-item/add":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -254,12 +254,26 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->editEventItemSlot($params["id"]);
                     break;
+                case "event/event-item/slot/add":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->addEventItemSlot();
+                    break;
                 case "event/event-item/ticket/edit":
                     session_start();
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->editEventItemTicket($params["id"]);
+                    break;
+                case "event/event-item/ticket/add":
+                    session_start();
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->addEventItemTicket();
                     break;
 
 
@@ -389,17 +403,23 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------DELETE event routes-----------------------------*/
 
-                case "event":
-                    // (new Middleware())->adminOnly();
-                    require_once __DIR__ . '/../api/controller/eventController.php';
-                    $controller = new APIEventController();
-                    $controller->deleteMainEvent();
-                    break;
                 case "event/event-item":
                     // (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->deleteEventItem($params['id']);
+                    break;
+                case "event/event-item/slot":
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->deleteEventItemSlot($params['id']);
+                    break;
+                case "event/event-item/slot/ticket":
+                    // (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/eventController.php';
+                    $controller = new APIEventController();
+                    $controller->deleteEventItemSlotTicket($params['id']);
                     break;
 
                     /*----------------------DELETE information pages routes-----------------------------*/

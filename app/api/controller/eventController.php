@@ -22,41 +22,6 @@ class APIEventController
     }
 
 
-    public function addMainEvent()
-    {
-        try {
-            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
-            $this->eventService->addMainEvent($_POST["name"], $image);
-            json_encode(['msg' => "Event succesfully added."]);
-        } catch (Exception $ex) {
-            http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
-        }
-    }
-    public function editMainEvent($id)
-    {
-        try {
-            $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
-            $this->eventService->updateMainEvent($id, $_POST["name"], $image);
-            json_encode(['msg' => "Event succesfully added."]);
-        } catch (Exception $ex) {
-            http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
-        }
-    }
-
-    public function deleteMainEvent()
-    {
-        try {
-
-            $this->eventService->deleteMainEvent();
-            echo json_encode(['msg' => "Event succesfully deleted."]);
-        } catch (Exception $ex) {
-            http_response_code(500);
-            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
-        }
-    }
-
     public function editEventItem($id)
     {
         try {
@@ -72,7 +37,7 @@ class APIEventController
     {
         try {
             $this->eventService->updateEventItemSlot($id, $_POST["start"], $_POST["end"], $_POST["stock"], $_POST["capacity"]);
-            echo json_encode(['msg' => "Event item successfully updated."]);
+            echo json_encode(['msg' => "Event item slot successfully updated."]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -119,6 +84,65 @@ class APIEventController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+    public function getEventItemTicketById($id)
+    {
+        try {
+            echo json_encode($this->eventService->getEventItemTicketById($id));
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function getEventItemSlotByEventItemId($id)
+    {
+        try {
+            echo json_encode($this->eventService->getEventItemSlotByEventItemId($id));
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function getEventItemSlotsByEventItemId($id)
+    {
+        try {
+            echo json_encode($this->eventService->getEventItemSlotsByEventItemId($id));
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+
+
+    public function editEventItemTicket($id)
+    {
+        try {
+            $this->eventService->updateEventItemTicket($id, $_POST["price"], $_POST["persons"]);
+            echo json_encode(['msg' => "Event item ticket successfully updated."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function addEventItemTicket()
+    {
+        try {
+            $this->eventService->addEventItemTicket($_POST['eventItemSlotId'], $_POST["price"], $_POST["persons"]);
+            echo json_encode(['msg' => "Event item ticket successfully added."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function addEventItemSlot()
+    {
+        try {
+            $this->eventService->addEventItemSlot($_POST['eventItemId'], $_POST["start"], $_POST["end"], $_POST["capacity"], $_POST["stock"]);
+            echo json_encode(['msg' => "Event item ticket successfully added."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
     public function getEventItemSlots()
     {
         try {
@@ -142,6 +166,26 @@ class APIEventController
         try {
             $this->eventService->deleteEventItem($id);
             echo json_encode(['msg' => "Event item successfully deleted."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function deleteEventItemSlot($id)
+    {
+        try {
+            $this->eventService->deleteEventItemSlot($id);
+            echo json_encode(['msg' => "Event item slot successfully deleted."]);
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
+    public function deleteEventItemSlotTicket($id)
+    {
+        try {
+            $this->eventService->deleteEventItemSlotTicket($id);
+            echo json_encode(['msg' => "Event item slot ticket successfully deleted."]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

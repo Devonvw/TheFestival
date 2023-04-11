@@ -61,7 +61,7 @@ class DashboardController extends Controller {
     }
     public function addEventItemSlot() {
         $this->adminOnly();
-        require __DIR__ . "/../view/Dashboard/events/addEventItemSlots.php";
+        require __DIR__ . "/../view/Dashboard/events/addEventItemSlot.php";
     }
     public function eventItemTickets() {
         $this->adminOnly();
@@ -70,6 +70,10 @@ class DashboardController extends Controller {
     public function editEventItemTicket() {
         $this->adminOnly();
         require __DIR__ . "/../view/Dashboard/events/editEventItemTickets.php";
+    }
+    public function addEventItemTicket() {
+        $this->adminOnly();
+        require __DIR__ . "/../view/Dashboard/events/addEventItemTicket.php";
     }
     public function eventItemSlots() {
         $this->adminOnly();

@@ -30,63 +30,66 @@
 </header>
 
 <body>
-    <div class="">
-        <div class="w-screen relative flex">
-
+    <div class="overflow-hidden">
+        <div class="w-screen relative">
             <?php include __DIR__ . '/../../../components/dashboard/sidebar.php' ?>
-            <div class="dashboard-right min-h-screen w-full ml-auto">
+            <div class="dashboard-right min-h-screen ml-auto">
 
-                <h1 class="text-3xl font-semibold mb-6">Tickets</h1>
+                <div class="mx-auto w-full max-w-screen-xl px-4">
+                    <button onclick="window.location.href='ticket/add'" class="bg-primary text-white py-2 px-4 rounded-md mb-4 absolute top-0 right-0 mt-4 mr-4">Add Ticket</button>
+                    <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4 mt-3">Go Back</button>
+                    <h1 class="text-3xl font-semibold mb-6">Tickets</h1>
 
-                <!-- Filters -->
-                <div class="bg-white p-4 rounded-lg shadow mb-6">
-                    <div class="flex flex-wrap gap-4">
-                        <!-- Event Filter -->
-                        <div>
-                            <label for="event_filter" class="block text-sm font-medium text-gray-700">Event</label>
-                            <select id="event_filter" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="">All</option>
-                                <!-- Add event options here -->
-                            </select>
-                        </div>
-                        <div>
-                            <label for="price_filter" class="block text-sm font-medium text-gray-700">Price</label>
-                            <input type="number" id="price_filter" placeholder="Enter maximum price" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <!-- Persons Filter -->
-                        <div>
-                            <label for="persons_filter" class="block text-sm font-medium text-gray-700">Persons</label>
-                            <input type="number" id="persons_filter" placeholder="Enter number of persons" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <!-- Search Filter -->
-                        <div>
-                            <label for="search_filter" class="block text-sm font-medium text-gray-700">Search</label>
-                            <input type="text" id="search_filter" placeholder="Search tickets" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        </div>
-                        <!-- Filter Button -->
-                        <div class="flex items-end">
-                            <button id="reset_filters" class="bg-primary text-white py-2 px-6 rounded-md">Reset Filters</button>
+                    <!-- Filters -->
+                    <div class="bg-white p-4 rounded-lg shadow mb-6">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- Event Filter -->
+                            <div>
+                                <label for="event_filter" class="block text-sm font-medium text-gray-700">Event</label>
+                                <select id="event_filter" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="">All</option>
+                                    <!-- Add event options here -->
+                                </select>
+                            </div>
+                            <div>
+                                <label for="price_filter" class="block text-sm font-medium text-gray-700">Price</label>
+                                <input type="number" id="price_filter" placeholder="Enter maximum price" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <!-- Persons Filter -->
+                            <div>
+                                <label for="persons_filter" class="block text-sm font-medium text-gray-700">Persons</label>
+                                <input type="number" id="persons_filter" placeholder="Enter number of persons" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <!-- Search Filter -->
+                            <div>
+                                <label for="search_filter" class="block text-sm font-medium text-gray-700">Search</label>
+                                <input type="text" id="search_filter" placeholder="Search tickets" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <!-- Filter Button -->
+                            <div class="flex items-end">
+                                <button id="reset_filters" class="bg-primary text-white py-2 px-6 rounded-md">Reset Filters</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Tickets Table -->
-                <div class="bg-white rounded-lg p-6 shadow">
-                    <table class="min-w-full table-auto">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Event Item Name</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Start Location</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">End Location</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Persons</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Add ticket rows here -->
-                        </tbody>
-                    </table>
+                    <!-- Tickets Table -->
+                    <div class="bg-white rounded-lg p-6 shadow">
+                        <table class="min-w-full table-auto">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Event Name</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Event Item Name</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Start Location</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">End Location</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Persons</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Add ticket rows here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,7 +144,7 @@
                             let isEventMatch = eventFilterValue === '' || eventFilterValue === ticket.event_name;
                             let isPriceMatch = priceFilterValue === '' || ticket.price <= parseFloat(priceFilterValue);
                             let isPersonsMatch = personsFilterValue === '' || ticket.persons === parseInt(personsFilterValue);
-                            let isSearchMatch = searchFilterValue === '' || ticket.eventName.toLowerCase().includes(searchFilterValue.toLowerCase()) || ticket.eventItemName.toLowerCase().includes(searchFilterValue.toLowerCase());
+                            let isSearchMatch = searchFilterValue === '' || ticket.event_name.toLowerCase().includes(searchFilterValue.toLowerCase()) || ticket.event_item_name.toLowerCase().includes(searchFilterValue.toLowerCase());
 
                             if (isEventMatch && isPriceMatch && isPersonsMatch && isSearchMatch) {
                                 const row = `
@@ -154,8 +157,8 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.price}</td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
             <div class="flex flex-col space-y-2">
-  <a href="ticket/edit?id=${ticket.id}""><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button>
-  <button class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
+  <a href="ticket/edit?id=${ticket.id}""><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button></a>
+  <button onclick="deleteEventItemSlotTicket(${ticket?.id})" class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
 </div>
 
 </td>
@@ -168,6 +171,21 @@
                     .catch((error) => {
                         console.log(error);
                     });
+            }
+
+            function deleteEventItemSlotTicket(id) {
+                fetch(`${window.location.origin}/api/event/event-item/slot/ticket?id=${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    method: "DELETE",
+                }).then(async (res) => {
+                    if (res.ok) {
+                        ToastSucces((await res.json())?.msg);
+                        updateTicketsTable();
+                        getEvents();
+                    }
+                }).catch((res) => {});
             }
 
             function resetFilters() {

@@ -58,6 +58,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </header>
 
 <body>
+    <?php include __DIR__ . '/../../components/nav.php' ?>
     <div class="max-w-md mx-auto mt-24">
         <section class="bg-white rounded-lg shadow-lg p-8 mb-8">
             <!-- Change Email section -->

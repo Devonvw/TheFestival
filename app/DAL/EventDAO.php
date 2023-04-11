@@ -96,6 +96,15 @@ class EventDAO
     }
     return $tickets;
   }
+  function getEventItemTicketById($id)
+  {
+    $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot_ticket WHERE id = :id LIMIT 1");
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $ticket;
+  }
 
   function getEventItemSlots()
   {
@@ -117,6 +126,23 @@ class EventDAO
     }
     return $eventItemSlots;
   }
+  function getEventItemSlotsById($eventItemId)
+  {
+    $stmt = $this->DB::$connection->prepare("SELECT start, end FROM event_item_slot WHERE event_item_id = :eventItemId");
+
+    $stmt->bindValue(':eventItemId', $eventItemId, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $eventItemSlots = [];
+    foreach ($data as $row) {
+      $eventItemSlots[] = array(
+        'start' => $row['start'],
+        'end' => $row['end']
+      );
+    }
+    return $eventItemSlots;
+  }
   function getEventItemSlotById($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE id = :id LIMIT 1");
@@ -126,34 +152,13 @@ class EventDAO
 
     return $slot;
   }
-  function addMainEvent($name, $description)
+  public function getEventItemSlotByEventItemId($eventItemId)
   {
-    if ($description && $description["size"] > 2 * 1024 * 1024) {
-      throw new Exception("This image is bigger than 2MB", 1);
-    }
-
-    if ($description && !is_uploaded_file($description['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
-
-    if ($description && !is_null($description)) {
-      $img_data = file_get_contents($description['tmp_name']);
-      $stmt = $this->DB::$connection->prepare("INSERT INTO event (description) VALUES (:description)");
-
-      $stmt->bindValue(':description', $img_data);
-      $stmt->execute();
-    }
-
-    $stmt = $this->DB::$connection->prepare("INSERT INTO event (name) VALUES (:name)");
-    $name_param = trim(htmlspecialchars($name));
-
-    $stmt->bindValue(':name', $name_param);
-
-    if ($stmt->execute()) {
-      return true;
-    } else {
-      throw new Exception("Error: Could not create event.", 1);
-    }
+    $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE event_item_id = :eventItemId");
+    $stmt->bindValue(':eventItemId', $eventItemId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
-
 
 
   function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image)
@@ -186,21 +191,6 @@ class EventDAO
       return true;
     } else {
       throw new Exception("Error: Could not add event item.", 1);
-    }
-  }
-
-  function deleteMainEvent()
-  {
-    //Delete all rows associated with this page
-    $del_stmt = $this->DB::$connection->prepare("DELETE FROM event  
-          WHERE id = :id");
-
-    $del_stmt->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
-
-    if ($del_stmt->execute()) {
-      return true;
-    } else {
-      throw new Exception("Error: Could not delete event.");
     }
   }
 
@@ -247,29 +237,28 @@ class EventDAO
       throw new Exception("Error: Could not delete event item.");
     }
   }
-
-  function updateMainEvent($id, $name, $description)
+  function deleteEventItemSlot($id)
   {
-    if ($description && $description["size"] > 2 * 1024 * 1024) {
-      throw new Exception("This image is bigger than 2MB", 1);
+    // Delete the event item from the table
+    $del_stmt = $this->DB::$connection->prepare("DELETE FROM event_item_slot WHERE id = :id");
+    $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    if ($del_stmt->execute()) {
+      return true;
+    } else {
+      throw new Exception("Error: Could not delete event item slot.");
     }
-    if ($description && !is_uploaded_file($description['tmp_name'])) throw new Exception("This is not the uploaded file", 1);
-
-    if ($description && !is_null($description)) {
-      $img_data = file_get_contents($description['tmp_name']);
-
-      $stmt = $this->DB::$connection->prepare("UPDATE event SET description = :description where id = :id");
-      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-      $stmt->bindValue(':description', $img_data);
-      $stmt->execute();
-    }
-    $update_stmt = $this->DB::$connection->prepare("UPDATE event SET name = :name, description = :description where id = :id");
-    $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
-    $update_stmt->bindValue(':name', trim(htmlspecialchars($name)));
-
-    $update_stmt->execute();
   }
-
+  function deleteEventItemSlotTicket($id)
+  {
+    // Delete the event item from the table
+    $del_stmt = $this->DB::$connection->prepare("DELETE FROM event_item_slot_ticket WHERE id = :id");
+    $del_stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    if ($del_stmt->execute()) {
+      return true;
+    } else {
+      throw new Exception("Error: Could not delete event item slot ticket.");
+    }
+  }
   function updateEventItemSlot($id, $start, $end, $stock, $capacity)
   {
     $start_date = new DateTime($start);
@@ -287,8 +276,8 @@ class EventDAO
     $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $update_stmt->bindValue(':start', trim(htmlspecialchars($start)));
     $update_stmt->bindValue(':end', trim(htmlspecialchars($end)));
-    $update_stmt->bindValue(':stock', trim(htmlspecialchars($stock)));
-    $update_stmt->bindValue(':capacity', trim(htmlspecialchars($capacity)));
+    $update_stmt->bindValue(':stock', $stock, PDO::PARAM_INT);
+    $update_stmt->bindValue(':capacity', $capacity, PDO::PARAM_INT);
 
     $update_stmt->execute();
   }
@@ -303,9 +292,60 @@ class EventDAO
 
     $update_stmt = $this->DB::$connection->prepare("UPDATE event_item_slot_ticket SET price = :price, persons = :persons WHERE id = :id");
     $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
-    $update_stmt->bindValue(':price', trim(htmlspecialchars($price)));
-    $update_stmt->bindValue(':persons', trim(htmlspecialchars($persons)));
+    $update_stmt->bindValue(':price', $price, PDO::PARAM_STR);
+    $update_stmt->bindValue(':persons', $persons, PDO::PARAM_INT);
 
     $update_stmt->execute();
+  }
+  public function addEventItemTicket($eventItemSlotId, $price, $persons)
+  {
+    if ($price < 0) {
+      throw new Exception("Price can't be negative", 1);
+    }
+    if ($persons <= 0) {
+      throw new Exception("The number of persons should be greater than 0", 1);
+    }
+
+    try {
+      $stmt = $this->DB::$connection->prepare("INSERT INTO event_item_slot_ticket (event_item_slot_id, persons, price) VALUES (:eventItemSlotId, :persons, :price)");
+      $stmt->bindValue(':eventItemSlotId', $eventItemSlotId, PDO::PARAM_INT);
+      $stmt->bindParam(':price', $price, PDO::PARAM_STR);
+      $stmt->bindParam(':persons', $persons, PDO::PARAM_INT);
+
+      $stmt->execute();
+    } catch (PDOException $e) {
+      throw new Exception("Error adding event item slot ticket: " . $e->getMessage());
+    }
+  }
+  public function addEventItemSlot($eventItemId, $start, $end, $capacity, $stock)
+  {
+    $start_date = new DateTime($start);
+    $end_date = new DateTime($end);
+
+    if ($start_date > $end_date) {
+      throw new Exception("Start date has to be before end date", 1);
+    }
+    if ($stock > $capacity) {
+      throw new Exception("The stock can't be higher than the capacity", 1);
+    }
+    if ($stock <= 0) {
+      throw new Exception("The stock must be greater than 0", 1);
+    }
+    if ($capacity <= 0) {
+      throw new Exception("The capacity must be greater than 0", 1);
+    }
+
+    try {
+      $stmt = $this->DB::$connection->prepare("INSERT INTO event_item_slot (event_item_id, start, end, capacity, stock) VALUES (:eventItemId, :start, :end, :capacity, :stock)");
+      $stmt->bindValue(':eventItemId', $eventItemId, PDO::PARAM_INT);
+      $stmt->bindValue(':start', trim(htmlspecialchars($start)));
+      $stmt->bindValue(':end', trim(htmlspecialchars($end)));
+      $stmt->bindValue(':capacity', $capacity, PDO::PARAM_INT);
+      $stmt->bindValue(':stock', $stock, PDO::PARAM_INT);
+
+      $stmt->execute();
+    } catch (PDOException $e) {
+      throw new Exception("Error adding event item slot: " . $e->getMessage());
+    }
   }
 }
