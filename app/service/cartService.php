@@ -31,7 +31,7 @@ class CartService {
 
     public function getCartShareLink($account_id, $session_id){
         $dao = new cartDAO();
-        return NGROK_URL ."/cart/shared?token=".$dao->getCartShareToken($account_id, $session_id);
+        return API_URL ."/cart/shared?token=".$dao->getCartShareToken($account_id, $session_id);
     }
 
     public function getSharedCart($token){

@@ -64,18 +64,10 @@ function getHomePage() {
             document.getElementById('headerSubtitle').innerHTML = data?.subtitle;
             document.getElementById('section1').innerHTML = data?.sections[0]?.text;
             document.getElementById('section2').innerHTML = data?.sections[1]?.text;
+            document.getElementsByTagName('Title')[0].innerHTML = `${data?.meta_title} - TheFestival`;
+            document.getElementsByTagName('meta')["description"].content = data?.meta_description;
+            document.getElementsByTagName('meta')["description"].content = data?.meta_description;
 
-            // document.getElementById('metaTitle').value = data?.meta_title;
-            // document.getElementById('metaDesc').value = data?.meta_description;
-            // document.getElementById('title').value = data?.title;
-            // document.getElementById('subtitle').value = data?.subtitle;
-            // if (data?.image) document.getElementById('image').src = getImage(data?.image);
-            // tinymce.get("section1").setContent(data?.sections[0]?.text ? data?.sections[0]?.text : "");
-            // tinymce.get("section2").setContent(data?.sections[1]?.text ? data?.sections[1]?.text : "");
-            // document.getElementById('section1').setAttribute("name", data?.sections[0] ? data?.sections[0]
-            //     ?.id : "");
-            // document.getElementById('section2').setAttribute("name", data?.sections[1] ? data?.sections[1]
-            //     ?.id : "");
         }
     }).catch((res) => {
         console.log(res)
