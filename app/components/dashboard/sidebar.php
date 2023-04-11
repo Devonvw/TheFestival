@@ -76,29 +76,7 @@ window.onload = () => {
             <li class="w-full"><a class="flex rounded hover:bg-teal-800 w-full p-1"
                     href="/dashboard/content/information-pages">Information pages</a></li>
         </ul>
-        <li class="accordion cursor-pointer flex justify-between items-center rounded hover:bg-teal-800 p-2">
-            <div class="flex gap-x-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819" />
-                </svg>
-                <h4>Yummie!</h4>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 chevron chevron-open">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-        </li>
-        <ul class="flex flex-col gap-y-3 text-white pl-12 my-2 hidden text-sm">
-            <a href="/dashboard/events">
 
-                <li>Restaurants</li>
-
-            </a>
-
-            <li>Sessions</li>
-            <li>Reservations</li>
-        </ul>
         <li class="accordion cursor-pointer flex justify-between items-center rounded hover:bg-teal-800 p-2">
             <div class="flex gap-x-2"><svg fill="#FFF" viewBox="-5.5 0 32 32" class="w-6 h-6" version="1.1"
                     xmlns="http://www.w3.org/2000/svg">
@@ -119,23 +97,7 @@ window.onload = () => {
             <li>Venues</li>
             <li>Artists</li>
         </ul>
-        <li class="accordion cursor-pointer flex justify-between items-center rounded hover:bg-teal-800 p-2">
-            <div class="flex gap-x-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-                </svg>
 
-                <h4>History!</h4>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 chevron chevron-open">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-        </li>
-        <ul class="flex flex-col gap-y-3 text-white pl-8 my-2 hidden text-sm">
-            <li>Event information</li>
-        </ul>
     </ul>
     <button class="flex gap-x-2 rounded hover:bg-teal-800 p-2 mt-auto text-white"><svg
             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"

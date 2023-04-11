@@ -70,6 +70,7 @@ class EventDAO
         eis.end, 
         ei.location, 
         ei.name as event_item_name, 
+        ei.image,
         e.name as event_name, 
         eist.persons, 
         eist.price
@@ -89,6 +90,7 @@ class EventDAO
         $row['end'],
         $row['location'],
         $row['event_item_name'],
+        $row['image'] ? base64_encode($row['image']) : null,
         $row['event_name'],
         $row['persons'],
         $row['price']

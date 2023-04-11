@@ -238,7 +238,7 @@ class PaymentService {
             // Content
             $mail->isHTML(false); // Set email format to plain text
             $mail->Subject = "Confirmation for order ". $orderId;
-            $mail->Body = "Dear " . $account->name . ",\n\nYour order has been succesfully processed. Included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
+            $mail->Body = "Dear " . $account->name . ",\n\nYour order has been successfully processed. Included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
 
             //$mail->AddAttachment($invoicePDF);
             $mail->AddStringAttachment($invoicePDF, "invoice-".$invoiceId."pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  

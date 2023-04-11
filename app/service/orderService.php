@@ -39,4 +39,9 @@ class OrderService {
         $dao = new OrderDAO();
         return $dao->getOrderStatus($orderId);
     }
+
+    public function getEventOrders(){
+        $dao = new OrderDAO();
+        return $dao->getEventOrders();
+    }
 }

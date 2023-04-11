@@ -148,6 +148,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller->getOrderStatus(isset($params["id"]) ? $params["id"] : null);
                     break;
 
+                    //Retrieve all orders by event. Admin only
+                case "order/event/all":
+                    (new Middleware())->adminOnly();
+                    require_once __DIR__ . '/../api/controller/orderController.php';
+                    $controller = new APIOrderController();
+                    $controller->getEventOrders();
+                    break;
+
                     /*----------------------GET payment routes-----------------------------*/
 
                     //Retrieve all ideal issuers. Open for everyone

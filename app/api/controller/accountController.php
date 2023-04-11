@@ -40,7 +40,7 @@ class APIAccountController
     {
         try {
             $this->accountService->logoutUser();
-            echo json_encode(['msg' => "Succesfully logged out"]);
+            echo json_encode(['msg' => "successfully logged out"]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

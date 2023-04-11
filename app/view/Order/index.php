@@ -160,9 +160,10 @@ function getOrder() {
 
 <body>
     <div class="">
+        <?php include __DIR__ . '/../../components/nav.php' ?>
         <div class="container mx-auto px-4 py-32">
             <a href="/cart" class="text-black text-sm font-medium">Back to Cart</a>
-            <h1 class="text-black text-3xl font-bold mt-6">Order was succesfull!</h1>
+            <h1 class="text-black text-3xl font-bold mt-6">Order was successful!</h1>
             <div class="flex flex-col md:flex-row justify-between">
                 <div class="w-full md:w-1/2 lg:w-[63%] pt-4 mt-4 border-t border-black">
                     <div id="calendar"></div>
@@ -194,7 +195,7 @@ function getOrder() {
                 </div>
             </div>
         </div>
-
+        <?php include __DIR__ . '/../../components/footer.php' ?>
     </div>
 </body>
 
