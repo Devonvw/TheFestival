@@ -31,8 +31,8 @@ class PaymentService {
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::IDEAL,
             "description" => "Order #$order->id",
-            "redirectUrl" => NGROK_URL ."/order?id=".$order->id,
-            "webhookUrl" => NGROK_URL ."/api/payment/status",
+            "redirectUrl" => API_URL ."/order?id=".$order->id,
+            "webhookUrl" => API_URL ."/api/payment/status",
             "metadata" => [
                 "order_id" => $order->id,
             ],
@@ -52,8 +52,8 @@ class PaymentService {
             ],
             "method" => \Mollie\Api\Types\PaymentMethod::PAYPAL,
             "description" => "Order #$order->id",
-            "redirectUrl" => NGROK_URL ."/order?id=".$order->id,
-            "webhookUrl" => NGROK_URL ."/api/payment/status",
+            "redirectUrl" => API_URL ."/order?id=".$order->id,
+            "webhookUrl" => API_URL ."/api/payment/status",
             "metadata" => [
                 "order_id" => $order->id,
             ],
@@ -106,11 +106,11 @@ class PaymentService {
         $paymentLink = $mollie->paymentLinks->create([
             "amount" => [
                 "currency" => "EUR",
-                "value" => sprintf('%.2F', $order->total), // You must send the correct number of decimals, thus we enforce the use of strings
+                "value" => sprintf('%.2F', $order->total), 
             ],
-            "description" => "Bicycle tires",
-            "redirectUrl" => NGROK_URL ."/order?id=".$orderId,
-            "webhookUrl" => NGROK_URL ."/api/payment/link", // optional
+            "description" => "Order #$order->id",
+            "redirectUrl" => API_URL ."/order?id=".$orderId,
+            "webhookUrl" => API_URL ."/api/payment/link", // optional
             "expiresAt" => (new DateTime("now +24 hours"))->format(DateTime::ATOM)
         ]);
 
@@ -165,7 +165,6 @@ class PaymentService {
 
         switch ($newStatus) {
             case 'paid':
-                //TODO: Send email with invoice and tickets
                 $this->handleOrderPaid($orderId);
                 break;
             case 'expired':
@@ -173,7 +172,7 @@ class PaymentService {
                 $this->createPayLater($orderId);
                 break;
             case 'canceled':
-                //TODO: Cancel order, return stock
+                //Cancel order, return stock
                 $orderDAO->cancelOrder($orderId);
                 break;
         }
@@ -199,6 +198,7 @@ class PaymentService {
         }
     }
 
+    // ASSESSMENT Handle ticket reserved stock, creating invoice and tickets, mail to customer. Save invoice as string
     private function handleOrderPaid($orderId) {
         $pdf = new PDFService();
         $orderDao = new OrderDAO();
@@ -247,8 +247,8 @@ class PaymentService {
             $mail->smtpClose();
         }
         catch (Exception $ex) {
-            var_dump($ex);
         }
+
         unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
     }
 }

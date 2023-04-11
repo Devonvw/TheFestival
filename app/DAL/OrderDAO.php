@@ -29,6 +29,8 @@ class OrderDAO
             throw new Exception("Your cart doesn't contain tickets.", 1);
         } 
 
+        // ASSESSMENT If a ticket price changes the order price doesn't
+
         //Add to price to keep price consistent, if a ticket price changes the order price doesn't
         $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
 
@@ -63,6 +65,7 @@ class OrderDAO
             $stock = $stmt->fetchObject();
 
             if ($stock->stock < 0) {
+                // ASSESSMENT Rollback when there are not enough tickets left
                 $this->DB::$connection->rollBack();
                 throw new Exception('You tried to order tickets for ' .$cart_item->ticket->persons * $cart_item->quantity. " person(s) for the following event: " . $cart_item->ticket->event_item_name . ". But there are only tickets for ". $stock->stock + $cart_item->ticket->persons * $cart_item->quantity. " person(s) left. Reduce the amount of tickets and try again.", 1);
             }

@@ -36,8 +36,7 @@ class PDFService {
 
         $pdf->addTVAs( $order->total, $order->subtotal, $order->vat);
         $pdf->addCadreEurosFrancs();
-        return $pdf->Output('S', __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf');   //save file
-        //return __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf';
+        return $pdf->Output('S', __DIR__ . '/../pdf/invoice-'. $order->id .'.pdf');
     }
     
     public function createTicketsPDF($tickets, $orderId, $userInfo){

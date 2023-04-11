@@ -11,14 +11,6 @@ class cartDAO
     {
         $this->DB = new DB();
     }
-    private function cartExist()
-    {
-        $cart = $this->getCart();
-        if (!$cart) {
-            $this->createCart();
-        }
-        return true;
-    }
 
     public function createCart($account_id = null, $session_id = null)
     {
@@ -33,6 +25,8 @@ class cartDAO
             $stmt->execute();
         }
     }
+
+    // ASSESSMENT Show update on duplicate to handle adding tickets efficiently
 
     public function addToCart($ticket_id, $account_id = null, $session_id = null, $token = null)
     {
@@ -108,7 +102,8 @@ class cartDAO
         $stmt->execute();
     }
 
-public function getCart($account_id = null, $session_id = null, $token = null)
+
+    public function getCart($account_id = null, $session_id = null, $token = null)
     {
         $cart = null;
 
@@ -155,6 +150,9 @@ public function getCart($account_id = null, $session_id = null, $token = null)
                 $cart = $stmt->fetch();
             }
         }
+
+        // ASSESSMENT Show calculating items
+
 
         $items_stmt = $this->DB::$connection->prepare("SELECT ci.*, eis.start, eis.end, eist.price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, e.name as event_name FROM cart INNER JOIN cart_item as ci on ci.cart_id = cart.id left join event_item_slot_ticket as eist on ci.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE cart.id = :cart_id;");
         $items_stmt->bindParam(':cart_id', $cart->id, PDO::PARAM_INT);
