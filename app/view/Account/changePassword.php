@@ -39,7 +39,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
-    
+
     <link rel="stylesheet" href="../../../styles/globals.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -54,6 +54,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </header>
 
 <body>
+    <?php include __DIR__ . '/../../components/nav.php' ?>
     <div class="max-w-md mx-auto mt-24">
         <!-- Change Password section -->
         <section class="bg-white rounded-lg shadow-lg p-8 mb-8">

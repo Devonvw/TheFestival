@@ -93,11 +93,23 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new DashboardController();
             $controller->editEventItemTicket();
             break;
+        case 'dashboard/events/event-items/ticket/add':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->addEventItemTicket();
+            break;
         case 'dashboard/events/event-items/slot/edit':
             require __DIR__ . '/../controller/dashboardController.php';
             session_start();
             $controller = new DashboardController();
             $controller->editEventItemSlot();
+            break;
+        case 'dashboard/events/event-items/slot/add':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->addEventItemSlot();
             break;
         case 'dashboard/content/home-page':
             require __DIR__ . '/../controller/dashboardController.php';

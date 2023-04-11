@@ -45,10 +45,8 @@
         <div class="dashboard-right flex-1 min-h-screen">
 
             <div class="container mx-auto px-4 py-10">
+                <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4">Go Back</button>s
                 <h1 class="text-3xl font-semibold mb-6">Event item slot</h1>
-
-
-
 
                 <!-- Edit Form -->
                 <div class="bg-white rounded-lg p-6 shadow mb-10">
@@ -97,7 +95,7 @@
                     method: "GET",
                 })
                 .then((response) => response.json())
-                
+
                 .then((data) => {
                     console.log(data);
                     // Update the form fields with the fetched data
@@ -138,8 +136,7 @@
             }).then(async (res) => {
                 if (res.ok) {
                     ToastSucces("Updated event item slot");
-                }
-                else{
+                } else {
                     ToastError((await res.json())?.msg);
                 }
 
