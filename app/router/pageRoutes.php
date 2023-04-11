@@ -5,6 +5,8 @@ function handleRoutes($uri, $requestMethod, $content)
 {
     if ($requestMethod != "GET") http_response_code(404);
 
+    // ASSESSMENT Show content pages
+
     if ($content) {
         require __DIR__ . '/../controller/informationPageController.php';
         session_start();

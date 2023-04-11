@@ -3,7 +3,8 @@
 //     header("location: /");
 //     exit;
 // }
-
+    /*Just for your server-side code*/
+    header('Content-Type: text/html; charset=ISO-8859-1');
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -64,18 +65,10 @@ function getHomePage() {
             document.getElementById('headerSubtitle').innerHTML = data?.subtitle;
             document.getElementById('section1').innerHTML = data?.sections[0]?.text;
             document.getElementById('section2').innerHTML = data?.sections[1]?.text;
+            document.getElementsByTagName('Title')[0].innerHTML = `${data?.meta_title} - TheFestival`;
+            document.getElementsByTagName('meta')["description"].content = data?.meta_description;
+            document.getElementsByTagName('meta')["description"].content = data?.meta_description;
 
-            // document.getElementById('metaTitle').value = data?.meta_title;
-            // document.getElementById('metaDesc').value = data?.meta_description;
-            // document.getElementById('title').value = data?.title;
-            // document.getElementById('subtitle').value = data?.subtitle;
-            // if (data?.image) document.getElementById('image').src = getImage(data?.image);
-            // tinymce.get("section1").setContent(data?.sections[0]?.text ? data?.sections[0]?.text : "");
-            // tinymce.get("section2").setContent(data?.sections[1]?.text ? data?.sections[1]?.text : "");
-            // document.getElementById('section1').setAttribute("name", data?.sections[0] ? data?.sections[0]
-            //     ?.id : "");
-            // document.getElementById('section2').setAttribute("name", data?.sections[1] ? data?.sections[1]
-            //     ?.id : "");
         }
     }).catch((res) => {
         console.log(res)
@@ -100,6 +93,7 @@ function getHomePage() {
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </header>
 
 <body>
@@ -115,7 +109,7 @@ function getHomePage() {
                 <p id="headerSubtitle" class="text-2xl font-normal text-center"></p>
             </div>
         </div>
-        <div class="flex">
+        <div class="flex mt-40 md:mt-0">
             <div id="section1" class="my-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto"></div>
         </div>
 

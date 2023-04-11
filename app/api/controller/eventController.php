@@ -38,6 +38,7 @@ class APIEventController
         try {
             $this->eventService->updateEventItemSlot($id, $_POST["start"], $_POST["end"], $_POST["stock"], $_POST["capacity"]);
             echo json_encode(['msg' => "Event item slot successfully updated."]);
+
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -55,11 +56,11 @@ class APIEventController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
-
     public function getEventItem($id)
     {
         try {
             echo json_encode($this->eventService->getEventItem($id));
+
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

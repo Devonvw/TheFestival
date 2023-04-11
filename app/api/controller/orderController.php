@@ -47,4 +47,14 @@ class APIOrderController
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
+    public function getEventOrders()
+    {
+        try {
+            echo json_encode($this->orderService->getEventOrders());
+        } catch (Exception $ex) {
+            http_response_code(500);
+            if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
+        }
+    }
 }

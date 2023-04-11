@@ -29,6 +29,8 @@ class OrderDAO
             throw new Exception("Your cart doesn't contain tickets.", 1);
         } 
 
+        // ASSESSMENT If a ticket price changes the order price doesn't
+
         //Add to price to keep price consistent, if a ticket price changes the order price doesn't
         $sql = "INSERT INTO order_item (ticket_id, order_id, price) VALUES (:ticket_id, :order_id, :price);";
 
@@ -63,6 +65,7 @@ class OrderDAO
             $stock = $stmt->fetchObject();
 
             if ($stock->stock < 0) {
+                // ASSESSMENT Rollback when there are not enough tickets left
                 $this->DB::$connection->rollBack();
                 throw new Exception('You tried to order tickets for ' .$cart_item->ticket->persons * $cart_item->quantity. " person(s) for the following event: " . $cart_item->ticket->event_item_name . ". But there are only tickets for ". $stock->stock + $cart_item->ticket->persons * $cart_item->quantity. " person(s) left. Reduce the amount of tickets and try again.", 1);
             }
@@ -103,7 +106,7 @@ class OrderDAO
         if (!$order) throw new Exception("This order doesn't exist.", 1);
 
         //$items_stmt = $this->DB::$connection->prepare("SELECT oi.*, eis.start, eis.end, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.name as event_item_name, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id;");
-        $items_stmt = $this->DB::$connection->prepare("SELECT COUNT(oi.id) as quantity, COUNT(oi.id) * oi.price as price, oi.order_id, oi.ticket_id, eis.start, eis.end, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id GROUP BY oi.order_id, oi.ticket_id, oi.price, eis.start, eis.end, eist.price, eist.persons, eist.event_item_slot_id, ei.location, ei.name, e.name;");
+        $items_stmt = $this->DB::$connection->prepare("SELECT COUNT(oi.id) as quantity, COUNT(oi.id) * oi.price as price, oi.order_id, oi.ticket_id, eis.start, eis.end, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, ei.image, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id GROUP BY oi.order_id, oi.ticket_id, oi.price, eis.start, eis.end, eist.price, eist.persons, eist.event_item_slot_id, ei.location, ei.name, e.name;");
         $items_stmt->bindParam(':order_id', $orderId, PDO::PARAM_INT);
         $items_stmt->execute();
         $items = $items_stmt->fetchAll();
@@ -116,7 +119,7 @@ class OrderDAO
             $total += $row['price'];
             $subtotal += $row['price'] / 1.21;
             $vat +=  $row['price'] - ($row['price'] / 1.21);
-            array_push($order_items, new OrderItem($row['order_id'], new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row["location"], $row['event_item_name'], $row['event_name'], $row['persons'], $row['ticket_price']), $row['price'],  $row['quantity']));
+            array_push($order_items, new OrderItem($row['order_id'], new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row["location"], $row['event_item_name'], $row['image'] ? base64_encode($row['image']) : null, $row['event_name'], $row['persons'], $row['ticket_price']), $row['price'],  $row['quantity']));
         }
 
         $order->total = $total;
@@ -128,14 +131,14 @@ class OrderDAO
     }
 
     public function getOrderTickets($orderId) {
-        $stmt = $this->DB::$connection->prepare("SELECT oi.order_id, oi.ticket_id, eis.start, eis.end, oi.price, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id;");
+        $stmt = $this->DB::$connection->prepare("SELECT oi.order_id, oi.ticket_id, eis.start, eis.end, oi.price, eist.price as ticket_price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, ei.image, e.name as event_name FROM `order` INNER JOIN order_item as oi on oi.order_id = order.id left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE `order`.id = :order_id;");
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->execute();
         $items = $stmt->fetchAll();
 
         $tickets = [];
         foreach ($items as $row) {
-            array_push($tickets, new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['location'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['ticket_price']));
+            array_push($tickets, new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['location'], $row['event_item_name'], $row['image'] ? base64_encode($row['image']) : null, $row['event_name'], $row['persons'], $row['ticket_price']));
         }
 
         return $tickets;
@@ -154,5 +157,17 @@ class OrderDAO
         $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchObject();
+    }
+
+    public function getEventOrders() {
+        $stmt = $this->DB::$connection->prepare("SELECT COUNT(oi.id) AS total FROM order_item AS oi;");
+        $stmt->execute();
+        $total = $stmt->fetchObject();
+
+        $stmt = $this->DB::$connection->prepare("SELECT e.id, e.name, COUNT(oi.id) as tickets FROM order_item as oi left join event_item_slot_ticket as eist on oi.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id GROUP BY e.id, e.name;");
+        $stmt->execute();
+        $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return ["total" => $total->total, "events" => $events];
     }
 }

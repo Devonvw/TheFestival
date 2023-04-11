@@ -11,14 +11,6 @@ class cartDAO
     {
         $this->DB = new DB();
     }
-    private function cartExist()
-    {
-        $cart = $this->getCart();
-        if (!$cart) {
-            $this->createCart();
-        }
-        return true;
-    }
 
     public function createCart($account_id = null, $session_id = null)
     {
@@ -33,6 +25,8 @@ class cartDAO
             $stmt->execute();
         }
     }
+
+    // ASSESSMENT Show update on duplicate to handle adding tickets efficiently
 
     public function addToCart($ticket_id, $account_id = null, $session_id = null, $token = null)
     {
@@ -108,21 +102,22 @@ class cartDAO
         $stmt->execute();
     }
 
-public function getCart($account_id = null, $session_id = null, $token = null)
+
+    public function getCart($account_id = null, $session_id = null, $token = null)
     {
         $cart = null;
 
-        if ($account_id !== null) {
-            $sql = "SELECT * FROM cart WHERE account_id = :account_id LIMIT 1";
-            $stmt = $this->DB::$connection->prepare($sql);
-            $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
-            $cart = $stmt->fetch();
-        } else if ($token !== null) {
+        if ($token !== null) {
             $sql = "SELECT * FROM cart WHERE share_token = :token LIMIT 1";
             $stmt = $this->DB::$connection->prepare($sql);
             $stmt->bindValue(':token', $token, PDO::PARAM_STR);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
+            $cart = $stmt->fetch();
+        } else if ($account_id !== null) {
+            $sql = "SELECT * FROM cart WHERE account_id = :account_id LIMIT 1";
+            $stmt = $this->DB::$connection->prepare($sql);
+            $stmt->bindValue(':account_id', $account_id, PDO::PARAM_INT);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Cart");
             $cart = $stmt->fetch();
@@ -156,7 +151,10 @@ public function getCart($account_id = null, $session_id = null, $token = null)
             }
         }
 
-        $items_stmt = $this->DB::$connection->prepare("SELECT ci.*, eis.start, eis.end, eist.price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, e.name as event_name FROM cart INNER JOIN cart_item as ci on ci.cart_id = cart.id left join event_item_slot_ticket as eist on ci.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE cart.id = :cart_id;");
+        // ASSESSMENT Show calculating items
+
+
+        $items_stmt = $this->DB::$connection->prepare("SELECT ci.*, eis.start, eis.end, eist.price, eist.persons, eist.event_item_slot_id, ei.location, ei.name as event_item_name, ei.image, e.name as event_name FROM cart INNER JOIN cart_item as ci on ci.cart_id = cart.id left join event_item_slot_ticket as eist on ci.ticket_id = eist.id left join event_item_slot as eis on eis.id = eist.event_item_slot_id left join event_item as ei on eis.event_item_id = ei.id left join event as e on ei.event_id = e.id WHERE cart.id = :cart_id;");
         $items_stmt->bindParam(':cart_id', $cart->id, PDO::PARAM_INT);
         $items_stmt->execute();
         $items = $items_stmt->fetchAll();
@@ -169,7 +167,7 @@ public function getCart($account_id = null, $session_id = null, $token = null)
             $total += $row['price'] * $row['quantity'];
             $subtotal += ($row['price'] * $row['quantity']) / 1.09;
             $vat +=  $row['price'] * $row['quantity'] - ($row['price'] * $row['quantity']) / 1.09;
-            array_push($cart_items, new CartItem($row['id'], $row['cart_id'], new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['location'], $row['event_item_name'], $row['event_name'], $row['persons'], $row['price']), $row['quantity'], $row['created_at']));
+            array_push($cart_items, new CartItem($row['id'], $row['cart_id'], new Ticket($row['ticket_id'], $row['event_item_slot_id'], $row['start'], $row['end'], $row['location'], $row['event_item_name'], $row['image'] ? base64_encode($row['image']) : null, $row['event_name'], $row['persons'], $row['price']), $row['quantity'], $row['created_at']));
         }
 
         $cart->total = $total;

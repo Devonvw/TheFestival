@@ -141,9 +141,6 @@ require_once __DIR__ . '/../DAL/Database.php';
         }
 
         function addInformationPage() {
-            //Check if title only contains letters
-            //if (!preg_match('/^[-a-zA-Z]+$/D', $url)) throw new Exception("Url can only contain letters and dashes (-)", 1);
-
             $stmt = $this->DB::$connection->prepare("INSERT INTO information_page (url, meta_title, meta_description, title, subtitle) VALUES ('', '', '', '', '');");
   
             $stmt->execute();

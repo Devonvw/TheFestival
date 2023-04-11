@@ -11,6 +11,8 @@ class InformationPageController extends Controller {
         $this->informationPageService = new InformationPageService();
     }
 
+    // ASSESSMENT Information page is checked for existence
+
     public function index($uri) {
         if (!$this->informationPageService->checkIfInformationPage($uri)) return http_response_code(404);
         
