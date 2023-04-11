@@ -27,7 +27,7 @@ class APIEventController
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
             $this->eventService->addMainEvent($_POST["name"], $image);
-            json_encode(['msg' => "Event succesfully added."]);
+            json_encode(['msg' => "Event successfully added."]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -38,7 +38,7 @@ class APIEventController
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
             $this->eventService->updateMainEvent($id, $_POST["name"], $image);
-            json_encode(['msg' => "Event succesfully added."]);
+            json_encode(['msg' => "Event successfully added."]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -50,7 +50,7 @@ class APIEventController
         try {
 
             $this->eventService->deleteMainEvent();
-            echo json_encode(['msg' => "Event succesfully deleted."]);
+            echo json_encode(['msg' => "Event successfully deleted."]);
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);

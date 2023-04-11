@@ -73,6 +73,8 @@ function editHomePage(e) {
         text: tinymce.get("section2").getContent()
     }]));
 
+    console.log(document.getElementById('subtitle').value);
+
     fetch(`${window.location.origin}/api/information-page/edit-home-page`, {
         method: "POST",
         body: formData
@@ -80,6 +82,8 @@ function editHomePage(e) {
         if (!res.ok) {
             document.getElementById('error').innerHTML = (await res.json())?.msg;
             document.getElementById('errorWrapper').classList.remove('hidden');
+        } else {
+            ToastSucces((await res.json())?.msg)
         }
     }).catch((res) => {});
 }
@@ -113,7 +117,6 @@ function getHomePage() {
 }
 
 const handleImage = (e) => {
-    console.log(e?.files[0])
     document.getElementById('image').src = getImage(e?.files[0]);
 }
 </script>
@@ -193,129 +196,7 @@ const handleImage = (e) => {
                                 Section 1</label>
                             <textarea id="section1" name="1" class="tiny"></textarea>
                         </div>
-                        <h3 class="text-xl font-medium pt-5">Links section</h3>
-                        <div class="grid grid-cols-12 gap-12 pb-5">
-                            <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                                <div class="rounded-md overflow-hidden border border-gray-200">
-                                    <div class="h-32 bg-gray-200 relative">
-                                        <div class="flex items-center justify-center w-full">
-                                            <label
-                                                class="relative flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 border-gray-300 cursor-pointer">
-                                                <img src="/assets/festival_logo.png"
-                                                    class="hidden absolute top-0 left-0 z-0 object-contain" />
-                                                <div class="visible flex flex-col items-center justify-center pt-7">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="w-12 h-12 text-gray-400 group-hover:text-gray-600"
-                                                        viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd"
-                                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                                            clipRule="evenodd" />
-                                                    </svg>
-                                                    <p
-                                                        class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                                        Choose an image
-                                                    </p>
-                                                </div>
-                                                <input type="file" multiple='false' accept="image/*"
-                                                    class="opacity-0" />
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="p-3"><label for="linkOneName"
-                                            class="block mb-2 text-sm font-medium text-gray-900">
-                                            Name</label>
-                                        <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                        <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
-                                            Link</label>
-                                        <input maxlength="255" type="text" name="linkOne" id="linkOne"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                                <div class="rounded-md overflow-hidden border border-gray-200">
-                                    <div class="h-32 bg-gray-200 relative">
-                                        <div class="flex items-center justify-center w-full">
-                                            <label
-                                                class="relative flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 border-gray-300 cursor-pointer">
-                                                <img src="/assets/festival_logo.png"
-                                                    class="hidden absolute top-0 left-0 z-0 object-contain" />
-                                                <div class="visible flex flex-col items-center justify-center pt-7">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="w-12 h-12 text-gray-400 group-hover:text-gray-600"
-                                                        viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd"
-                                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                                            clipRule="evenodd" />
-                                                    </svg>
-                                                    <p
-                                                        class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                                        Choose an image
-                                                    </p>
-                                                </div>
-                                                <input type="file" multiple='false' accept="image/*"
-                                                    class="opacity-0" />
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="p-3"><label for="linkOneName"
-                                            class="block mb-2 text-sm font-medium text-gray-900">
-                                            Name</label>
-                                        <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                        <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
-                                            Link</label>
-                                        <input maxlength="255" type="text" name="linkOne" id="linkOne"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                                <div class="rounded-md overflow-hidden border border-gray-200">
-                                    <div class="h-32 bg-gray-200 relative">
-                                        <div class="flex items-center justify-center w-full">
-                                            <label
-                                                class="relative flex flex-col w-full h-32 border-4 border-dashed hover:bg-gray-100 border-gray-300 cursor-pointer">
-                                                <img src="/assets/festival_logo.png"
-                                                    class="hidden absolute top-0 left-0 z-0 object-contain" />
-                                                <div class="visible flex flex-col items-center justify-center pt-7">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="w-12 h-12 text-gray-400 group-hover:text-gray-600"
-                                                        viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fillRule="evenodd"
-                                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                                            clipRule="evenodd" />
-                                                    </svg>
-                                                    <p
-                                                        class="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                                        Choose an image
-                                                    </p>
-                                                </div>
-                                                <input type="file" multiple='false' accept="image/*"
-                                                    class="opacity-0" />
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="p-3"><label for="linkOneName"
-                                            class="block mb-2 text-sm font-medium text-gray-900">
-                                            Name</label>
-                                        <input maxlength="255" type="text" name="linkOneName" id="linkOneName"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                        <label for="linkOne" class="block mb-2 text-sm font-medium text-gray-900 mt-2">
-                                            Link</label>
-                                        <input maxlength="255" type="text" name="linkOne" id="linkOne"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-50 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Subtitle...">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                         <div>
                             <label for="section2" class="block mb-2 text-sm font-medium text-gray-900">
                                 Section 2</label>

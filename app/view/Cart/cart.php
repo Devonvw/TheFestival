@@ -2,6 +2,7 @@
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="/utils/getImage.js"></script>
 <script>
 window.addEventListener("load", (event) => {
     getCart();
@@ -72,7 +73,7 @@ function getCart() {
             data?.cart_items?.forEach((cartItem) => cartItemsHTML +=
                 `
             <div class="w-full flex flex-wrap gap-x-4 gap-y-4 border-b border-black pb-4 mb-4">
-                            <div class="h-24 w-24 rounded-full bg-gray-300 my-auto"></div>
+                            <div class="h-24 w-24 rounded-full bg-gray-300 my-auto overflow-hidden">${cartItem?.ticket?.image ? `<img src="${getImage(cartItem?.ticket?.image)}" class="object-cover h-full w-full" />` : ""}</div>
                             <div class="mr-auto">
                                 <ul>
                                     <li>

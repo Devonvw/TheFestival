@@ -3,7 +3,8 @@
 //     header("location: /");
 //     exit;
 // }
-
+    /*Just for your server-side code*/
+    header('Content-Type: text/html; charset=ISO-8859-1');
 ?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -92,6 +93,7 @@ function getHomePage() {
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </header>
 
 <body>
@@ -107,7 +109,7 @@ function getHomePage() {
                 <p id="headerSubtitle" class="text-2xl font-normal text-center"></p>
             </div>
         </div>
-        <div class="flex">
+        <div class="flex mt-40 md:mt-0">
             <div id="section1" class="my-60 max-w-6xl px-4 md:px-6 lg:px-8 mx-auto"></div>
         </div>
 
