@@ -62,7 +62,7 @@ class APIInformationPageController
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
 
-            $this->informationPageService->editHomePage($_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
+            $this->informationPageService->editHomePage($_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode(isset($_POST["sections"]) ? $_POST["sections"] : '[]'), $image);
             echo json_encode(['msg' => "Home page successfully updated."]);
         } catch (Exception $ex){
             http_response_code(500);
@@ -75,7 +75,7 @@ class APIInformationPageController
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
 
-            $this->informationPageService->editInformationPage($id, $_POST["url"], $_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode($_POST["sections"]), $image);
+            $this->informationPageService->editInformationPage($id, $_POST["url"], $_POST["title"], $_POST["subtitle"], $_POST["meta_description"], $_POST["meta_title"], json_decode(isset($_POST["sections"]) ? $_POST["sections"] : '[]'), $image);
             echo json_encode(['msg' => "Information successfully updated."]);
         } catch (Exception $ex){
             http_response_code(500);
