@@ -78,12 +78,11 @@ function getUser() {
                 <div class="shadow-xl border-black w-full p-4 px-8 mb-10">
                     <h2 class="text-2xl font-semibold">Edit account </h2>
                 </div>
+                
                 <div class="px-4 md:px-6 lg:px-8">
+                    
                     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1
-                            class="text-2xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                            Edit post
-                        </h1>
+                        
                         <div class="bg-red-200 p-2 w-full rounded-lg flex text-red-700 items-center text-sm hidden"
                             id="errorWrapper"><svg aria-hidden="true" class="flex-shrink-0 inline w-5 h-5 mr-3"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -91,8 +90,10 @@ function getUser() {
                                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                                     clip-rule="evenodd"></path>
                             </svg>
+                            
                             <p id="error"></p>
                         </div>
+                        <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4 mt-2">Go Back</button>
                         <form id="editForm" class="space-y-4 md:space-y-6">
                             <div>
                                 <label for="firstName" class="block mb-2 text-sm font-medium text-gray-900">

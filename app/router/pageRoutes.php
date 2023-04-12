@@ -51,6 +51,12 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new DashboardController();
             $controller->accounts();
             break;
+        case 'dashboard/accounts/add':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->addAccount();
+            break;
         case 'dashboard/accounts/edit':
             require __DIR__ . '/../controller/dashboardController.php';
             session_start();

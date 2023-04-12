@@ -27,7 +27,7 @@ class APIAccountController
     {
         try {
             $body = json_decode(file_get_contents('php://input'), true);
-            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], 1, $body["recaptchaToken"]);
+            $this->accountService->createUser($body["email"], $body["password"], $body["first_name"], $body["last_name"], $body["type_id"], $body["recaptchaToken"]);
             echo json_encode(['msg' => "Account successfully created, you can now login"]);
         } catch (Exception $ex) {
             http_response_code(500);

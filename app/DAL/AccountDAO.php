@@ -55,7 +55,7 @@ class AccountDAO
 
 
 
-    function createUser($email, $password, $first_name, $last_name, $type_id, $recaptchaToken)
+    function createUser($email, $password, $first_name, $last_name, $type_id, $recaptchaToken = null)
     {
         if (empty(trim($email))) {
             throw new Exception("Please enter an email", 1);
@@ -91,7 +91,7 @@ class AccountDAO
         if (empty(trim($last_name))) {
             throw new Exception("Please enter a last name", 1);
         }
-        if (!$this->validateRecaptcha($recaptchaToken)) {
+        if ($recaptchaToken && !$this->validateRecaptcha($recaptchaToken)) {
             throw new Exception("reCAPTCHA validation failed", 1);
         }
         if ($stmt = $this->DB::$connection->prepare("INSERT INTO account (email, password, first_name, last_name, type_id) VALUES (:email, :password, :first_name, :last_name, :type_id)")) {

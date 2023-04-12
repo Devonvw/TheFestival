@@ -11,9 +11,9 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 <script src="/utils/handleImageUpload.js"></script>
 <script>
 function checkPasswords() {
-    const newPassword = document.getElementById('password').value;
+    const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('passwordConfirm').value;
-    if (newPassword === confirmPassword) {
+    if (password === confirmPassword) {
 
         return true; //allow form submission to proceed
     } else {
@@ -30,7 +30,7 @@ function signUp() {
         grecaptcha.enterprise.execute('6LcjQBwlAAAAALbMpWmrTVTRtkVBuOmA6zhYebFI', {
             action: 'signup'
         }).then(function(token) {
-            fetch(`${window.location.origin}/api/account/sign-up`, {
+            fetch(`${window.location.origin}/api/account/create`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -40,6 +40,7 @@ function signUp() {
                     last_name: document.getElementById('last_name').value,
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
+                    type_id : 1,
                     recaptchaToken: token // Add the reCAPTCHA token to the request body
 
                 })

@@ -200,7 +200,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
 
                     /*----------------------POST account routes-----------------------------*/
 
-                case "account/sign-up":
+                case "account/create":
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->createAccount();
