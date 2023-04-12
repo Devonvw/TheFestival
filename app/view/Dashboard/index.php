@@ -1,10 +1,3 @@
-<?php 
-/*if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    eader("location: /");
-    exit;
-}*/
-?>
-
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <header>

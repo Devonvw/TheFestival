@@ -212,7 +212,7 @@ class PaymentService {
 
         $invoiceId = $invoiceDao->createInvoiceOrder($orderId);
         $invoicePDF = $pdf->createInvoicePDF($invoiceId, $order, $account);
-        $invoiceDao->addInvoiceToOrder($orderId, $invoicePDF);
+        $invoiceDao->addInvoiceToOrder($invoiceId, $invoicePDF);
 
         $ticketsPDF = $pdf->createTicketsPDF($tickets, $orderId, $account);
 

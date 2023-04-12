@@ -10,11 +10,11 @@ class InvoiceDAO
         $this->DB = new DB();
     }
 
-    function addInvoiceToOrder($orderId, $invoicePDF)
+    function addInvoiceToOrder($invoiceId, $invoicePDF)
     {
-        $sql = "INSERT INTO order_invoice (order_id, file) VALUES (:order_id, :file);";
+        $sql = "UPDATE order_invoice SET file = :file WHERE id = :id;";
         $stmt = $this->DB::$connection->prepare($sql);
-        $stmt->bindValue(':order_id', $orderId, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $invoiceId, PDO::PARAM_INT);
         $stmt->bindValue(':file', $invoicePDF);
         $stmt->execute();
     }
