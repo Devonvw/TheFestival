@@ -144,11 +144,11 @@ function getCart() {
 }
 </script>
 <header>
-    <title>Cart - Social</title>
+    <title>Cart - The Festival</title>
     <link rel="stylesheet" href="../styles/globals.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
-    <meta property="og:title" content="Login - Social" />
+    <meta property="og:title" content="Login - The Festival" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
@@ -166,7 +166,7 @@ function getCart() {
 <body>
     <div class="">
         <?php include __DIR__ . '/../../components/nav.php' ?>
-        <div class="container mx-auto px-4 py-32">
+        <div class="container mx-auto px-4 mt-20 py-32">
             <a href="#" class="text-black text-sm font-medium">Back to Events</a>
             <div class="flex items-center justify-between mt-6">
                 <h1 class="text-black text-3xl font-bold">Your Cart</h1>

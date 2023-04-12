@@ -136,12 +136,24 @@ const editInformationPage = (e) => {
     formData.append("subtitle", document.getElementById('subtitle').value);
     formData.append("image", document.getElementById('imageInput').files ? document.getElementById('imageInput')
         .files[0] : null);
-    formData.append("sections", JSON.stringify([...Array(document.getElementById('sections').getAttribute('name'))
+
+    console.log(document.getElementById('sections')?.getAttribute(
+        'name'))
+
+    console.log([...Array(2)
         .keys()
-    ].map((value) => ({
-        id: document.getElementById(`section-${value}`).getAttribute('name'),
-        text: tinymce.get(`section-${value}`).getContent()
-    }))));
+    ])
+
+    if (document.getElementById('sections')?.getAttribute('name') != 0) {
+        formData.append("sections", JSON.stringify([...Array(Number(document.getElementById('sections')
+                ?.getAttribute(
+                    'name')))
+            .keys()
+        ].map((value) => ({
+            id: document.getElementById(`section-${value}`)?.getAttribute('name'),
+            text: tinymce.get(`section-${value}`)?.getContent()
+        }))));
+    }
 
     fetch(`${window.location.origin}/api/information-page/edit-page?id=${params.get("id")}`, {
         method: "POST",

@@ -1,9 +1,4 @@
 <?php
-// if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-//     header("location: /");
-//     exit;
-// }
-    /*Just for your server-side code*/
     header('Content-Type: text/html; charset=ISO-8859-1');
 ?>
 <html>
@@ -80,7 +75,7 @@ function getHomePage() {
     <link rel="stylesheet" href="../../styles/globals.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
-    <meta property="og:title" content="Login - Social" />
+    <meta property="og:title" content="Login - The Festival" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />

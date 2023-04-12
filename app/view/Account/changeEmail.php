@@ -35,10 +35,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </script>
 <header>
 
-    <title>Account - Social</title>
+    <title>Account - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
-    <meta property="og:title" content="Login - Social" />
+    <meta property="og:title" content="Login - The Festival" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />

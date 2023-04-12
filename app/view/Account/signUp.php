@@ -68,10 +68,10 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
 
 <html>
 <header>
-    <title>Sign Up - Social</title>
+    <title>Sign Up - The Festival</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
-    <meta property="og:title" content="Sign Up - Social" />
+    <meta property="og:title" content="Sign Up - The Festival" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
