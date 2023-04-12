@@ -103,7 +103,7 @@
                     body: formData
                 });
                 if (response.ok) {
-                    ToastSucces("Added event item slot");
+                    ToastSucces((await response.json())?.msg);
                 } else {
                     ToastError((await response.json())?.msg);
                 }
