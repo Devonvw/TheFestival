@@ -11,36 +11,37 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 <script src="/packages/toast/toast.js"></script>
 <script src="/utils/handleImageUpload.js"></script>
 <script>
-    const newEmail = document.getElementById('new_email');
-    const newEmailConfirmation = document.getElementById('new_email_confirmation');
-    const password = document.getElementById('password');
+const newEmail = document.getElementById('new_email');
+const newEmailConfirmation = document.getElementById('new_email_confirmation');
+const password = document.getElementById('password');
 
-    function updateEmail() {
-        fetch(`${window.location.origin}/api/me/change-email`, {
-            method: "PUT",
-            body: JSON.stringify({
-                new_email: document.getElementById('new_email').value,
-                new_email_confirmation: document.getElementById('new_email_confirmation').value,
-                password: document.getElementById('password').value
-            })
-        }).then(async (res) => {
-            if (res.ok) {
-                ToastSucces((await res.json())?.msg);
+function updateEmail() {
+    fetch(`${window.location.origin}/api/me/change-email`, {
+        method: "PUT",
+        body: JSON.stringify({
+            new_email: document.getElementById('new_email').value,
+            new_email_confirmation: document.getElementById('new_email_confirmation').value,
+            password: document.getElementById('password').value
+        })
+    }).then(async (res) => {
+        if (res.ok) {
+            ToastSucces((await res.json())?.msg);
 
-            } else {
-                ToastError((await res.json())?.msg);
-            }
-        }).catch((res) => {});
-    }
+        } else {
+            ToastError((await res.json())?.msg);
+        }
+    }).catch((res) => {});
+}
 </script>
 <header>
 
     <title>Account - The Festival</title>
+    <link rel="stylesheet" href="../styles/globals.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="" />
     <meta property="og:title" content="Login - The Festival" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
+    <meta property="og:url" content="https://the-festival-haarlem.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
 
@@ -66,18 +67,22 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             <div id="change_email_form">
                 <div class="mb-4">
                     <label for="new_email" class="block text-gray-700 font-bold mb-2">New Email</label>
-                    <input id="new_email" name="new_email" type="email" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
+                    <input id="new_email" name="new_email" type="email"
+                        class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="mb-4">
                     <label for="new_email_confirmation" class="block text-gray-700 font-bold mb-2">Re-type Email</label>
-                    <input id="new_email_confirmation" name="new_email_confirmation" type="email" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
+                    <input id="new_email_confirmation" name="new_email_confirmation" type="email"
+                        class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="mb-8">
                     <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-                    <input id="password" name="password" type="password" class="w-full px-4 py-2 border border-gray-600 rounded-lg">
+                    <input id="password" name="password" type="password"
+                        class="w-full px-4 py-2 border border-gray-600 rounded-lg">
                 </div>
                 <div class="text-right">
-                    <button onclick="updateEmail()" id="change_email_button" type="button" class="bg-primary text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
+                    <button onclick="updateEmail()" id="change_email_button" type="button"
+                        class="bg-primary text-white font-bold py-2 px-4 rounded-lg">Change Email</button>
                 </div>
             </div>
         </section>

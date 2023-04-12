@@ -23,7 +23,6 @@ window.onload = () => {
         });
     }
 }
-}
 
 function logout() {
     fetch(`${window.location.origin}/api/account/logout`, {

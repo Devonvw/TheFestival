@@ -102,6 +102,10 @@ function getOrders() {
                     data: dataArray,
                 },
                 columns: [{
+                    select: 2,
+                    render: (value, _td, _rowIndex, _cellIndex) =>
+                        value ? value : "Concept"
+                }, {
                     select: 4,
                     render: (value, _td, _rowIndex, _cellIndex) =>
                         `€${value?.toFixed(2)}`

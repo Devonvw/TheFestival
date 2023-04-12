@@ -62,8 +62,10 @@ function getHomePage() {
             document.getElementById('section2').innerHTML = data?.sections[1]?.text;
             document.getElementsByTagName('Title')[0].innerHTML = `${data?.meta_title} - TheFestival`;
             document.getElementsByTagName('meta')["description"].content = data?.meta_description;
-            document.getElementsByTagName('meta')["description"].content = data?.meta_description;
-
+            document.querySelector('meta[property="og:title"]').setAttribute("content",
+                `${data?.meta_title} - TheFestival`);
+            document.querySelector('meta[property="og:description"]').setAttribute("content",
+                data?.meta_description);
         }
     }).catch((res) => {
         console.log(res)
@@ -77,7 +79,7 @@ function getHomePage() {
     <meta name="description" content="" />
     <meta property="og:title" content="Login - The Festival" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
+    <meta property="og:url" content="https://the-festival-haarlem.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
