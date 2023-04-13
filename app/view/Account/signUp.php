@@ -49,6 +49,9 @@ function signUp() {
                     document.getElementById('errorWrapper').classList.add('hidden');
                     document.getElementById('success').innerHTML = (await res.json())?.msg;
                     document.getElementById('successWrapper').classList.remove('hidden');
+
+                    document.querySelector('#sign-up-btn').disabled = true;
+
                     //Redirect to login page after 3 seconds
                     setTimeout(() => {
                         window.location = "/login";
@@ -156,7 +159,7 @@ function signUp() {
 
                             <p id="success"></p>
                         </div>
-                        <button type="button" onclick="signUp()"
+                        <button id="sign-up-btn" type="button" onclick="signUp()"
                             class="w-full text-white border border-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-xs px-4 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create
                             an account</button>
 

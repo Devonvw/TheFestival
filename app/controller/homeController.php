@@ -19,10 +19,6 @@ class HomeController extends Controller
     {
         require __DIR__ . "/../view/Event/festival.php";
     }
-    public function jazz()
-    {
-        require __DIR__ . "/../view/Event/Music/jazz.php";
-    }
     public function dance()
     {
         require __DIR__ . "/../view/Event/Music/dance.php";

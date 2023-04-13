@@ -24,12 +24,6 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new HomeController();
             $controller->index();
             break;
-        case 'events/music/jazz':
-            require __DIR__ . '/../controller/homeController.php';
-            session_start();
-            $controller = new HomeController();
-            $controller->jazz();
-            break;
         case 'events/music/dance':
             require __DIR__ . '/../controller/homeController.php';
             session_start();
@@ -188,7 +182,7 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller->signUp();
             break;
             //customer account manager routes
-        case 'customer/manage-account':
+        case 'manage-account':
             require __DIR__ . '/../controller/accountController.php';
             session_start();
             $controller = new AccountController();

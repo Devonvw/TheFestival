@@ -24,9 +24,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
                     /*----------------------GET Event routes-----------------------------*/
-                    //retrieve all events, only admin can view this
+                    //retrieve all events
                 case "event/main-events":
-                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->getMainEvents();
@@ -213,6 +212,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->createAccount();
                     break;
+                    //login, used for customer and admin
                 case "account/login":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
@@ -227,19 +227,21 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIAccountController();
                     $controller->updateAccountCustomer();
                     break;
+                    //update-account in post because of image
                 case "account/reset/password":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->resetPassword();
                     break;
+                    //sending a reset link to the email
                 case "account/reset/sendResetLink":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->sendConfirmationMail();
                     break;
-
+                    //logout   
                 case "account/logout":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
@@ -248,7 +250,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
                     /*----------------------POST event routes-----------------------------*/
-
+                    //create event
                 case "event/event-item/add":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -256,6 +258,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->addEventItem();
                     break;
+                    //edit event
                 case "event/event-item/edit":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -263,6 +266,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->editEventItem($params["id"]);
                     break;
+                    //edit event item slot
                 case "event/event-item/slot/edit":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -270,6 +274,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->editEventItemSlot($params["id"]);
                     break;
+                    //add event item slot
                 case "event/event-item/slot/add":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -277,6 +282,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->addEventItemSlot();
                     break;
+                    //edit event item ticket
                 case "event/event-item/ticket/edit":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -284,6 +290,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->editEventItemTicket($params["id"]);
                     break;
+                    //add event item ticket
                 case "event/event-item/ticket/add":
                     session_start();
                     // (new Middleware())->adminOnly();
@@ -372,27 +379,31 @@ function handleApiRoutes($uri, $params, $requestMethod)
             switch ($uri) {
 
                     /*----------------------PUT account routes-----------------------------*/
-
+                    //edit account only for logged in
                 case "account":
-                    //(new Middleware())->adminOnly();
+                    (new Middleware())->loggedInOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->updateAccount($params["id"]);
                     break;
+                    //set account active, for admin
                 case "account/active":
-                    //(new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->setAccountActive($params["id"]);
                     break;
+                    //changing email only for logged in
                 case "me/change-email":
+                    (new Middleware())->loggedInOnly();
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->updateEmailCustomer();
                     break;
+                    //change password only for logged in
                 case "me/change-password":
-                    session_start();
+                    (new Middleware())->loggedInOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->updatePasswordCustomer();
@@ -409,30 +420,32 @@ function handleApiRoutes($uri, $params, $requestMethod)
             switch ($uri) {
 
                     /*----------------------DELETE account routes-----------------------------*/
-
+                    //delete account for admin only
                 case "account":
-                    //(new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->deleteAccount($params["id"]);
                     break;
 
                     /*----------------------DELETE event routes-----------------------------*/
-
+                    //delete event for admin only
                 case "event/event-item":
-                    // (new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->deleteEventItem($params['id']);
                     break;
+                    //delete event item slot for admin only
                 case "event/event-item/slot":
-                    // (new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->deleteEventItemSlot($params['id']);
                     break;
+                    //delete event item slot ticket for admin only
                 case "event/event-item/slot/ticket":
-                    // (new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->deleteEventItemSlotTicket($params['id']);

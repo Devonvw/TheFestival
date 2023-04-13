@@ -8,6 +8,34 @@
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="/utils/getImage.js"></script>
+<script>
+    window.addEventListener("load", () => {
+            getMainEvents();
+        });
+    function getMainEvents() {
+        fetch(`${window.location.origin}/api/event/main-events`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: "GET",
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                const smallHeaderImageDance = document.getElementById('small-header-image-dance');
+                const smallHeaderImageJazz = document.getElementById('small-header-image-jazz');
+                const smallHeaderImageYummie = document.getElementById('small-header-image-yummie');
+                if (data.length > 0) {
+                    smallHeaderImageDance.src = getImage(data[1]?.description);
+                    smallHeaderImageYummie.src = getImage(data[0]?.description);
+                    smallHeaderImageJazz.src = getImage(data[2]?.description);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+</script>
 <header>
     <title>Festival - Haarlem</title>
     <link rel="stylesheet" href="../../styles/globals.css">
@@ -35,68 +63,92 @@
     });
 </script>
 
-<body>
+<body class="bg-gray-100 font-sans">
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v16.0&appId=4731276436960002&autoLogAppEvents=1" nonce="z6VwweeS"></script>
-    <div class="">
-        <?php include __DIR__ . '/../../components/nav.php' ?>
+    <?php include __DIR__ . '/../../components/nav.php' ?>
+    <div class="relative h-80" style="background-image: url('https://source.unsplash.com/featured/?concert'); background-size: cover; background-position: center; margin-top:110px;">
+        <div class="absolute inset-0 backdrop-blur-md"></div>
+        <div class="container mx-auto px-4 md:px-6 lg:px-8 text-white relative">
+            <div class="flex flex-col items-center justify-end text-center h-full pb-4">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+                    Festival
+                </h1>
+            </div>
+        </div>
+    </div>
+    <section class="py-20 text-center">
 
-        <div class="flex flex-col information-page overflow-hidden" style="margin-top: 200px;" id="sections">
-            <section class="py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">Haarlem Jazz</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
-            <section class="bg-gray-100 py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">The Secret of Dr. Teyler</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
-            <section class="py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">Yummie</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
-            <section class="bg-gray-100 py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">History</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
-            <section class="py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">Dance</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
-            <section class="bg-gray-100 py-10">
-                <div class="container mx-auto px-4">
-                    <h2 class="text-3xl font-bold mb-6">Schedule</h2>
-                    <p class="text-lg leading-7">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra tristique tortor, id mollis tellus fringilla ac. Nullam nec gravida sapien. Nulla in ipsum in quam elementum ornare. Integer vitae ligula non est bibendum laoreet. Donec viverra sapien non elit eleifend congue. Fusce elementum diam a dolor faucibus, vel viverra odio lacinia. Sed quis blandit leo, vitae venenatis libero. Proin vel dapibus lorem, in pellentesque augue.
-                    </p>
-                </div>
-            </section>
+        <div class="mx-auto" style="max-width: 600px;">
+            <h3 class="">The Festival is a summer event, taking place over four days from Thursday 28th July to Sunday 31st July in Haarlem. It targets a wide audience, including families, culinary enthusiasts, music lovers and anyone looking to experience the great city of Haarlem.
+
+                There are five events taking place, including Haarlem Jazz, DANCE!, Yummie!, A Stroll Through History and The Secret of Dr Teyler. Find out more by reading below!</h3>
         </div>
-        <div class="container mx-auto">
-            <div class="fb-share-button" data-href="" data-layout="" data-size=""></div>
-        </div>
-        <?php include __DIR__ . '/../../components/footer.php' ?>
+    </section>
+    <div class="bg-primary py-20 text-center">
+        <h1 class="text-5xl font-bold text-white mb-4">The secret of dr. Teyler</h1>
+        <h2 class="text-xl text-white">Discover the backstory of professor Teyler</h2>
+        <h3 class="text-white">Challenges, achievements, rewards and much more</h3>
+        <button class="py-2 px-4 mt-4 rounded-md" style="background-color: #E8BF56;">Visit app</button>
     </div>
 
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 mt-10">
+        <div>
+            <img id="small-header-image-dance" src="" alt="Concert" class="w-full h-96 object-cover rounded-md">
+        </div>
+        <div>
+            <h2 class="text-3xl font-bold mb-4">Dance!</h2>
+            <p class="mb-4">A new addition to the festival is Haarlem Dance, which focuses on the latest dance, house, techno, and trance music. Six of the world's top DJs will entertain their audiences in back-to-back sessions, as well as in smaller experimental (club) sessions.</p>
+            <a id="scroll-to-event-list" href="/events/music/dance" class="bg-primary text-white py-2 px-4 rounded-md">Read more</a>
+        </div>
+    </section>
+    <div class="bg-primary py-20 text-center">
+        <h1 class="text-5xl font-bold text-white mb-4">History</h1>
+        <a id="scroll-to-event-list" href="#" class="bg-yellow-500 text-white py-2 px-4 rounded-md">Read more</a>
+    </div>
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 mt-10">
+        <div>
+            <img id="small-header-image-jazz" src="" alt="Concert" class="w-full h-96 object-cover rounded-md">
+        </div>
+        <div>
+            <h2 class="text-3xl font-bold mb-4">Jazz!</h2>
+            <p class="mb-4">One of the haarlem festival events is the Haarlem Jazz event. From July 26 to 29, jazz can be heard in the Patronaat and on the Grote Markt. The Patronaat has several venues open with prices ranging from 10 to 15 euros. The Grote Markt is open for jazz on July 29 with free admission. The Haarlem Jazz event features a variety of artists, including the Gumbo Kings, Gare du Nord and Evolve.</p>
+
+            <a id="scroll-to-event-list" href="#" class="bg-primary text-white py-2 px-4 rounded-md">Read more</a>
+
+        </div>
+    </section>
+    <div class="bg-primary py-20">
+    <div class="container mx-auto text-center">
+        <h1 class="text-5xl font-bold text-white mb-4">Yummie</h1>
+        <div class="flex items-center justify-center mt-8">
+            <img id="small-header-image-yummie" class="w-1/2" src="" alt="Yummie Image">
+            <div class="text-white ml-8">
+                <h2 class="text-2xl font-bold mb-4">Haarlem Festival</h2>
+                <p>Although Haarlem is not known for its food or culinary traditions, there are many restaurants worth visiting. From French to Asian and fish to vegetarian. Haarlem has it all. During the Haarlem festival, there are some restaurants that have created a special Haarlem festival menu for a reduced price. From 27 to 31 July, seven restaurants will have 2 or 3 sessions per day open for reservations.</p>
+                <div class="mt-4">
+                  <a id="scroll-to-event-list" href="#" class="bg-yellow-500 text-white py-2 px-4 rounded-md">Read more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="calendar-container mt-10">
+        <div id="calendar" class="mx-auto mb-10"></div>
+    </div>
+    <div class="bg-primary py-20 text-center">
+        <h1 class="text-5xl font-bold text-white mb-4">Share The Fun</h1>
+        <p class="text-xl text-white">Spread the word about our events with your friends</p>
+        <div class="container mx-auto mt-4">
+            <div class="fb-share-button" data-href="" data-layout="" data-size=""></div>
+        </div>
+    </div>
+    
+    <?php include __DIR__ . '/../../components/footer.php' ?>
 </body>
+
 
 </html>
