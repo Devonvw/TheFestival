@@ -241,15 +241,13 @@ class PaymentService {
             $mail->Body = "Dear " . $account->name . ",\n\nYour order has been successfully processed. Included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
 
             //$mail->AddAttachment($invoicePDF);
-            $mail->AddStringAttachment($invoicePDF, "invoice-".$invoiceId."pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  
-            $mail->AddAttachment($ticketsPDF);
+            $mail->AddStringAttachment($invoicePDF, "invoice-".$invoiceId.".pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  
+            $mail->AddStringAttachment($ticketsPDF, "tickets-".$orderId.".pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  
             $mail->send();
             $mail->smtpClose();
         }
         catch (Exception $ex) {
         }
-
-        unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
     }
 }
 ?>
