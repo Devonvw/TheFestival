@@ -8,11 +8,11 @@ It contains:
 * PHPMyAdmin
 
 ## Production
-
+https://the-festival-haarlem.000webhostapp.com/
 
 ## Login
-* 
-* 
+* username: admin@gmail.com, password: wachtwoord
+* username: test@gmail.com, password: wachtwoord
 
 
 ## Installation
