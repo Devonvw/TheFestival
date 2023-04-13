@@ -53,8 +53,6 @@ class PDFService {
             $pdf->addClientAdresse($userInfo->name. "\n". $userInfo->address. "\n". $userInfo->zipcode. " ". $userInfo->city. "\n". $userInfo->country. "\n");
             $pdf->addQRBox();
         }
-        
-        $pdf->Output('F', __DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');        
-        return __DIR__ . '/../pdf/tickets-'. $orderId .'.pdf';
+        return $pdf->Output('S', __DIR__ . '/../pdf/tickets-'. $orderId .'.pdf');
     }
 }

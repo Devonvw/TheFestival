@@ -1,9 +1,3 @@
-<?php 
-/*if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: /");
-    exit;
-}*/
-?>
 <html>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@6.0"></script>
@@ -28,10 +22,12 @@ function Export(type) {
 
             const headers = ["Id", "Account ID", "Status", "Name", "Total", "Created At"]
 
+            //Get selected columns
             headers.forEach((column, index) => {
                 if (document.getElementById(column)?.checked) selectedCols.push(column);
             })
 
+            //Filter columns
             const excelData = data?.map((obj) => Object.fromEntries(Object.entries(obj).filter(([key],
                     index) =>
                 selectedCols?.includes(headers[index])
@@ -73,15 +69,6 @@ function downloadInvoice(id) {
     }).catch((res) => {});
 }
 
-function setActiveAccount(id) {
-    fetch(`${window.location.origin}/api/account/active?id=${id}`, {
-        method: "PUT",
-        body: null
-    }).then(async (res) => {
-        if (res.ok) getAccounts();
-    }).catch((res) => {});
-}
-
 function getOrders() {
     fetch(`${window.location.origin}/api/order/all`, {
         headers: {
@@ -108,7 +95,7 @@ function getOrders() {
                 }, {
                     select: 4,
                     render: (value, _td, _rowIndex, _cellIndex) =>
-                        `€${value?.toFixed(2)}`
+                        `€${value ? Number(value)?.toFixed(2) : 0.00}`
                 }, {
                     select: 6,
                     sortable: false,
