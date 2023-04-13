@@ -56,20 +56,20 @@ class EventService
         $dao = new EventDAO();
         return $dao->getEventItems($id);
     }
-    public function getEventItemTickets()
+    public function getEventItemTickets($artistFilter = '', $priceFilter = '', $startDateFilter = '', $endDateFilter = '', $searchFilter = '')
     {
         $dao = new EventDAO();
-        return $dao->getEventItemTickets();
+        return $dao->getEventItemTickets($artistFilter, $priceFilter, $startDateFilter, $endDateFilter, $searchFilter);
     }
     public function getEventItemTicketById($id)
     {
         $dao = new EventDAO();
         return $dao->getEventItemTicketById($id);
     }
-    public function getEventItemSlots()
+    public function getEventItemSlots($filters)
     {
         $dao = new EventDAO();
-        return $dao->getEventItemSlots();
+        return $dao->getEventItemSlots($filters);
     }
     public function getEventItemSlotById($id)
     {

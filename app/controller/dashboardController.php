@@ -22,6 +22,11 @@ class DashboardController extends Controller {
 
         require __DIR__ . "/../view/Dashboard/accounts/index.php";
     }
+    public function addAccount() {
+        $this->adminOnly();
+
+        require __DIR__ . "/../view/Dashboard/accounts/add.php";
+    }
     public function editAccount() {
         $this->adminOnly();
 

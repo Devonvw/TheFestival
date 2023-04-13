@@ -97,6 +97,7 @@
 
         <script>
             window.addEventListener("load", () => {
+                getTicketsData();
                 updateTicketsTable();
                 getEvents();
             });
@@ -124,53 +125,59 @@
                         console.log(error);
                     });
             }
+            let allTickets = [];
 
-            function updateTicketsTable() {
-                const eventFilterValue = document.getElementById('event_filter').value;
 
-                const priceFilterValue = document.getElementById('price_filter').value;
-                const personsFilterValue = document.getElementById('persons_filter').value;
-                const searchFilterValue = document.getElementById('search_filter').value;
 
-                const apiUrl = `/api/event/event-item/tickets?event=${eventFilterValue}&price=${priceFilterValue}&persons=${personsFilterValue}&search=${searchFilterValue}`;
+            function getTicketsData() {
+                const apiUrl = `/api/event/event-item/tickets`;
 
                 fetch(apiUrl)
                     .then((response) => response.json())
                     .then((tickets) => {
-                        const ticketsTableBody = document.querySelector('tbody');
-                        ticketsTableBody.innerHTML = '';
-
-                        tickets.forEach((ticket) => {
-                            let isEventMatch = eventFilterValue === '' || eventFilterValue === ticket.event_name;
-                            let isPriceMatch = priceFilterValue === '' || ticket.price <= parseFloat(priceFilterValue);
-                            let isPersonsMatch = personsFilterValue === '' || ticket.persons === parseInt(personsFilterValue);
-                            let isSearchMatch = searchFilterValue === '' || ticket.event_name.toLowerCase().includes(searchFilterValue.toLowerCase()) || ticket.event_item_name.toLowerCase().includes(searchFilterValue.toLowerCase());
-
-                            if (isEventMatch && isPriceMatch && isPersonsMatch && isSearchMatch) {
-                                const row = `
-                        <tr>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.event_name}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.event_item_name}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.start}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.end}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.persons}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.price}</td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div class="flex flex-col space-y-2">
-  <a href="ticket/edit?id=${ticket.id}""><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button></a>
-  <button onclick="deleteEventItemSlotTicket(${ticket?.id})" class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
-</div>
-
-</td>
-                        </tr>
-                    `;
-                                ticketsTableBody.insertAdjacentHTML('beforeend', row);
-                            }
-                        });
+                        allTickets = tickets;
+                        updateTicketsTable();
                     })
                     .catch((error) => {
                         console.log(error);
                     });
+            }
+
+            function updateTicketsTable() {
+                const eventFilterValue = document.getElementById('event_filter').value;
+                const priceFilterValue = document.getElementById('price_filter').value;
+                const personsFilterValue = document.getElementById('persons_filter').value;
+                const searchFilterValue = document.getElementById('search_filter').value;
+
+                const ticketsTableBody = document.querySelector('tbody');
+                ticketsTableBody.innerHTML = '';
+
+                allTickets.forEach((ticket) => {
+                    let isEventMatch = eventFilterValue === '' || eventFilterValue === ticket.event_name;
+                    let isPriceMatch = priceFilterValue === '' || ticket.price <= parseFloat(priceFilterValue);
+                    let isPersonsMatch = personsFilterValue === '' || ticket.persons === parseInt(personsFilterValue);
+                    let isSearchMatch = searchFilterValue === '' || ticket.event_name.toLowerCase().includes(searchFilterValue.toLowerCase()) || ticket.event_item_name.toLowerCase().includes(searchFilterValue.toLowerCase());
+
+                    if (isEventMatch && isPriceMatch && isPersonsMatch && isSearchMatch) {
+                        const row = `
+                <tr>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.event_name}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.event_item_name}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.start}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.end}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.persons}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${ticket.price}</td>
+                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                        <div class="flex flex-col space-y-2">
+                            <a href="ticket/edit?id=${ticket.id}"><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button></a>
+                            <button onclick="deleteEventItemSlotTicket(${ticket?.id})" class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+                        ticketsTableBody.insertAdjacentHTML('beforeend', row);
+                    }
+                });
             }
 
             function deleteEventItemSlotTicket(id) {

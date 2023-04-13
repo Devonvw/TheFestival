@@ -36,6 +36,12 @@ function handleRoutes($uri, $requestMethod, $content)
             $controller = new HomeController();
             $controller->dance();
             break;
+        case 'festival':
+            require __DIR__ . '/../controller/homeController.php';
+            session_start();
+            $controller = new HomeController();
+            $controller->festival();
+            break;
 
             /*----------------------Dashboard routes-----------------------------*/
 
@@ -50,6 +56,12 @@ function handleRoutes($uri, $requestMethod, $content)
             session_start();
             $controller = new DashboardController();
             $controller->accounts();
+            break;
+        case 'dashboard/accounts/add':
+            require __DIR__ . '/../controller/dashboardController.php';
+            session_start();
+            $controller = new DashboardController();
+            $controller->addAccount();
             break;
         case 'dashboard/accounts/edit':
             require __DIR__ . '/../controller/dashboardController.php';

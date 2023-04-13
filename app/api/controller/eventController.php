@@ -38,7 +38,6 @@ class APIEventController
         try {
             $this->eventService->updateEventItemSlot($id, $_POST["start"], $_POST["end"], $_POST["stock"], $_POST["capacity"]);
             echo json_encode(['msg' => "Event item slot successfully updated."]);
-
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -60,7 +59,6 @@ class APIEventController
     {
         try {
             echo json_encode($this->eventService->getEventItem($id));
-
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
@@ -79,12 +77,19 @@ class APIEventController
     public function getEventItemTickets()
     {
         try {
-            echo json_encode($this->eventService->getEventItemTickets());
+            $artistFilter = isset($_GET['artist']) ? $_GET['artist'] : '';
+            $priceFilter = isset($_GET['price']) ? $_GET['price'] : '';
+            $startDateFilter = isset($_GET['start']) ? $_GET['start'] : '';
+            $endDateFilter = isset($_GET['end']) ? $_GET['end'] : '';
+            $searchFilter = isset($_GET['search']) ? $_GET['search'] : '';
+
+            echo json_encode($this->eventService->getEventItemTickets($artistFilter, $priceFilter, $startDateFilter, $endDateFilter, $searchFilter));
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
     public function getEventItemTicketById($id)
     {
         try {
@@ -147,12 +152,20 @@ class APIEventController
     public function getEventItemSlots()
     {
         try {
-            echo json_encode($this->eventService->getEventItemSlots());
+            $filters = [
+                'event_name' => $_GET['event_name'] ?? null,
+                'start_date' => $_GET['start_date'] ?? null,
+                'end_date' => $_GET['end_date'] ?? null,
+                'search' => $_GET['search'] ?? null,
+                'stock' => $_GET['stock'] ?? null,
+            ];
+            echo json_encode($this->eventService->getEventItemSlots($filters));
         } catch (Exception $ex) {
             http_response_code(500);
             if ($ex->getCode() != 0) echo json_encode(['msg' => $ex->getMessage()]);
         }
     }
+
     public function getEventItemSlotById($id)
     {
         try {

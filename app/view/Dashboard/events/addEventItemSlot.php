@@ -33,7 +33,6 @@
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
 </header>
-
 <body class="bg-gray-100 overflow-x-hidden">
     <div class="h-screen flex">
         <div class="w-64">
@@ -103,7 +102,7 @@
                     body: formData
                 });
                 if (response.ok) {
-                    ToastSucces("Added event item slot");
+                    ToastSucces((await response.json())?.msg);
                 } else {
                     ToastError((await response.json())?.msg);
                 }

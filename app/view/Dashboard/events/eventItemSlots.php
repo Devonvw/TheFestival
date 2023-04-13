@@ -138,7 +138,6 @@
         }
 
         function updateSlotsTable() {
-
             // Get filter values
             const eventItemFilter = document.getElementById('event_item_filter').value;
             const startDateFilter = document.getElementById('start_date_filter').value;
@@ -146,11 +145,10 @@
             const searchFilter = document.getElementById('search_filter').value;
             const stockFilter = document.getElementById('stock_filter').value;
 
+            // Constructing the API URL
+            const apiUrl = `/api/events/event-items/slots?event_name=${eventItemFilter}&start_date=${startDateFilter}&end_date=${endDateFilter}&search=${searchFilter}&stock=${stockFilter}`;
 
-            //constructing the API URL
-            const apiUrl = `/api/events/event-items/slots?event_item=${eventItemFilter}&start_date=${startDateFilter}&end_date=${endDateFilter}&search=${searchFilter}&stock=${stockFilter}`;
-
-            //fetching slots data based on filter values
+            // Fetching slots data based on filter values
             fetch(apiUrl)
                 .then((response) => response.json())
                 .then((eventItemSlots) => {
@@ -159,38 +157,30 @@
                     slotsTableBody.innerHTML = '';
 
                     eventItemSlots.forEach((slot) => {
-                        let isSoldOut = slot.stock === 0;
-                        let isEventNameMatch = eventItemFilter === '' || eventItemFilter === slot.eventName;
-                        let isStartDateMatch = startDateFilter === '' || new Date(slot.start) >= new Date(startDateFilter);
-                        let isEndDateMatch = endDateFilter === '' || new Date(slot.end) <= new Date(endDateFilter);
-                        let isSearchMatch = searchFilter === '' || slot.eventName.toLowerCase().includes(searchFilter.toLowerCase()) || slot.eventItemName.toLowerCase().includes(searchFilter.toLowerCase());
-
-                        if ((stockFilter === '' || (stockFilter === 'sold_out' && isSoldOut)) && isEventNameMatch && isStartDateMatch && isEndDateMatch && isSearchMatch) {
-                            const row = `
-          <tr>
-          <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.eventName}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.eventItemName}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.start}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.end}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.stock}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.capacity}</td>
-            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div class="flex flex-col space-y-2">
-  <a href="slot/edit?id=${slot.slotId}""><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button></a>
-  <button onclick="deleteEventItemSlot(${slot?.slotId})" class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
-</div>
-
-</td>
+                        const row = `
+<tr>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.eventName}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.eventItemName}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.start}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.end}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.stock}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">${slot.capacity}</td>
+  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+    <div class="flex flex-col space-y-2">
+      <a href="slot/edit?id=${slot.slotId}"><button class="bg-indigo-500 text-white py-1 px-4 rounded-md hover:bg-indigo-600">Edit</button></a>
+      <button onclick="deleteEventItemSlot(${slot?.slotId})" class="bg-red-500 text-white py-1 px-4 rounded-md hover:bg-red-600">Delete</button>
+    </div>
+  </td>
 </tr>
 `;
-                            slotsTableBody.insertAdjacentHTML('beforeend', row);
-                        }
+                        slotsTableBody.insertAdjacentHTML('beforeend', row);
                     });
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         }
+
 
         function deleteEventItemSlot(id) {
             fetch(`${window.location.origin}/api/event/event-item/slot?id=${id}`, {

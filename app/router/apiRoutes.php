@@ -8,13 +8,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
             switch ($uri) {
 
                     /*----------------------GET Account routes-----------------------------*/
-
+                    //retrieve all accounts, only admin can view this
                 case "account/all":
-                    //(new Middleware())->adminOnly();
+                    (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->getAllAccounts();
                     break;
+                    //retrieve account by id
                 case "me":
                     session_start();
                     require_once __DIR__ . '/../api/controller/accountController.php';
@@ -23,13 +24,14 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     break;
 
                     /*----------------------GET Event routes-----------------------------*/
-
+                    //retrieve all events, only admin can view this
                 case "event/main-events":
                     (new Middleware())->adminOnly();
                     require_once __DIR__ . '/../api/controller/eventController.php';
                     $controller = new APIEventController();
                     $controller->getMainEvents();
                     break;
+                    //retrieve all event items by main event, only admin can view this
                 case "event/event-items":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -37,6 +39,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItems($params["id"]);
                     break;
+                    //retrieve eventitem by main event, only admin can view this
                 case "event/event-item":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -44,6 +47,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItem($params["id"]);
                     break;
+                    //retrieve all event item slots, only admin can view this
                 case "events/event-items/slots":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -51,6 +55,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemSlots();
                     break;
+                    //retrieve all event item slots based on eventitemid, only admin can view this
                 case "event/event-item/slots":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -58,6 +63,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemSlotsByEventItemId($params["id"]);
                     break;
+                    //retrieve all event item tickets, only admin can view this
                 case "event/event-item/tickets":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -65,6 +71,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemTickets();
                     break;
+                    //retrieve event item ticket by id, only admin can view this
                 case "event/event-item/ticket":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -72,6 +79,7 @@ function handleApiRoutes($uri, $params, $requestMethod)
                     $controller = new APIEventController();
                     $controller->getEventItemTicketById($params["id"]);
                     break;
+                    //retrieve event item slot by id, only admin can view this
                 case "event/event-item/slot":
                     session_start();
                     (new Middleware())->adminOnly();
@@ -199,8 +207,8 @@ function handleApiRoutes($uri, $params, $requestMethod)
             switch ($uri) {
 
                     /*----------------------POST account routes-----------------------------*/
-
-                case "account/sign-up":
+                    //create account, used for customer and admin
+                case "account/create":
                     require_once __DIR__ . '/../api/controller/accountController.php';
                     $controller = new APIAccountController();
                     $controller->createAccount();

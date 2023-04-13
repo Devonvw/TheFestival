@@ -2,6 +2,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
+require_once __DIR__ . '/../env/index.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/Exception.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/SMTP.php';
 require_once __DIR__ . '/../packages/PHPMailer-master/src/PHPMailer.php';
@@ -16,8 +17,8 @@ function sendEmail($email, $firstName, $messageSubject, $messageBody) {
         $mail->SMTPSecure = 'tls';
         $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
         $mail->SMTPAuth = true; // Enable SMTP authentication
-        $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
-        $mail->Password = 'cchfozteyygkuiwf'; // SMTP password
+        $mail->Username = 'festivalhaarlem35@gmail.com'; // SMTP username
+        $mail->Password = SMPT_PASSWORD; // SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
         $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
         // Recipients
