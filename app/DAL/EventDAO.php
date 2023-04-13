@@ -12,7 +12,7 @@ class EventDAO
   {
     $this->DB = new DB();
   }
-
+  //retrieving event items based on event id
   function getEventItems($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item WHERE event_id = :id");
@@ -30,7 +30,7 @@ class EventDAO
 
     return $event_items;
   }
-
+  //retrieving event item based on event item id
   function getEventItem($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item WHERE id = :id LIMIT 1");
@@ -46,6 +46,7 @@ class EventDAO
     }
     return $event_item;
   }
+
   function getMainEvents()
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event");
@@ -60,26 +61,54 @@ class EventDAO
     }
     return $events;
   }
-  function getEventItemTickets()
+  function getEventItemTickets($artistFilter = '', $priceFilter = '', $startDateFilter = '', $endDateFilter = '', $searchFilter = '')
   {
-    $stmt = $this->DB::$connection->prepare(
-      "SELECT 
-        eist.id, 
-        eist.event_item_slot_id, 
-        eis.start, 
-        eis.end, 
-        ei.location, 
-        ei.name as event_item_name, 
-        ei.image,
-        e.name as event_name, 
-        eist.persons, 
-        eist.price
-      FROM event_item_slot_ticket eist
-      JOIN event_item_slot eis ON eis.id = eist.event_item_slot_id
-      JOIN event_item ei ON ei.id = eis.event_item_id
-      JOIN event e ON e.id = ei.event_id"
-    );
-    $stmt->execute();
+    $query = "SELECT 
+          eist.id, 
+          eist.event_item_slot_id, 
+          eis.start, 
+          eis.end, 
+          ei.location, 
+          ei.name as event_item_name, 
+          ei.image,
+          e.name as event_name, 
+          eist.persons, 
+          eist.price
+        FROM event_item_slot_ticket eist
+        JOIN event_item_slot eis ON eis.id = eist.event_item_slot_id
+        JOIN event_item ei ON ei.id = eis.event_item_id
+        JOIN event e ON e.id = ei.event_id
+        WHERE 1";
+
+    $params = [];
+
+    if ($artistFilter) {
+      $query .= " AND ei.name = :artistFilter";
+      $params['artistFilter'] = $artistFilter;
+    }
+
+    if ($priceFilter) {
+      $query .= " AND eist.price <= :priceFilter";
+      $params['priceFilter'] = $priceFilter;
+    }
+
+    if ($startDateFilter) {
+      $query .= " AND eis.start >= :startDateFilter";
+      $params['startDateFilter'] = $startDateFilter;
+    }
+
+    if ($endDateFilter) {
+      $query .= " AND eis.start <= :endDateFilter";
+      $params['endDateFilter'] = $endDateFilter;
+    }
+
+    if ($searchFilter) {
+      $query .= " AND ei.name LIKE :searchFilter";
+      $params['searchFilter'] = '%' . $searchFilter . '%';
+    }
+
+    $stmt = $this->DB::$connection->prepare($query);
+    $stmt->execute($params);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $tickets = [];
     foreach ($data as $row) {
@@ -98,6 +127,7 @@ class EventDAO
     }
     return $tickets;
   }
+
   function getEventItemTicketById($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot_ticket WHERE id = :id LIMIT 1");
@@ -108,10 +138,43 @@ class EventDAO
     return $ticket;
   }
 
-  function getEventItemSlots()
+  function getEventItemSlots($filters = [])
   {
-    $stmt = $this->DB::$connection->prepare("SELECT event_item_slot.id as slotId, event.name as eventName, event_item.name as eventItemName, event_item_slot.start, event_item_slot.end, event_item_slot.stock, event_item_slot.capacity FROM event_item_slot INNER JOIN event_item ON event_item.id = event_item_slot.event_item_id INNER JOIN event ON event.id = event_item.event_id");
-    $stmt->execute();
+    $query = "SELECT event_item_slot.id as slotId, event.name as eventName, event_item.name as eventItemName, event_item_slot.start, event_item_slot.end, event_item_slot.stock, event_item_slot.capacity FROM event_item_slot INNER JOIN event_item ON event_item.id = event_item_slot.event_item_id INNER JOIN event ON event.id = event_item.event_id";
+
+    $conditions = [];
+    $params = [];
+
+    if (!empty($filters['event_name'])) {
+      $conditions[] = "event.name = :event_name";
+      $params[':event_name'] = $filters['event_name'];
+    }
+
+    if (!empty($filters['start_date'])) {
+      $conditions[] = "event_item_slot.start >= :start_date";
+      $params[':start_date'] = $filters['start_date'];
+    }
+
+    if (!empty($filters['end_date'])) {
+      $conditions[] = "event_item_slot.end <= :end_date";
+      $params[':end_date'] = $filters['end_date'];
+    }
+
+    if (!empty($filters['search'])) {
+      $conditions[] = "(event.name LIKE :search OR event_item.name LIKE :search)";
+      $params[':search'] = '%' . $filters['search'] . '%';
+    }
+
+    if (!empty($filters['stock']) && $filters['stock'] === 'sold_out') {
+      $conditions[] = "event_item_slot.stock = 0";
+    }
+
+    if (!empty($conditions)) {
+      $query .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    $stmt = $this->DB::$connection->prepare($query);
+    $stmt->execute($params);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $eventItemSlots = [];
@@ -128,23 +191,7 @@ class EventDAO
     }
     return $eventItemSlots;
   }
-  function getEventItemSlotsById($eventItemId)
-  {
-    $stmt = $this->DB::$connection->prepare("SELECT start, end FROM event_item_slot WHERE event_item_id = :eventItemId");
 
-    $stmt->bindValue(':eventItemId', $eventItemId, PDO::PARAM_INT);
-    $stmt->execute();
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $eventItemSlots = [];
-    foreach ($data as $row) {
-      $eventItemSlots[] = array(
-        'start' => $row['start'],
-        'end' => $row['end']
-      );
-    }
-    return $eventItemSlots;
-  }
   function getEventItemSlotById($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE id = :id LIMIT 1");
@@ -352,4 +399,3 @@ class EventDAO
     }
   }
 }
-
