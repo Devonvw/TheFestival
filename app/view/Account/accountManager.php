@@ -38,7 +38,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <?php include __DIR__ . '/../../components/nav.php' ?>
-    <h1 class="max-w-md mx-auto text-2xl font-bold mt-5">Manage Account</h1>
+    <h1 class="max-w-md mx-auto text-2xl font-bold mt-5" style="margin-top: 150px;">Manage Account</h1>
 
     <form id="manage_account_form">
         <div class="max-w-md mx-auto">
@@ -101,6 +101,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         </div>
     </form>
     <script>
+    
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.querySelector('#manage_account_form');
         const submitButton = document.querySelector('#update_account_button');
