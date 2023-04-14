@@ -230,8 +230,14 @@
             method: "POST",
             body: null
         }).then(async (res) => {
-            if (res.ok)ToastSucces("Ticket added to cart");
-            else ToastError((await res.json())?.msg);
+            if (res.ok) {
+                document.getElementById('successWrapper').classList.remove('hidden');
+                document.getElementById('success').innerHTML = ((await res.json())?.msg);
+                setTimeout(() => {
+                    document.getElementById('successWrapper').classList.add('hidden');
+                }, 3000);
+
+            }
         }).catch((res) => {});
     }
 
@@ -428,6 +434,11 @@
                     <button class="bg-primary hover:bg-primary-light text-white py-2 px-4 rounded" onclick="addTicket(event)">Add to Cart</button>
 
                 </div>
+                
+                <div class="bg-green-200 p-2 w-full rounded-lg flex text-green-700 items-center text-sm hidden" id="successWrapper">
+
+<p id="success"></p>
+</div>
             </div>
         </div>`;
         eventGrid.innerHTML += eventCard;
