@@ -28,7 +28,7 @@
         <div class="container flex flex-wrap justify-between px-3 py-10 mx-auto space-y-8 md:space-y-0">
             <div class="flex flex-col-reverse justify-center space-y-10 md:flex-col md:space-y-0">
                 <a href="/">
-                    <img src="../assets/festival_logo.png" class="h-16" />
+                    <img src="/../assets/festival_logo.png" class="h-16" />
                 </a>
                 <div>
                     <ul class="flex justify-center space-x-4">

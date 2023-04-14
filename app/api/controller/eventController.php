@@ -26,7 +26,7 @@ class APIEventController
     {
         try {
             $image = $_FILES ? ($_FILES["image"]["name"] ? $_FILES["image"] : false) : false;
-            $this->eventService->updateEventItem($id, $_POST["event_id"], $_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $image);
+            $this->eventService->updateEventItem($id, $_POST["name"], $_POST["description"], $_POST["location"], $_POST["venue"], $_POST["cousine"], $image);
             echo json_encode(['msg' => "Event item successfully updated."]);
         } catch (Exception $ex) {
             http_response_code(500);

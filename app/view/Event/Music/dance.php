@@ -15,7 +15,7 @@
     <meta name="description" content="" />
     <meta property="og:title" content="Music - Event" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://socialdevon.000webhostapp.com/" />
+    <meta property="og:url" content="https://the-festival-haarlem.000webhostapp.com/" />
     <meta property="og:image" itemProp="image" content="/og_image.png" />
     <meta property="og:description" content="" />
     <link rel="stylesheet" href="../../../styles/globals.css">

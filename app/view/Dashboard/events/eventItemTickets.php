@@ -189,11 +189,16 @@
                 }).then(async (res) => {
                     if (res.ok) {
                         ToastSucces((await res.json())?.msg);
+
+                        //remove the deleted ticket from the allTickets array
+                        allTickets = allTickets.filter(ticket => ticket.id !== id);
+
                         updateTicketsTable();
                         getEvents();
                     }
                 }).catch((res) => {});
             }
+
 
             function resetFilters() {
                 document.getElementById('event_filter').value = '';

@@ -319,7 +319,7 @@ class AccountDAO
         if (strlen(trim($password)) < 6) {
             throw new Exception("New password must have at least 6 characters", 1);
         }
-        
+
         $email = $_SESSION['email'];
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -334,12 +334,9 @@ class AccountDAO
             if (!sendEmail($email, $email, $messageSubject, $body)) {
                 throw new Exception("E-mail could not be sent", 1);
             }
-            
         } else {
             throw new Exception("Error: Could not update password.", 1);
         }
-
-        
     }
 
     function tokenRemover($email)
@@ -353,15 +350,37 @@ class AccountDAO
     }
     public function validateRecaptcha($recaptchaToken)
     {
-
+        //Set the reCAPTCHA secret key from your application's configuration
         $recaptchaSecret = RECAPTCHA_SECRET;
-        $recaptchaResponse = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecret&response=$recaptchaToken");
+
+        //Build the URL for Google's reCAPTCHA API with the secret key and the token received from the client
+        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecret&response=$recaptchaToken";
+
+        //Initialize a new cURL session
+        $ch = curl_init();
+
+        //Set the URL to be requested
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        //Set the cURL option to return the response as a string instead of outputting it directly
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        //Execute the cURL session and store the response in a variable
+        $recaptchaResponse = curl_exec($ch);
+
+        //Close the cURL session
+        curl_close($ch);
+
+        //Decode the JSON response from the reCAPTCHA API
         $recaptchaData = json_decode($recaptchaResponse);
 
+        //Check if the reCAPTCHA validation was successful and if the score is above the threshold (0.5)
         if (!$recaptchaData->success || $recaptchaData->score < 0.5) {
+            //If the validation failed or the score is below the threshold, return false
             return false;
         }
 
+        //If the validation was successful and the score is above the threshold, return true
         return true;
     }
 }

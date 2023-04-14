@@ -14,10 +14,10 @@ class EventService
         $dao->addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image);
     }
 
-    public function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image)
+    public function updateEventItem($id, $name, $description, $location, $venue, $cousine, $image)
     {
         $dao = new EventDAO();
-        $dao->updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image);
+        $dao->updateEventItem($id, $name, $description, $location, $venue, $cousine, $image);
     }
     public function updateEventItemSlot($id, $start, $end, $stock, $capacity)
     {

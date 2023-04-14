@@ -45,7 +45,7 @@
         <div class="dashboard-right flex-1 min-h-screen">
 
             <div class="container mx-auto px-4 py-10">
-                <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4">Go Back</button>s
+                <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4">Go Back</button>
                 <h1 class="text-3xl font-semibold mb-6">Event item slot</h1>
 
                 <!-- Edit Form -->

@@ -11,7 +11,7 @@ class EventItem {
 
 
 
-  function __construct($id = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $capacity = null, $image = null) {
+  function __construct($id = null, $event_id = null, $name = null, $description = null, $location = null, $venue = null, $cousine = null, $image = null) {
     if(!is_null($id)) {
       $this->id = $id;
       $this->event_id = $event_id;
