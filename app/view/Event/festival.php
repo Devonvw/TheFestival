@@ -10,8 +10,9 @@
 <script src="/utils/getImage.js"></script>
 <script>
     window.addEventListener("load", () => {
-            getMainEvents();
-        });
+        getMainEvents();
+    });
+
     function getMainEvents() {
         fetch(`${window.location.origin}/api/event/main-events`, {
                 headers: {
@@ -85,12 +86,6 @@
                 There are five events taking place, including Haarlem Jazz, DANCE!, Yummie!, A Stroll Through History and The Secret of Dr Teyler. Find out more by reading below!</h3>
         </div>
     </section>
-    <div class="bg-primary py-20 text-center">
-        <h1 class="text-5xl font-bold text-white mb-4">The secret of dr. Teyler</h1>
-        <h2 class="text-xl text-white">Discover the backstory of professor Teyler</h2>
-        <h3 class="text-white">Challenges, achievements, rewards and much more</h3>
-        <button class="py-2 px-4 mt-4 rounded-md" style="background-color: #E8BF56;">Visit app</button>
-    </div>
 
     <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 mt-10">
         <div>
@@ -102,9 +97,20 @@
             <a id="scroll-to-event-list" href="/events/music/dance" class="bg-primary text-white py-2 px-4 rounded-md">Read more</a>
         </div>
     </section>
-    <div class="bg-primary py-20 text-center">
-        <h1 class="text-5xl font-bold text-white mb-4">History</h1>
-        <a id="scroll-to-event-list" href="#" class="bg-yellow-500 text-white py-2 px-4 rounded-md">Read more</a>
+    <div class="bg-primary py-20">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl font-bold text-white mb-4">Yummie</h1>
+            <div class="flex items-center justify-center mt-8">
+                <img id="small-header-image-yummie" class="w-1/2" src="" alt="Yummie Image">
+                <div class="text-white ml-8">
+                    <h2 class="text-2xl font-bold mb-4">Haarlem Festival</h2>
+                    <p>Although Haarlem is not known for its food or culinary traditions, there are many restaurants worth visiting. From French to Asian and fish to vegetarian. Haarlem has it all. During the Haarlem festival, there are some restaurants that have created a special Haarlem festival menu for a reduced price. From 27 to 31 July, seven restaurants will have 2 or 3 sessions per day open for reservations.</p>
+                    <div class="mt-4">
+                        <a id="scroll-to-event-list" href="#" class="bg-yellow-500 text-white py-2 px-4 rounded-md">Read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 mt-10">
         <div>
@@ -118,24 +124,7 @@
 
         </div>
     </section>
-    <div class="bg-primary py-20">
-    <div class="container mx-auto text-center">
-        <h1 class="text-5xl font-bold text-white mb-4">Yummie</h1>
-        <div class="flex items-center justify-center mt-8">
-            <img id="small-header-image-yummie" class="w-1/2" src="" alt="Yummie Image">
-            <div class="text-white ml-8">
-                <h2 class="text-2xl font-bold mb-4">Haarlem Festival</h2>
-                <p>Although Haarlem is not known for its food or culinary traditions, there are many restaurants worth visiting. From French to Asian and fish to vegetarian. Haarlem has it all. During the Haarlem festival, there are some restaurants that have created a special Haarlem festival menu for a reduced price. From 27 to 31 July, seven restaurants will have 2 or 3 sessions per day open for reservations.</p>
-                <div class="mt-4">
-                  <a id="scroll-to-event-list" href="#" class="bg-yellow-500 text-white py-2 px-4 rounded-md">Read more</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+    
     <div class="calendar-container mt-10">
         <div id="calendar" class="mx-auto mb-10"></div>
     </div>
@@ -146,7 +135,7 @@
             <div class="fb-share-button" data-href="" data-layout="" data-size=""></div>
         </div>
     </div>
-    
+
     <?php include __DIR__ . '/../../components/footer.php' ?>
 </body>
 

@@ -57,15 +57,16 @@
         <div class="dashboard-right flex-1 min-h-screen">
 
             <div class="container mx-auto px-4 py-10">
-                <h1 class="text-3xl font-semibold mb-6">Event item</h1>
+            <button onclick="window.history.back()" class="bg-primary text-white py-2 px-4 rounded-md mb-4 ml-4">Go Back</button>
+                
 
 
 
 
                 <!-- Edit Form -->
                 <div class="bg-white rounded-lg p-6 shadow mb-10">
-                    <h2 class="text-xl font-semibold mb-4">Add event item</h2>
-                    <form onsubmit="editEventItem()" id="editForm" class="space-y-4 md:space-y-6">
+                    <h2 class="text-xl font-semibold mb-4">Edit event item</h2>
+                    <form onsubmit="editEventItem(event)" id="editForm" class="space-y-4 md:space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-1">
                                 <label for="event_item_name" class="block text-sm font-medium text-gray-700">Event name</label>
@@ -117,7 +118,7 @@
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
-                    // Update the form fields with the fetched data
+                    //uppdating the form fields with the fetched data
                     document.getElementById('event_item_name').value = data.name;
                     document.getElementById('location').value = data.location;
                     document.getElementById('cousine').value = data.cousine;
@@ -145,13 +146,17 @@
             formData.append("image", document.getElementById('image').files ? document.getElementById('image')
                 .files[0] : null);
             formData.append("description", tinymce.get('description').getContent());
-            fetch(`${window.location.origin}/api/event/event-item/edit?id=${params.get("id")}`, {
+            fetch(`${window.location.origin}/api/event/event-item/edit?id=${urlParams.get("id")}`, {
                 method: "POST",
                 body: formData
             }).then(async (res) => {
-                if (!res.ok) {
-                    ToastError((await res.json())?.msg);
 
+                if (res.ok) {
+                    ToastSucces((await res.json())?.msg);
+
+                }
+                else{
+                    ToastError((await res.json())?.msg);
                 }
 
             }).catch((res) => {});

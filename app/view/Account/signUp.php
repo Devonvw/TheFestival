@@ -27,7 +27,7 @@ function checkPasswords() {
 
 function signUp() {
     if (checkPasswords()) {
-        grecaptcha.enterprise.execute('6LcjQBwlAAAAALbMpWmrTVTRtkVBuOmA6zhYebFI', {
+        grecaptcha.enterprise.execute('6Lc20oclAAAAAKCGKnMlsfrzco9fdrK6WtXgQvWz', {
             action: 'signup'
         }).then(function(token) {
             fetch(`${window.location.origin}/api/account/create`, {
@@ -41,7 +41,7 @@ function signUp() {
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
                     type_id : 1,
-                    recaptchaToken: token // Add the reCAPTCHA token to the request body
+                    recaptchaToken: token //add the reCAPTCHA token to the request body
 
                 })
             }).then(async (res) => {

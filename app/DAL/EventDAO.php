@@ -46,7 +46,7 @@ class EventDAO
     }
     return $event_item;
   }
-
+  //get main events
   function getMainEvents()
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event");
@@ -61,56 +61,71 @@ class EventDAO
     }
     return $events;
   }
+  //get event tickets filtering in backend
   function getEventItemTickets($artistFilter = '', $priceFilter = '', $startDateFilter = '', $endDateFilter = '', $searchFilter = '')
   {
+    //prepare the base query to select data from multiple tables using JOINs
     $query = "SELECT 
-          eist.id, 
-          eist.event_item_slot_id, 
-          eis.start, 
-          eis.end, 
-          ei.location, 
-          ei.name as event_item_name, 
-          ei.image,
-          e.name as event_name, 
-          eist.persons, 
-          eist.price
-        FROM event_item_slot_ticket eist
-        JOIN event_item_slot eis ON eis.id = eist.event_item_slot_id
-        JOIN event_item ei ON ei.id = eis.event_item_id
-        JOIN event e ON e.id = ei.event_id
-        WHERE 1";
+        eist.id, 
+        eist.event_item_slot_id, 
+        eis.start, 
+        eis.end, 
+        ei.location, 
+        ei.name as event_item_name, 
+        ei.image,
+        e.name as event_name, 
+        eist.persons, 
+        eist.price
+      FROM event_item_slot_ticket eist
+      JOIN event_item_slot eis ON eis.id = eist.event_item_slot_id
+      JOIN event_item ei ON ei.id = eis.event_item_id
+      JOIN event e ON e.id = ei.event_id
+      WHERE 1";
 
+    //initialize an array to store query parameters
     $params = [];
 
+    //if artistFilter is set, add a condition to the query and add the parameter to the array
     if ($artistFilter) {
       $query .= " AND ei.name = :artistFilter";
       $params['artistFilter'] = $artistFilter;
     }
 
+    //if priceFilter is set, add a condition to the query and add the parameter to the array
     if ($priceFilter) {
       $query .= " AND eist.price <= :priceFilter";
       $params['priceFilter'] = $priceFilter;
     }
 
+    //if startDateFilter is set, add a condition to the query and add the parameter to the array
     if ($startDateFilter) {
       $query .= " AND eis.start >= :startDateFilter";
       $params['startDateFilter'] = $startDateFilter;
     }
 
+    // If endDateFilter is set, add a condition to the query and add the parameter to the array
     if ($endDateFilter) {
       $query .= " AND eis.start <= :endDateFilter";
       $params['endDateFilter'] = $endDateFilter;
     }
 
+    //if searchFilter is set, add a condition to the query and add the parameter to the array
     if ($searchFilter) {
       $query .= " AND ei.name LIKE :searchFilter";
       $params['searchFilter'] = '%' . $searchFilter . '%';
     }
 
+    //prepare the statement and execute it with the provided parameters
     $stmt = $this->DB::$connection->prepare($query);
     $stmt->execute($params);
+
+    //fetch all records and store them in an associative array
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //initialize an empty array to store Ticket objects
     $tickets = [];
+
+    //iterate through the fetched data and create Ticket objects
     foreach ($data as $row) {
       $tickets[] = new Ticket(
         $row['id'],
@@ -125,9 +140,12 @@ class EventDAO
         $row['price']
       );
     }
+
+    //returning the array of Ticket objects
     return $tickets;
   }
 
+  //getting event item tickets based on event item id
   function getEventItemTicketById($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot_ticket WHERE id = :id LIMIT 1");
@@ -191,7 +209,7 @@ class EventDAO
     }
     return $eventItemSlots;
   }
-
+  //getting event item slots based on 
   function getEventItemSlotById($id)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE id = :id LIMIT 1");
@@ -201,6 +219,7 @@ class EventDAO
 
     return $slot;
   }
+  //getting event item slots based on event item id
   public function getEventItemSlotByEventItemId($eventItemId)
   {
     $stmt = $this->DB::$connection->prepare("SELECT * FROM event_item_slot WHERE event_item_id = :eventItemId");
@@ -209,7 +228,7 @@ class EventDAO
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-
+  //adding event item
   function addEventItem($event_id, $name, $description, $location, $venue, $cousine, $image)
   {
     if ($image && $image["size"] > 2 * 1024 * 1024) {
@@ -243,7 +262,7 @@ class EventDAO
     }
   }
 
-  function updateEventItem($id, $event_id, $name, $description, $location, $venue, $cousine, $image)
+  function updateEventItem($id, $name, $description, $location, $venue, $cousine, $image)
   {
     if ($image && $image["size"] > 2 * 1024 * 1024) {
       throw new Exception("This image is bigger than 2MB", 1);
@@ -259,7 +278,7 @@ class EventDAO
       $stmt->execute();
     }
 
-    $update_stmt = $this->DB::$connection->prepare("UPDATE event_item SET event_id = :event_id, name = :name, description = :description, location = :location, venue = :venue, cousine = :cousine, capacity = :capacity WHERE id = :id");
+    $update_stmt = $this->DB::$connection->prepare("UPDATE name = :name, description = :description, location = :location, venue = :venue, cousine = :cousine, capacity = :capacity WHERE id = :id");
 
     $name_param = trim(htmlspecialchars($name));
     $description_param = trim(htmlspecialchars($description));
@@ -268,7 +287,6 @@ class EventDAO
     $cousine_param = trim(htmlspecialchars($cousine));
 
     $update_stmt->bindValue(':id', $id, PDO::PARAM_INT);
-    $update_stmt->bindValue(':event_id', $event_id, PDO::PARAM_INT);
     $update_stmt->bindValue(':name', $name_param);
     $update_stmt->bindValue(':description', $description_param);
     $update_stmt->bindValue(':location', $location_param);

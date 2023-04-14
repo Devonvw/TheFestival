@@ -196,7 +196,7 @@
     ${eventItem.venue}
   </td>
   <td class="px-4 py-2 max-w-sm whitespace-wrap overflow-hidden overflow-ellipsis text-sm text-gray-500">
-    ${eventItem.cuisine}
+    ${eventItem.cousine}
   </td>
   <td class="px-6 py-2 max-w-sm">
     <img src="data:image/jpeg;base64,${eventItem.image}" alt="Event Item Image" class="w-16 h-16 rounded">
@@ -250,7 +250,7 @@
                     body: formData
                 }).then(async (res) => {
                     if (!res.ok) {
-                        ToastError((await res.json())?.msg);
+                        ToastError("Added Event item");
                     } else {
                         ToastSucces((await res.json())?.msg);
                     }
@@ -269,6 +269,9 @@
                         ToastSucces((await res.json())?.msg);
 
                         getEventItems();
+                    }
+                    else{
+                        ToastError((await res.json())?.msg);    
                     }
                 }).catch((res) => {});
             }
