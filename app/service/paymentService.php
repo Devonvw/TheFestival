@@ -81,7 +81,7 @@ class PaymentService {
 
         $dao = new PaymentDAO();
         $dao->createPayment($order->id, $payment->id, $paymentAccountInfo);
-
+        
         return json_encode(["link" => $payment->getCheckoutUrl()]);
     }
 
@@ -127,13 +127,13 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
+            $mail->Username = 'festivalhaarlem35@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
+            $mail->setFrom('festivalhaarlem35@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
@@ -226,19 +226,19 @@ class PaymentService {
             $mail->SMTPSecure = 'tls';
             $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
             $mail->SMTPAuth = true; // Enable SMTP authentication
-            $mail->Username = 'festival.haarleminfo@gmail.com'; // SMTP username
+            $mail->Username = 'festivalhaarlem35@gmail.com'; // SMTP username
             $mail->Password = SMPT_PASSWORD; // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
             $mail->Port = 587; // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
             // Recipients
-            $mail->setFrom('festival.haarleminfo@gmail.com', 'Festival Team');
+            $mail->setFrom('festivalhaarlem35@gmail.com', 'Festival Team');
             $mail->addAddress($account->email, $account->name); // Add a recipient
 
             // Content
             $mail->isHTML(false); // Set email format to plain text
             $mail->Subject = "Confirmation for order ". $orderId;
-            $mail->Body = "Dear " . $account->name . ",\n\nYour order has been successfully processed. Included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
+            $mail->Body = "Dear " . $account->name . ",\n\nYour order has been successfully processed. \n\nHere is your schedule and order overview.\n".API_URL ."/order?id=".$orderId."\n\nAlso included in this email are the tickets and the invoice. \n\nBest regards,\nThe festival team";
 
             //$mail->AddAttachment($invoicePDF);
             $mail->AddStringAttachment($invoicePDF, "invoice-".$invoiceId.".pdf", PHPMailer::ENCODING_BASE64, "application/pdf");  
@@ -248,6 +248,8 @@ class PaymentService {
         }
         catch (Exception $ex) {
         }
+
+        unlink(__DIR__ .'/../pdf/tickets-'. $orderId .'.pdf');
     }
 }
 ?>

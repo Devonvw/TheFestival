@@ -19,7 +19,7 @@ require_once __DIR__ . '/../DAL/Database.php';
           $pages = [];
 
           foreach ($data as $row) {
-            array_push($pages, new InformationPage($row['id'], $row['url'], $row['title'], $row['subtitle'], $row['meta_title'], $row['meta_description'], $row['image'] ? base64_encode($row['image']) : null, $row['sections'] == '[null]' ? [] :json_decode(str_replace('}"', "}", str_replace('"{', "{", stripslashes($data['sections']))))));
+            array_push($pages, new InformationPage($row['id'], $row['url'], $row['title'], $row['subtitle'], $row['meta_title'], $row['meta_description'], $row['image'] ? base64_encode($row['image']) : null, $row['sections'] == '[null]' ? [] :json_decode(str_replace('}"', "}", str_replace('"{', "{", stripslashes($row['sections']))))));
           }
 
           return $pages;
